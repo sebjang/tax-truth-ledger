@@ -298,6 +298,38 @@ hr.heavy { border-top: 2px solid var(--ink); }
   .w { max-width: 100%; padding: 0; }
   @page { margin: 2cm 2.2cm; }
 }
+
+/* ── DOWNLOAD BUTTON ── */
+.dl-band {
+  background: var(--deep); border: 2px solid var(--ink);
+  padding: 1.8rem 2rem; margin: 2rem 0;
+  display: flex; align-items: center; gap: 1.8rem; flex-wrap: wrap;
+}
+.dl-icon { font-size: 2rem; line-height: 1; flex-shrink: 0; }
+.dl-info { flex: 1; min-width: 200px; }
+.dl-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .3rem;
+}
+.dl-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .95rem; font-weight: 700; color: var(--ink); margin-bottom: .2rem;
+}
+.dl-desc { font-size: .78rem; color: var(--muted); line-height: 1.5; }
+.dl-btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--ink); color: #f5f0e8;
+  padding: .75rem 1.6rem;
+  font-family: 'Noto Serif KR', serif;
+  font-size: .82rem; font-weight: 700;
+  text-decoration: none; flex-shrink: 0;
+  transition: background .15s;
+}
+.dl-btn:hover { background: var(--gold); color: var(--ink); }
+.dl-btn svg { width: 14px; height: 14px; fill: currentColor; }
+@media print { .dl-band { page-break-inside: avoid; } }
+
 </style>
 </head>
 <body>
@@ -330,6 +362,19 @@ KTAX_BASE = KR_DIVIDEND_BASE + ST_GAIN
     저자: <strong>장세봉 / 인흥(주)</strong> &nbsp;·&nbsp; 기준: 엑셀 소계1 Col11·29·31·43·44 직접 인용<br>
     특허출원: 10-2026-0079638 · 0084940 · 0084983 &nbsp;·&nbsp; 2026.05.30<br>
     원장 우선순위: S01 → S02 → S03 → S04 → HTML → PDF &nbsp;·&nbsp; 원장=정본(Canonical Ledger)
+  </div>
+
+  <div class="dl-band">
+    <div class="dl-icon">📊</div>
+    <div class="dl-info">
+      <div class="dl-label">원장 데이터 · Canonical Ledger · 2025귀속</div>
+      <div class="dl-title">JSB71GA10-2025-KRTAX-S04b.xlsx</div>
+      <div class="dl-desc">소계1 직접 인용 · SHA-256: b8073f497b060933…</div>
+    </div>
+    <a class="dl-btn" href="https://sebjang.github.io/tax-truth-ledger/JSB71GA10-2025-KRTAX-S04b.xlsx" download>
+      <svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-5 2h10v1.5H3V14z"/></svg>
+      엑셀 원장 다운로드
+    </a>
   </div>
 </div>
 
@@ -580,6 +625,22 @@ DVCA → QI → <span class="eq">ICI</span> → KTAX
     </div>
   </div>
 </section>
+
+<!-- ── DOWNLOAD REPEAT ── -->
+<div class="w" style="padding-bottom:0;">
+  <div class="dl-band">
+    <div class="dl-icon">📊</div>
+    <div class="dl-info">
+      <div class="dl-label">원장 데이터 · Canonical Ledger · 2025귀속</div>
+      <div class="dl-title">JSB71GA10-2025-KRTAX-S04b.xlsx</div>
+      <div class="dl-desc">소계1 직접 인용 · SHA-256: b8073f497b060933…</div>
+    </div>
+    <a class="dl-btn" href="https://sebjang.github.io/tax-truth-ledger/JSB71GA10-2025-KRTAX-S04b.xlsx" download>
+      <svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-5 2h10v1.5H3V14z"/></svg>
+      엑셀 원장 다운로드
+    </a>
+  </div>
+</div>
 
 <!-- ── FINALE ── -->
 <div class="finale">
