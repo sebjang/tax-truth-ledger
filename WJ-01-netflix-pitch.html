@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원장(元帳) feat. 원금(元金) — 으뜸 기록이 이긴다</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=IM+Fell+English:ital@0;1&display=swap');
+
+  :root {
+    --ink:     #0d0d0d;
+    --paper:   #f5f0e8;
+    --cinnabar:#c0392b;
+    --gold:    #b8860b;
+    --ledger:  #1a3a2a;
+    --ash:     #6b6560;
+    --rule:    #c8b99a;
+    --accent:  #8b1a1a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ── 배경 텍스처 ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, var(--rule) 39px, var(--rule) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(200,185,154,0.3) 39px, rgba(200,185,154,0.3) 40px);
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  /* ── 레이아웃 ── */
+  .page { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+    padding: 6rem 1rem 4rem;
+    position: relative;
+  }
+
+  .hero-stamp {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(7rem, 22vw, 14rem);
+    font-weight: 900;
+    color: var(--cinnabar);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    opacity: 0.12;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-8deg);
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .hero-label {
+    font-family: 'IM Fell English', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--ash);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-hanja {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(4rem, 14vw, 8rem);
+    font-weight: 900;
+    color: var(--ledger);
+    line-height: 1;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.4s forwards;
+  }
+
+  .hero-hanja span { color: var(--cinnabar); }
+
+  .hero-reading {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: 400;
+    color: var(--ash);
+    margin-top: 0.5rem;
+    letter-spacing: 0.2em;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.6s forwards;
+  }
+
+  .hero-divider {
+    width: 80px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 2.5rem auto;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.8s forwards;
+  }
+
+  .hero-tagline {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeUp 0.9s 1s forwards;
+  }
+
+  .hero-tagline em {
+    font-style: normal;
+    color: var(--cinnabar);
+    border-bottom: 2px solid var(--cinnabar);
+  }
+
+  .hero-sub {
+    margin-top: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--ash);
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 0.9s 1.2s forwards;
+  }
+
+  /* ── ETYMOLOGY BLOCK ── */
+  .section { padding: 5rem 0; }
+
+  .section-label {
+    font-family: 'IM Fell English', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1.5rem, 4vw, 2.4rem);
+    font-weight: 700;
+    color: var(--ledger);
+    line-height: 1.35;
+    margin-bottom: 2rem;
+  }
+
+  .etymology-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--rule);
+    margin: 2.5rem 0;
+  }
+
+  .etym-cell {
+    padding: 2.5rem 2rem;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .etym-cell:nth-child(2) { border-right: none; }
+  .etym-cell:nth-child(3), .etym-cell:nth-child(4) { border-bottom: none; }
+
+  .etym-hanja {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--cinnabar);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .etym-reading {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--ash);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-family: 'IM Fell English', serif;
+  }
+
+  .etym-meaning {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--ledger);
+    margin-bottom: 0.6rem;
+  }
+
+  .etym-desc {
+    font-size: 0.85rem;
+    color: var(--ash);
+    line-height: 1.7;
+  }
+
+  /* ── 元의 연결 ── */
+  .yuan-bridge {
+    background: var(--ledger);
+    color: var(--paper);
+    padding: 4rem 3rem;
+    margin: 3rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .yuan-bridge::before {
+    content: '元';
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.04);
+    position: absolute;
+    right: -2rem; top: -3rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .yuan-bridge .bridge-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+    color: #e8dfc8;
+  }
+
+  .yuan-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    margin: 1.5rem 0;
+  }
+
+  .yuan-item {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 1.2rem 1.5rem;
+    text-align: center;
+  }
+
+  .yuan-item .hj {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--cinnabar);
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .yuan-item .kr { font-size: 0.8rem; color: #c8bca8; letter-spacing: 0.1em; }
+
+  .yuan-arrow {
+    font-size: 1.5rem;
+    color: var(--gold);
+    text-align: center;
+  }
+
+  .yuan-insight {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #c8bca8;
+  }
+
+  .yuan-insight strong { color: #e8dfc8; }
+
+  /* ── 문제 정의 ── */
+  .problem-block {
+    border-left: 4px solid var(--cinnabar);
+    padding: 2rem 2rem 2rem 2.5rem;
+    margin: 2.5rem 0;
+    background: rgba(192,57,43,0.04);
+  }
+
+  .problem-block p {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--ink);
+  }
+
+  .problem-block strong { color: var(--cinnabar); }
+
+  /* ── 타임라인 ── */
+  .timeline { margin: 3rem 0; }
+
+  .tl-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .tl-row:first-child { border-top: 1px solid var(--rule); }
+
+  .tl-year {
+    font-family: 'IM Fell English', serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--gold);
+    padding: 1.2rem 0;
+    letter-spacing: 0.05em;
+  }
+
+  .tl-us, .tl-kr {
+    padding: 1.2rem 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--ash);
+  }
+
+  .tl-us strong { color: var(--ledger); font-weight: 600; }
+  .tl-kr strong { color: var(--cinnabar); font-weight: 600; }
+
+  .tl-header .tl-year { color: var(--ash); font-size: 0.7rem; letter-spacing: 0.25em; }
+  .tl-header .tl-us, .tl-header .tl-kr {
+    font-size: 0.7rem; letter-spacing: 0.25em; color: var(--ash);
+    text-transform: uppercase; font-family: 'IM Fell English', serif;
+  }
+
+  /* ── 원장 vs 현실 ── */
+  .ledger-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin: 3rem 0;
+    background: var(--rule);
+  }
+
+  .lc-panel {
+    background: var(--paper);
+    padding: 2.5rem 2rem;
+  }
+
+  .lc-panel.truth { background: var(--ledger); color: var(--paper); }
+
+  .lc-head {
+    font-family: 'IM Fell English', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    color: var(--gold);
+  }
+
+  .lc-panel.truth .lc-head { color: #c8b99a; }
+
+  .lc-item {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    color: var(--cinnabar);
+  }
+
+  .lc-panel.truth .lc-item {
+    color: #e8dfc8;
+    border-bottom-color: rgba(255,255,255,0.1);
+  }
+
+  .lc-item span { color: var(--ash); }
+  .lc-panel.truth .lc-item span { color: #9a8a74; }
+
+  /* ── κ 카드 ── */
+  .kappa-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin: 3rem 0;
+  }
+
+  .kappa-card {
+    border: 1px solid var(--rule);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kappa-card::before {
+    content: attr(data-ticker);
+    font-family: 'IM Fell English', serif;
+    font-size: 4rem;
+    color: rgba(0,0,0,0.04);
+    position: absolute;
+    bottom: -0.5rem; right: 0.5rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .kappa-pct {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--cinnabar);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .kappa-ticker {
+    font-family: 'IM Fell English', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--ash);
+    text-transform: uppercase;
+  }
+
+  .kappa-label {
+    margin-top: 0.8rem;
+    font-size: 0.78rem;
+    color: var(--ash);
+    line-height: 1.5;
+  }
+
+  /* ── 에피소드 ── */
+  .ep-list { margin: 2.5rem 0; }
+
+  .ep-item {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 1.5rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ep-num {
+    font-family: 'IM Fell English', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-align: right;
+    padding-top: 0.2rem;
+  }
+
+  .ep-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ledger);
+    margin-bottom: 0.5rem;
+  }
+
+  .ep-subtitle {
+    font-size: 0.78rem;
+    color: var(--cinnabar);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: 'IM Fell English', serif;
+    margin-bottom: 0.8rem;
+  }
+
+  .ep-body {
+    font-size: 0.88rem;
+    color: var(--ash);
+    line-height: 1.75;
+  }
+
+  .ep-body strong { color: var(--ink); font-weight: 600; }
+
+  /* ── 클로징 ── */
+  .closing {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 6rem 3rem;
+    margin-top: 5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .closing::before {
+    content: '元帳';
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.03);
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .closing-main {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: #e8dfc8;
+    position: relative;
+  }
+
+  .closing-main em {
+    font-style: normal;
+    color: var(--cinnabar);
+  }
+
+  .closing-meta {
+    font-size: 0.78rem;
+    color: #6b6560;
+    letter-spacing: 0.15em;
+    line-height: 2.2;
+    position: relative;
+  }
+
+  .closing-seal {
+    width: 80px; height: 80px;
+    border: 2px solid var(--cinnabar);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 2rem auto;
+    position: relative;
+  }
+
+  .closing-seal span {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--cinnabar);
+    line-height: 1;
+  }
+
+  /* ── util ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 3rem 0;
+  }
+
+  .red { color: var(--cinnabar); }
+  .gold { color: var(--gold); }
+
+  blockquote {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    line-height: 1.8;
+    color: var(--ledger);
+    padding: 1.5rem 2rem;
+    border-left: 3px solid var(--gold);
+    margin: 2rem 0;
+    background: rgba(184,134,11,0.04);
+  }
+
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 620px) {
+    .etymology-grid { grid-template-columns: 1fr; }
+    .etym-cell:nth-child(2) { border-right: 1px solid var(--rule); }
+    .yuan-row { grid-template-columns: 1fr; }
+    .yuan-arrow { transform: rotate(90deg); }
+    .ledger-compare { grid-template-columns: 1fr; }
+    .kappa-grid { grid-template-columns: 1fr; }
+    .tl-row { grid-template-columns: 60px 1fr; }
+    .tl-kr { display: none; }
+    .tl-header .tl-kr { display: none; }
+    .ep-item { grid-template-columns: 40px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════ HERO ══════════════════════════════ -->
+<section class="hero">
+  <div class="hero-stamp">元帳</div>
+  <div class="hero-label">Netflix Original Series · Korea · 2026 · Ledger as Infrastructure</div>
+  <div class="hero-hanja"><span>元</span>帳</div>
+  <div class="hero-reading">원 장 &nbsp;·&nbsp; WON · JANG</div>
+  <div class="hero-divider"></div>
+  <div class="hero-tagline">
+    으뜸 <span class="red">元</span>은 돌아와야 한다 — 원장이 그것을 안다<br>
+    <em>데이터가 없으면 원금도 없다</em>
+  </div>
+  <div class="hero-sub">
+    회계장부 추적성 · 세제 데이터 인프라 · 실화 기반 · ICI P/L 2025 · κ=100%
+  </div>
+</section>
+
+<!-- ══════════════════════════════ ETYMOLOGY ══════════════════════════════ -->
+<section class="section page">
+  <div class="section-label">Etymology — 어원</div>
+  <h2 class="section-title">원장(元帳)이란 무엇인가<br>글자가 이미 모든 것을 말한다</h2>
+
+  <p style="color:var(--ash);font-size:0.92rem;line-height:1.85;margin-bottom:2rem;">
+    회계에서 원장을 영어로 <em style="color:var(--ledger);font-style:normal;font-weight:600;">Ledger</em>라 부른다.
+    하지만 한자어 <strong style="color:var(--cinnabar);">元帳</strong>은 그보다 훨씬 깊은 뜻을 품고 있다.
+    두 글자 안에 이 이야기의 전부가 있다.
+  </p>
+
+  <div class="etymology-grid">
+    <div class="etym-cell">
+      <div class="etym-hanja">元</div>
+      <div class="etym-reading">WON · Yuan · 원</div>
+      <div class="etym-meaning">으뜸, 처음, 근본</div>
+      <div class="etym-desc">
+        사람의 머리 위를 가리키는 상형자. 모든 것의 <strong>으뜸이 되는 것</strong>,
+        시작이자 근원. 황제의 연호에도 쓰이고, 화폐 단위에도 쓰인다.
+        <br><br>
+        → 元金(원금): <em style="color:var(--cinnabar);">으뜸가는 돈</em>, 이자가 붙기 전의 본디 돈
+      </div>
+    </div>
+    <div class="etym-cell">
+      <div class="etym-hanja">帳</div>
+      <div class="etym-reading">JANG · Zhang · 장</div>
+      <div class="etym-meaning">휘장, 장부, 기록포</div>
+      <div class="etym-desc">
+        천(巾)으로 만든 길게 늘어진 <strong>휘장·장막</strong>. 거기에 기록을 새기던 데서 장부가 되었다.
+        공간을 나누고 경계를 짓는 천 — 무엇을 안쪽에 두고
+        무엇을 바깥에 두는가를 <em style="color:var(--cinnabar);">구분하는 기록</em>.
+      </div>
+    </div>
+    <div class="etym-cell">
+      <div class="etym-hanja" style="font-size:2.2rem;color:var(--ledger);">元帳</div>
+      <div class="etym-reading">WONJANG · 원장</div>
+      <div class="etym-meaning">으뜸가는 기록</div>
+      <div class="etym-desc">
+        두 글자를 합치면: <strong style="color:var(--cinnabar);">"으뜸이 되는 것을 기록한 휘장"</strong>.
+        단순한 숫자 장부가 아니다.
+        <em>무엇이 원금이고 무엇이 이익인지</em>를 구분해 놓은,
+        진실의 경계선이다.
+      </div>
+    </div>
+    <div class="etym-cell">
+      <div class="etym-hanja" style="font-size:2.2rem;color:var(--ledger);">Ledger</div>
+      <div class="etym-reading">LEDGER · 원장의 영어</div>
+      <div class="etym-meaning">눕혀두는 책</div>
+      <div class="etym-desc">
+        중세 영어 <em>leggen</em> — 눕혀두다, 고정하다에서 왔다.
+        움직이지 않게 <strong>고정해 두는 기록</strong>.
+        <br><br>
+        하지만 元帳은 더 근본적이다 — 단지 고정이 아니라
+        <em style="color:var(--cinnabar);">으뜸을 수호하는 것</em>이다.
+      </div>
+    </div>
+  </div>
+
+  <!-- 元의 연결 -->
+  <div class="yuan-bridge">
+    <div class="bridge-title">
+      으뜸 <strong>元</strong> — 원장과 원금은 같은 뿌리에서 온다
+    </div>
+
+    <div class="yuan-row">
+      <div class="yuan-item">
+        <span class="hj">元</span>
+        <div class="kr">WON · 으뜸 · 근본</div>
+      </div>
+      <div class="yuan-arrow">→</div>
+      <div class="yuan-item">
+        <span class="hj" style="font-size:1.4rem;color:#c8bca8;">元金 &nbsp;·&nbsp; 元帳</span>
+        <div class="kr">원금 &nbsp;·&nbsp; 원장 — 같은 元</div>
+      </div>
+    </div>
+
+    <div class="yuan-insight">
+      <strong>원금(元金)</strong>의 元과 <strong>원장(元帳)</strong>의 元은 같은 글자다.<br>
+      원금이 "으뜸가는 돈"이라면, 원장은 "그 으뜸을 기록하는 장부"다.<br><br>
+      따라서 원장이 없으면 원금도 없다.<br>
+      <strong>원금이 원금임을 증명하는 유일한 방법은 — 원장에 기록하는 것이다.</strong><br>
+      기록되지 않은 원금은, 국가에게 그냥 소득이다.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ 문제 ══════════════════════════════ -->
+<section class="section page">
+  <div class="section-label">The Problem — 문제</div>
+  <h2 class="section-title">원장 없이 원금 없다<br>이것은 과세 문제가 아니라 <em class="red">데이터 인프라</em> 문제다</h2>
+
+  <div class="problem-block">
+    <p>
+      ICI(Investment Company Institute)는 2025년 기준, 해외 ETF 분배금의 상당 부분이
+      <strong>BOX3 — 원금 반환(Return of Capital)</strong>임을 공개 데이터로 확정했다.
+      MSTY는 2025년 분배금의 <strong>100%가 원금 반환</strong>이다.
+      이것은 소득이 아니다. 으뜸가는 돈 — 元金 — 이 돌아온 것이다.
+    </p>
+    <p>
+      그런데 한국의 증권사 시스템은 이 데이터를 수신하지 않는다.
+      국세청 시스템은 이 데이터를 반영하지 않는다.
+      <strong>원장이 없기 때문이다.</strong>
+      데이터 인프라가 없기 때문이다.
+    </p>
+    <p>
+      기록이 없으면 구분이 없다. 구분이 없으면 원금도 없다.
+      <strong>원금이 소득으로 둔갑하는 것은 — 악의가 아니라 원장의 부재다.</strong>
+    </p>
+  </div>
+
+  <div class="kappa-grid">
+    <div class="kappa-card" data-ticker="MSTY">
+      <div class="kappa-pct">100%</div>
+      <div class="kappa-ticker">MSTY 2025</div>
+      <div class="kappa-label">BOX3 원금 반환 비중<br>ICI P/L 2025 확정</div>
+    </div>
+    <div class="kappa-card" data-ticker="CONY">
+      <div class="kappa-pct">97%</div>
+      <div class="kappa-ticker">CONY 2025</div>
+      <div class="kappa-label">BOX3 원금 반환 비중<br>ICI P/L 2025 확정</div>
+    </div>
+    <div class="kappa-card" data-ticker="NVDY">
+      <div class="kappa-pct">52.6%</div>
+      <div class="kappa-ticker">NVDY 2025</div>
+      <div class="kappa-label">BOX3 원금 반환 비중<br>ICI P/L 2025 확정</div>
+    </div>
+  </div>
+
+  <blockquote>
+    원금에 세금을 매기는 것은 악법이 아니라 <strong>원장 부재</strong>의 결과다.<br>
+    원장을 만드는 것 — 이것이 이 싸움의 본질이다.
+  </blockquote>
+</section>
+
+<!-- ══════════════════════════════ 인프라 타임라인 ══════════════════════════════ -->
+<section class="section page">
+  <div class="section-label">Data Infrastructure Gap — 72년 격차</div>
+  <h2 class="section-title">원장 인프라의 역사<br>미국은 언제부터 기록했는가</h2>
+
+  <div class="timeline">
+    <div class="tl-row tl-header">
+      <div class="tl-year">Year</div>
+      <div class="tl-us">🇺🇸 &nbsp;원장 인프라 (미국)</div>
+      <div class="tl-kr">🇰🇷 &nbsp;한국의 현실</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-year">1954</div>
+      <div class="tl-us"><strong>IRC §301(c)(2) 법제화</strong><br>원금 반환은 소득이 아님을 법으로 기록. 으뜸(元)의 보호를 원장에 새기다.</div>
+      <div class="tl-kr"><strong>한국전쟁 복구 중</strong><br>원장 인프라 구축 기회 — 방치</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-year">1993</div>
+      <div class="tl-us"><strong>ICI Primary Layout 표준화</strong><br>분배금의 성격(소득/원금)을 구분하는 데이터 표준 확립. 원장의 문법을 만들다.</div>
+      <div class="tl-kr"><strong>금융실명제 도입</strong><br>명의는 실명화, 원장 데이터 인프라는 미추진</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-year">2012</div>
+      <div class="tl-us"><strong>Cost Basis Reporting 의무화</strong><br>증권사 전산 — Basis Tracking 전면 도입. 취득원가부터 원금 반환까지 원장이 자동 추적.</div>
+      <div class="tl-kr"><strong>IT 강국 선언</strong><br>스마트폰 보급률 세계 1위 — 금융 세제 원장 인프라는 0</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-year">2024</div>
+      <div class="tl-us"><strong>ICI P/L 2025 자동 공시</strong><br>BOX1·BOX2·BOX3 자동 분류 및 전 투자자 공개. 원장이 스스로 말한다.</div>
+      <div class="tl-kr"><strong>유권해석 한 줄로 대응</strong><br>공청회 없음. 기록 없음. ICI 데이터 미연동.</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-year">2026</div>
+      <div class="tl-us"><strong>완전 자동화 세제 원장 인프라</strong><br>원금과 소득의 구분이 데이터로 완성.</div>
+      <div class="tl-kr"><strong>KSD "당국 관여 없음" 공식 확인</strong><br>72년 격차 — 원장 부재 지속</div>
+    </div>
+  </div>
+
+  <div class="problem-block" style="margin-top:2.5rem;">
+    <p>
+      미국은 1954년부터 원장에 기록했다. <strong>으뜸(元)을 지키는 장부(帳)를 법으로 만들었다.</strong>
+      한국은 72년이 지나도록 유권해석 한 줄로 버텼다.
+      이것은 세율의 문제가 아니다. <strong>원장이라는 데이터 인프라의 부재</strong>다.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ 원장의 힘 ══════════════════════════════ -->
+<section class="section page">
+  <div class="section-label">Ledger Power — 원장의 힘</div>
+  <h2 class="section-title">원장은 거짓말하지 않는다<br>으뜸 元은 기록 속에서만 살아남는다</h2>
+
+  <div class="ledger-compare">
+    <div class="lc-panel">
+      <div class="lc-head">원장 없는 세계 — 지금 한국</div>
+      <div class="lc-item">MSTY 분배금 입금 <span>→ 종합소득으로 분류</span></div>
+      <div class="lc-item">BOX3=100% 공시 존재 <span>→ 시스템 미반영</span></div>
+      <div class="lc-item">원금 반환 입증 불가 <span>→ 납세자 개인이 싸워야</span></div>
+      <div class="lc-item">종합소득세 누진 <span>→ 원금에 세율 적용</span></div>
+      <div class="lc-item">건강보험료 폭탄 <span>→ 원금이 소득이니까</span></div>
+      <div class="lc-item">피부양자 탈락 <span>→ 원금이 소득이니까</span></div>
+      <div class="lc-item" style="color:var(--ash);font-style:italic;font-size:0.78rem;">원장 없음 = 구분 없음 = 원금 없음</div>
+    </div>
+    <div class="lc-panel truth">
+      <div class="lc-head">원장 있는 세계 — ICI가 기록한 진실</div>
+      <div class="lc-item">MSTY BOX3 = 100.0% <span>→ 원금 반환, 비과세</span></div>
+      <div class="lc-item">CONY BOX3 = 97.0% <span>→ 원금 반환, 비과세</span></div>
+      <div class="lc-item">NVDY BOX3 = 52.6% <span>→ 해당 비율 비과세</span></div>
+      <div class="lc-item">κ = 100% <span>→ 106건 교차검증 오차 없음</span></div>
+      <div class="lc-item">원장 = 데이터 인프라 <span>→ 납세자 자동 보호</span></div>
+      <div class="lc-item">투자자 보호 + 세원 확보 <span>→ 동시 달성</span></div>
+      <div class="lc-item" style="color:#c8bca8;font-style:italic;font-size:0.78rem;">원장 있음 = 구분 있음 = 원금 보호</div>
+    </div>
+  </div>
+
+  <blockquote>
+    조선왕조실록은 왕도 볼 수 없는 기록이었다.<br>
+    ICI 원장은 관료도 지울 수 없는 기록이다.<br>
+    <strong>으뜸 元은, 기록된 곳에서만 살아남는다.</strong>
+  </blockquote>
+</section>
+
+<!-- ══════════════════════════════ 에피소드 ══════════════════════════════ -->
+<section class="section page">
+  <div class="section-label">Episode Guide — 5부작</div>
+  <h2 class="section-title">원장이 이기는 이야기<br>데이터가 권력을 이기는 방법</h2>
+
+  <div class="ep-list">
+
+    <div class="ep-item">
+      <div class="ep-num">EP.1</div>
+      <div>
+        <div class="ep-subtitle">Ledger Infrastructure · 원장 인프라란 무엇인가</div>
+        <div class="ep-title">원장이 없으면 원금도 없다</div>
+        <div class="ep-body">
+          1970년대 공장, 논문, 수출선. 납세자는 평생 세금을 냈다.
+          은퇴 후 국가의 권유로 해외 ETF에 투자했다.
+          <strong>분배금이 들어오던 날 — 고지서가 날아왔다.</strong>
+          <br><br>
+          원인은 단순하다. ICI가 BOX3=100%로 공시한 원금 반환 데이터가
+          한국 증권사 시스템에 없다. <strong>원장 인프라가 없으니, 으뜸(元)을 지킬 방법도 없다.</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="ep-item">
+      <div class="ep-num">EP.2</div>
+      <div>
+        <div class="ep-subtitle">Return of Capital · 원금이 돌아오던 날</div>
+        <div class="ep-title">BOX3 — 이것은 소득이 아니다</div>
+        <div class="ep-body">
+          MSTY 분배금 수령. 화면의 숫자. 잠깐의 안도. 그리고 종합소득세, 건보료, 피부양자 탈락.
+          <br><br>
+          ICI 원장은 말한다: <strong>이 돈의 100%는 元金이다.</strong>
+          한국 시스템은 모른다 — 원장이 없기 때문이다.
+          <em>"데이터가 없으면 아무리 옳아도 소용없다."</em>
+          이것이 이 에피소드의 교훈이다.
+        </div>
+      </div>
+    </div>
+
+    <div class="ep-item">
+      <div class="ep-num">EP.3</div>
+      <div>
+        <div class="ep-subtitle">Audit Trail · 회계장부 추적성</div>
+        <div class="ep-title">원장은 추적한다 — 유권해석은 기록이 없다</div>
+        <div class="ep-body">
+          그는 증권사에, 국세청에 물었다.
+          돌아온 답: <strong>"유권해석에 따라 처리됩니다."</strong>
+          유권해석의 근거는? 공청회는? 기록은?
+          <br><br>
+          조선 사관은 왕도 볼 수 없는 실록을 썼다.
+          2026년 세제 공무원은 유권해석 한 줄을 남긴다. 근거도, 공청회도, 기록도 없이.
+          <strong>Audit Trail — 회계장부 추적성 — 이 없는 행정은 원장이 아니다.</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="ep-item">
+      <div class="ep-num">EP.4</div>
+      <div>
+        <div class="ep-subtitle">Forensic Verification · 포렌식 검증</div>
+        <div class="ep-title">열두 척의 원장 — κ=100%</div>
+        <div class="ep-body">
+          난중일기. 이순신은 열두 척으로 133척을 막았다.
+          기록이 있었기에 후세가 안다.
+          <br><br>
+          2026년, 원장 하나가 있다.
+          ICI P/L 2025 원장. κ=100%. 106건 교차검증. 특허출원 3건.
+          <strong>포렌식 ROC 검증시스템이 원금을 추적한다.</strong>
+          열두 척이 원장이다. 원장이 열두 척이다.
+        </div>
+      </div>
+    </div>
+
+    <div class="ep-item">
+      <div class="ep-num">EP.5</div>
+      <div>
+        <div class="ep-subtitle">Finale · 국민이 이긴다</div>
+        <div class="ep-title">원장은 남는다 — 인프라가 바뀐다</div>
+        <div class="ep-body">
+          경정청구가 수리된다. ICI 데이터가 국세청 시스템에 연동된다.
+          Cost Basis Reporting 법제화. 300만 납세자의 원금이 보호된다.
+          <br><br>
+          <strong>으뜸 元을 기록하는 장부 帳 — 원장이 완성될 때,
+          원금은 비로소 원금이 된다.</strong>
+          투자자 보호와 세원 확보가 동시에 이루어진다.
+          원장은 거짓말하지 않는다.
+          <br><br>
+          <em style="color:var(--cinnabar);">POST-CREDITS: "시스템을 고쳐라. 지금."</em>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════ CLOSING ══════════════════════════════ -->
+<div class="closing">
+  <div class="closing-main">
+    으뜸 <em>元</em>은 기록될 때 살아남는다<br>
+    원장이 없으면 원금도 없다<br>
+    <em>데이터가 진실이다</em>
+  </div>
+
+  <div class="closing-seal"><span>元</span></div>
+
+  <p style="font-family:'Noto Serif KR',serif;font-size:0.95rem;color:#9a8a74;line-height:2;position:relative;margin-bottom:2rem;">
+    元帳(원장) = 으뜸 元 + 휘장 帳<br>
+    元金(원금) = 으뜸 元 + 쇠 金<br>
+    <strong style="color:#c8bca8;">같은 뿌리, 같은 으뜸 — 원장이 원금을 지킨다</strong>
+  </p>
+
+  <div class="closing-meta">
+    ICI-Primary-MASTER-V03_LOCK &nbsp;·&nbsp; κ=100% &nbsp;·&nbsp; 106건 교차검증 &nbsp;·&nbsp; 특허출원 3건<br>
+    장세봉 / 인흥(주) &nbsp;·&nbsp; sebjang@gmail.com &nbsp;·&nbsp; 2026.05.30<br>
+    sebjang.github.io/roc-tax-verification<br><br>
+    Netflix Original Series · 한류 유니버스 시즌 3<br>
+    기생충 → 오징어게임 → <strong style="color:#c8bca8;">元帳</strong> → 모피아
+  </div>
+</div>
+
+</body>
+</html>

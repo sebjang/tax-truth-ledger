@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원장(元帳) feat. 원금(元金) — 元帳 삼분론 — 소득성격 결정권의 수학적 증명 · JSB71GA10</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500&family=JetBrains+Mono:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  --bg:     #06090a;
+  --s1:     #0a0f12;
+  --s2:     #0f151a;
+  --panel:  #131c22;
+  --border: #1a2830;
+  --b2:     #223040;
+  --text:   #a8c0cc;
+  --muted:  #4a6070;
+  --faint:  #0f1820;
+  --ink:    #dce8ef;
+  --gold:   #c0a030;
+  --gold2:  #806a18;
+  --cyan:   #2a9a8a;
+  --cyan2:  #1a6a5c;
+  --red:    #c03830;
+  --red2:   #882820;
+  --green:  #2a8a5a;
+  --mono:   'JetBrains Mono', monospace;
+  --w: 860px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  line-height: 1.85;
+  overflow-x: hidden;
+}
+/* terminal scan lines */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0, transparent 3px,
+    rgba(42,154,138,.012) 3px, rgba(42,154,138,.012) 4px
+  );
+}
+.w { position: relative; z-index: 1; max-width: var(--w); margin: 0 auto; padding: 0 2rem; }
+
+/* ── HEADER ── */
+.header {
+  background: var(--s1);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  position: relative; z-index: 1;
+}
+.header-top {
+  padding: .7rem 2rem;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.hdr-id {
+  font-family: var(--mono);
+  font-size: .65rem; color: var(--cyan);
+  letter-spacing: .1em;
+}
+.hdr-tag {
+  font-size: .58rem; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--muted);
+}
+.header-main {
+  padding: 4rem 2rem 3rem;
+  position: relative; overflow: hidden;
+}
+.hm-bg {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(12rem,28vw,20rem);
+  font-weight: 900;
+  color: rgba(42,154,138,.04);
+  position: absolute; right: -2rem; top: 50%;
+  transform: translateY(-50%);
+  line-height: 1; pointer-events: none; user-select: none;
+}
+.hm-kicker {
+  font-family: var(--mono);
+  font-size: .68rem; color: var(--cyan);
+  letter-spacing: .2em; margin-bottom: 1.2rem;
+}
+.hm-hanja {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(2.8rem,8vw,5rem);
+  font-weight: 900; color: var(--ink);
+  line-height: 1; letter-spacing: .12em; margin-bottom: .5rem;
+}
+.hm-hanja .gold { color: var(--gold); }
+.hm-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.1rem,2.8vw,1.6rem);
+  font-weight: 700; color: var(--ink); line-height: 1.4;
+  margin-bottom: .8rem;
+}
+.hm-sub {
+  font-size: .85rem; color: var(--muted); line-height: 1.7;
+  max-width: 600px;
+}
+.hm-sub strong { color: var(--text); }
+
+/* ── SUPREME IDENTITY BOX ── */
+.identity-box {
+  background: var(--panel);
+  border: 1px solid var(--cyan2);
+  padding: 2.5rem 2.5rem;
+  margin: 3rem 0;
+  position: relative;
+}
+.identity-box::before {
+  content: 'CANONICAL';
+  position: absolute; top: -1px; left: 2rem;
+  background: var(--cyan2);
+  color: #fff; font-size: .55rem; letter-spacing: .3em;
+  padding: .15rem .6rem; text-transform: uppercase;
+}
+.id-label {
+  font-family: var(--mono);
+  font-size: .65rem; color: var(--cyan);
+  letter-spacing: .15em; margin-bottom: 1.2rem;
+}
+.id-equation {
+  font-family: var(--mono);
+  font-size: clamp(1rem, 2.8vw, 1.5rem);
+  color: var(--ink); line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+.id-equation .gold { color: var(--gold); }
+.id-equation .cyan { color: var(--cyan); }
+.id-equation .red  { color: var(--red);  }
+.id-values {
+  font-family: var(--mono);
+  font-size: .78rem; color: var(--text); line-height: 2;
+}
+.id-values .y { color: var(--gold); }
+.id-values .c { color: var(--cyan); }
+
+/* ── SECTION ── */
+section { padding: 4.5rem 0; border-top: 1px solid var(--border); }
+.sec-num {
+  font-family: var(--mono);
+  font-size: .65rem; color: var(--cyan);
+  letter-spacing: .15em; margin-bottom: .5rem;
+}
+.sec-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.2rem,3vw,1.8rem);
+  font-weight: 700; color: var(--ink); line-height: 1.35;
+  margin-bottom: 1.8rem;
+}
+.sec-title .gold { color: var(--gold); }
+.sec-title .cyan { color: var(--cyan); }
+.sec-title .red  { color: var(--red);  }
+.prose { font-size: .88rem; color: var(--text); line-height: 1.9; margin-bottom: 1rem; }
+.prose strong { color: var(--ink); }
+
+/* ── TRIBOX — 원장 삼분론 ── */
+.tribox {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px; background: var(--border);
+  margin: 2rem 0;
+}
+.tc {
+  background: var(--s2); padding: 2rem 1.6rem;
+  position: relative;
+}
+.tc.star { background: var(--panel); border-top: 2px solid var(--cyan); }
+.tc-badge {
+  font-family: var(--mono);
+  font-size: .55rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: .5rem;
+}
+.tc.star .tc-badge { color: var(--cyan); }
+.tc-name {
+  font-family: var(--mono);
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--gold); line-height: 1; margin-bottom: .3rem;
+}
+.tc.star .tc-name { color: var(--cyan); font-size: 1.8rem; }
+.tc-role {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .88rem; font-weight: 700;
+  color: var(--ink); margin-bottom: .6rem; margin-top: .3rem;
+}
+.tc-can  { font-size: .78rem; color: var(--green); line-height: 1.65; margin-bottom: .4rem; }
+.tc-cant { font-size: .78rem; color: var(--red);   line-height: 1.65; }
+.tc.star .tc-can { color: var(--cyan); }
+.tc-star-tag {
+  position: absolute; top: .8rem; right: .8rem;
+  font-family: var(--mono);
+  font-size: .52rem; letter-spacing: .2em;
+  color: var(--cyan); border: 1px solid var(--cyan2);
+  padding: .1rem .4rem;
+}
+
+/* ── THEOREM BLOCK ── */
+.theorem {
+  background: var(--panel);
+  border-left: 3px solid var(--gold);
+  padding: 2rem 2rem;
+  margin: 2rem 0;
+}
+.thm-label {
+  font-family: var(--mono);
+  font-size: .62rem; color: var(--gold); letter-spacing: .15em;
+  margin-bottom: .6rem;
+}
+.thm-stmt {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; font-weight: 700; color: var(--ink);
+  line-height: 1.7; margin-bottom: .8rem;
+}
+.thm-proof {
+  font-family: var(--mono);
+  font-size: .78rem; color: var(--muted); line-height: 1.8;
+  border-left: 1px solid var(--border); padding-left: 1rem; margin-left: .5rem;
+}
+.thm-proof .gold { color: var(--gold); }
+.thm-proof .cyan { color: var(--cyan); }
+.thm-qed {
+  text-align: right; margin-top: .4rem;
+  font-family: var(--mono); font-size: .72rem; color: var(--gold);
+}
+
+/* ── CODE / EQUATION ── */
+.eq-block {
+  background: var(--faint);
+  border: 1px solid var(--border);
+  padding: 1.5rem 1.8rem;
+  margin: 1.5rem 0;
+  font-family: var(--mono);
+}
+.eq-line { font-size: .85rem; color: var(--text); line-height: 2; }
+.eq-line .c { color: var(--cyan); }
+.eq-line .g { color: var(--gold); }
+.eq-line .r { color: var(--red); }
+.eq-line .m { color: var(--muted); font-style: italic; }
+.eq-line .gr { color: var(--green); }
+.eq-result {
+  border-top: 1px solid var(--border);
+  margin-top: .8rem; padding-top: .8rem;
+  font-size: .92rem; font-weight: 700; color: var(--ink);
+}
+
+/* ── S01~S04 FLOW ── */
+.stage-flow {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 2px; background: var(--border); margin: 2rem 0;
+}
+.sf {
+  background: var(--s2); padding: 1.8rem 1.4rem; text-align: center;
+}
+.sf-stage {
+  font-family: var(--mono);
+  font-size: .62rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--cyan); margin-bottom: .4rem;
+}
+.sf-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .92rem; font-weight: 700; color: var(--ink);
+  margin-bottom: .5rem;
+}
+.sf-formula {
+  font-family: var(--mono);
+  font-size: .72rem; color: var(--gold);
+  margin-bottom: .5rem;
+}
+.sf-result {
+  font-family: var(--mono);
+  font-size: .7rem; color: var(--cyan);
+  line-height: 1.5;
+}
+.sf-role { font-size: .72rem; color: var(--muted); margin-top: .3rem; }
+
+/* ── DATA TABLE ── */
+.dtbl-wrap { overflow-x: auto; margin: 2rem 0; }
+table.dtbl { width: 100%; border-collapse: collapse; }
+table.dtbl thead tr { border-bottom: 1px solid var(--gold2); }
+table.dtbl th {
+  font-family: var(--mono);
+  font-size: .58rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--muted); font-weight: 400; text-align: left; padding: .6rem .7rem;
+}
+table.dtbl td {
+  padding: .65rem .7rem; border-bottom: 1px solid var(--border);
+  font-size: .8rem; color: var(--text); vertical-align: top; line-height: 1.6;
+  font-family: var(--mono);
+}
+table.dtbl td:first-child { color: var(--gold); }
+table.dtbl tr.hl td { background: rgba(42,154,138,.05); }
+table.dtbl tr.hl td:first-child { color: var(--cyan); }
+.hi-g { color: var(--green) !important; font-weight: 700; }
+.hi-r { color: var(--red) !important; }
+
+/* ── DEFERRAL FLOW ── */
+.deferral {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 2px; background: var(--border); margin: 2rem 0;
+}
+.df-step {
+  background: var(--s2); padding: 1.6rem 1.2rem; text-align: center;
+}
+.df-n {
+  font-family: var(--mono);
+  font-size: .58rem; letter-spacing: .25em; color: var(--muted);
+  margin-bottom: .4rem;
+}
+.df-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .88rem; font-weight: 700; color: var(--ink); margin-bottom: .4rem;
+}
+.df-formula {
+  font-family: var(--mono);
+  font-size: .7rem; color: var(--cyan); line-height: 1.5; margin-bottom: .4rem;
+}
+.df-note { font-size: .7rem; color: var(--muted); line-height: 1.4; }
+.df-step.active { background: var(--panel); border-top: 2px solid var(--cyan); }
+
+/* ── UNIFIED PROP ── */
+.unified {
+  background: var(--panel);
+  border: 1px solid var(--b2);
+  padding: 3rem 2.5rem; margin: 2rem 0;
+  position: relative; overflow: hidden;
+}
+.unified::before {
+  content: '∴';
+  font-family: var(--mono);
+  font-size: 14rem; color: rgba(42,154,138,.04);
+  position: absolute; right: -1rem; bottom: -2rem;
+  line-height: 1; pointer-events: none;
+}
+.unified-tag {
+  font-family: var(--mono);
+  font-size: .62rem; color: var(--cyan);
+  letter-spacing: .2em; margin-bottom: 1rem;
+}
+.unified-stmt {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(.98rem,2.4vw,1.3rem);
+  font-weight: 700; color: var(--ink); line-height: 1.75;
+  position: relative;
+}
+.unified-stmt .gold { color: var(--gold); }
+.unified-stmt .cyan { color: var(--cyan); }
+.unified-stmt .red  { color: var(--red);  }
+
+/* ── FINALE ── */
+.finale {
+  background: var(--s1);
+  border-top: 1px solid var(--border);
+  padding: 5rem 2rem; text-align: center;
+  position: relative; overflow: hidden;
+}
+.finale::before {
+  content: '元帳';
+  font-family: 'Noto Serif KR', serif;
+  font-size: 16rem; font-weight: 900;
+  color: rgba(42,154,138,.03);
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  white-space: nowrap; pointer-events: none; line-height: 1;
+}
+.fin-main {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1rem,3vw,1.6rem);
+  font-weight: 700; color: var(--ink); line-height: 1.85;
+  margin-bottom: 2rem; position: relative;
+}
+.fin-main .gold { color: var(--gold); }
+.fin-main .cyan { color: var(--cyan); }
+.fin-seal {
+  width: 72px; height: 72px;
+  border: 1px solid var(--gold2); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 2rem; position: relative;
+}
+.fin-seal span {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.6rem; font-weight: 900; color: var(--gold);
+}
+.fin-meta {
+  font-family: var(--mono);
+  font-size: .65rem; color: var(--muted);
+  letter-spacing: .08em; line-height: 2.2; position: relative;
+}
+.fin-meta strong { color: var(--text); }
+
+@media(max-width:620px){
+  .tribox { grid-template-columns: 1fr; }
+  .stage-flow { grid-template-columns: 1fr 1fr; }
+  .deferral { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="header-top w" style="max-width:100%;">
+    <span class="hdr-id">JSB71GA10 · ERRATA-PROPOSITION · 2026-05-29</span>
+    <span class="hdr-tag">원장 체계 정식화 · 명제 정리 · 법정 증거자료</span>
+  </div>
+  <div class="header-main w">
+    <div class="hm-bg">帳</div>
+    <div class="hm-kicker">// CANONICAL LEDGER · 元帳 삼분론 정식화</div>
+    <div class="hm-hanja">元帳 <span class="gold">삼분론</span><span style="font-size:.38em;font-weight:400;color:var(--muted);letter-spacing:.05em;display:block;margin-top:.2em;">元帳 feat. 元金</span></div>
+    <div class="hm-title">
+      소득성격 결정권의 수학적 증명<br>
+      DVCA · QI · ICI — 세 원장의 역할 구분과 한계
+    </div>
+    <div class="hm-sub">
+      ICI 부재에 따른 해외 ETF 분배금 소득성격 오인 문제<br>
+      S01~S04 국제원장 체계에서의 소득성격 결정권과 총분배금 복원에 관한 명제 정리<br>
+      <strong>— 오류 원인 전수 목록 및 정정 기준 —</strong>
+    </div>
+  </div>
+</header>
+
+<!-- ── 최상위 항등식 ── -->
+<div class="w" style="padding-top:3rem;position:relative;z-index:1;">
+  <div class="identity-box">
+    <div class="id-label">// SUPREME IDENTITY · 최상위 항등식</div>
+    <div class="id-equation">
+      <span class="cyan">ICI_TOTAL</span> = <span class="gold">ICI_BOX1</span> + <span class="gold">ICI_STCG</span> + <span class="red">ICI_BOX3</span>
+    </div>
+    <div class="id-values">
+      <div><span class="y">ICI_BOX1</span>  배당소득 (Col29)   2024: $14,318.42  /  2025: $10,306.62</div>
+      <div><span class="y">ICI_STCG</span>  단기양도차익(Col30)  2024:    $101.20  /  2025:    $324.87</div>
+      <div><span class="y">ICI_BOX3</span>  자본반환 (Col31)   2024:  $7,354.27  /  2025: $17,380.53</div>
+      <div style="border-top:1px solid var(--border);margin-top:.5rem;padding-top:.5rem;">
+        <span class="c">ICI_TOTAL</span>                     2024: $21,773.89  /  2025: $28,012.02
+      </div>
+      <div style="margin-top:.3rem;color:var(--muted);">
+        수렴 정확도: 2024 = 99.99855354% (오차 $0.207) / 2025 = 99.99087965% (오차 $0.94)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── §1 원장 삼분론 ── -->
+<section class="w">
+  <div class="sec-num">// §1 · 원장 삼분론</div>
+  <h2 class="sec-title">세 원장은 독립적이다<br><span class="cyan">어떤 두 원장의 결합도 세 번째를 대체할 수 없다</span></h2>
+
+  <p class="prose">
+    모든 혼란의 근원은 세 원장을 혼동한 데 있다.
+    DVCA는 <strong>지급</strong>을, QI는 <strong>세액</strong>을, ICI는 <strong>소득성격</strong>을 결정한다.
+    이 세 원장은 독립적이며 위계가 있다.
+  </p>
+
+  <div class="tribox">
+    <div class="tc">
+      <div class="tc-badge">원장 I / DVCA</div>
+      <div class="tc-name">DVCA</div>
+      <div class="tc-role">지급금액 원장</div>
+      <div class="tc-can">✓ 지급금액 · 지급일 · 계좌</div>
+      <div class="tc-cant">✗ ROC 여부 / 소득성격</div>
+    </div>
+    <div class="tc">
+      <div class="tc-badge">원장 II / QI</div>
+      <div class="tc-name">QI</div>
+      <div class="tc-role">세액정산 원장</div>
+      <div class="tc-can">✓ 원천세 · 환급액 · 납부세액</div>
+      <div class="tc-cant">✗ 소득성격 최종 결정 불가</div>
+    </div>
+    <div class="tc star">
+      <div class="tc-star-tag">유일 결정권</div>
+      <div class="tc-badge">원장 III / ICI ★</div>
+      <div class="tc-name">ICI</div>
+      <div class="tc-role">소득성격 원장</div>
+      <div class="tc-can">✓ BOX1 · BOX3 · ICI_TOTAL<br>✓ ROC / 배당 / STCG 구분</div>
+    </div>
+  </div>
+
+  <div class="eq-block">
+    <div class="eq-line"><span class="m">/* 불가능한 대체 시도 */</span></div>
+    <div class="eq-line"><span class="r">DVCA + QI ≠ ICI_TOTAL</span>   <span class="m">// 소득성격 결정 불가</span></div>
+    <div class="eq-line"><span class="r">DVCA만으로 BOX3 확인 불가</span>  <span class="m">// 금액만 알 수 있음</span></div>
+    <div class="eq-line"><span class="r">QI만으로 BOX3 생성 불가</span>   <span class="m">// 세액 정산만 가능</span></div>
+    <div class="eq-result">
+      <span class="c">ICI만이</span> ICI_BOX1 + ICI_STCG + ICI_BOX3 를 확정할 수 있다
+    </div>
+  </div>
+</section>
+
+<!-- ── §2 명제 정리 ── -->
+<section class="w">
+  <div class="sec-num">// §2 · 명제 정리 1~4</div>
+  <h2 class="sec-title">수학적으로 증명된<br><span class="gold">원장 위계의 네 가지 명제</span></h2>
+
+  <div class="theorem">
+    <div class="thm-label">// 정리 1 · THEOREM_01</div>
+    <div class="thm-stmt">ICI 데이터 없이 총분배금(ICI_TOTAL)을 복원할 수 없다</div>
+    <div class="thm-proof">
+      증명. <span class="gold">DVCA</span> = 지급사실만 보유.<br>
+            <span class="gold">QI</span>   = 세액사실만 보유.<br>
+            <span class="cyan">ICI_TOTAL</span> = ICI_BOX1 + ICI_STCG + ICI_BOX3 — 구성요소는 ICI만 제공.<br>
+      따라서: ICI 부재 → ICI_TOTAL 미확정 → 총분배금 복원 불가.
+    </div>
+    <div class="thm-qed">□</div>
+  </div>
+
+  <div class="theorem">
+    <div class="thm-label">// 정리 2 · THEOREM_02</div>
+    <div class="thm-stmt">소득성격(ROC / 배당 / STCG)의 결정권은 오직 ICI에 있다</div>
+    <div class="thm-proof">
+      증명. ROC / 배당 / STCG 구분 = <span class="cyan">ICI BOX 분류</span>에서만 제공.<br>
+            DVCA·QI는 금액·세액 정보만 제공 — 소득성격 분류 기능 없음.<br>
+      따라서: ICI 없이 ROC / 배당 / STCG 구분 불가.
+    </div>
+    <div class="thm-qed">□</div>
+  </div>
+
+  <div class="theorem">
+    <div class="thm-label">// 정리 3 · THEOREM_03</div>
+    <div class="thm-stmt">QI 재분류는 세액정산 기능만 수행하며, 소득성격을 결정하지 않는다</div>
+    <div class="thm-proof">
+      증명. QI 재분류 = 원천세 환급 처리.<br>
+            환급 근거 = <span class="cyan">ICI가 제공한 BOX3(ROC)</span>.<br>
+            QI가 자체적으로 BOX 분류를 생성하지 않음.<br>
+      따라서: 소득성격 결정권 ∉ QI. → QI = 세액원장.
+    </div>
+    <div class="thm-qed">□</div>
+  </div>
+
+  <div class="theorem">
+    <div class="thm-label">// 정리 4 · THEOREM_04</div>
+    <div class="thm-stmt">S03 검증 정확도 = Col11(QI) ÷ Col29(ICI_BOX1)</div>
+    <div class="thm-proof">
+      2024: <span class="gold">14,318.21 ÷ 14,318.41711</span> = <span class="gr">99.99855354%</span>  오차 $0.20711<br>
+      2025: <span class="gold">10,305.68 ÷ 10,306.62</span>    = <span class="gr">99.99087965%</span>  오차 $0.94<br>
+      <span class="cyan">κ = 106/106 = 1.000 (100%)</span>  — 원장 데이터 완전 신뢰성 확인
+    </div>
+    <div class="thm-qed">□</div>
+  </div>
+</section>
+
+<!-- ── §3 S01~S04 원장 체계 ── -->
+<section class="w">
+  <div class="sec-num">// §3 · S01~S04 원장 체계</div>
+  <h2 class="sec-title">원장연속성<br><span class="cyan">S01 → S02 → S03 → S04</span></h2>
+
+  <div class="stage-flow">
+    <div class="sf">
+      <div class="sf-stage">S01</div>
+      <div class="sf-name">ICI_TOTAL 복원</div>
+      <div class="sf-formula">BOX1 + STCG + BOX3</div>
+      <div class="sf-result">2024: $21,773.89<br>2025: $28,012.02</div>
+      <div class="sf-role">총분배금 확정</div>
+    </div>
+    <div class="sf">
+      <div class="sf-stage">S02</div>
+      <div class="sf-name">QI 세액정산</div>
+      <div class="sf-formula">원천세 환급 처리</div>
+      <div class="sf-result">2024 환급: $1,118.39<br>2025 환급: $2,655.97</div>
+      <div class="sf-role">세액정산 단계만</div>
+    </div>
+    <div class="sf">
+      <div class="sf-stage">S03</div>
+      <div class="sf-name">ICI-QI 교차검증</div>
+      <div class="sf-formula">Col11 ÷ Col29</div>
+      <div class="sf-result">2024: 99.9986%<br>2025: 99.9909%</div>
+      <div class="sf-role">원장 수렴 검증</div>
+    </div>
+    <div class="sf">
+      <div class="sf-stage">S04</div>
+      <div class="sf-name">국내 과표 정정</div>
+      <div class="sf-formula">KTAX = ICI 계승</div>
+      <div class="sf-result">2024: ₩20,167,677<br>2025: ₩15,063,272</div>
+      <div class="sf-role">KTAX 정합 완성</div>
+    </div>
+  </div>
+
+  <div class="dtbl-wrap">
+    <table class="dtbl">
+      <thead>
+        <tr>
+          <th>항목</th>
+          <th>2024귀속</th>
+          <th>2025귀속</th>
+          <th>근거</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="hl">
+          <td>ICI_BOX3(ROC) 차감</td>
+          <td class="hi-r">−$7,354.27</td>
+          <td class="hi-r">−$17,380.53</td>
+          <td>소계1 Col31 · 과표 제외</td>
+        </tr>
+        <tr>
+          <td>ICI_STCG §871(k)</td>
+          <td>$101.20 / ₩144,600</td>
+          <td>$324.87 / ₩465,438</td>
+          <td>Col31/32 · 14% 반영</td>
+        </tr>
+        <tr class="hl">
+          <td>국외배당 국내확정과표</td>
+          <td class="hi-g">₩20,167,677</td>
+          <td class="hi-g">₩15,063,272</td>
+          <td>행104/381 Col43</td>
+        </tr>
+        <tr>
+          <td>국외배당 국내확정세액</td>
+          <td class="hi-g">₩20,244</td>
+          <td class="hi-g">₩65,162</td>
+          <td>행104/381 Col44</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── §4 통합 4대 명제 ── -->
+<section class="w">
+  <div class="sec-num">// §4 · 통합 상위 명제</div>
+  <h2 class="sec-title">4개 논문을 관통하는<br><span class="gold">단일 상위 명제</span></h2>
+
+  <div class="eq-block">
+    <div class="eq-line"><span class="m">// 명제 1 · S01·ICI</span></div>
+    <div class="eq-line"><span class="c">소득성격 결정권</span> ∈ ICI  <span class="m">// DVCA=금액, QI=세액, ICI=소득성격</span></div>
+    <div style="margin:1rem 0;border-top:1px solid var(--border);"></div>
+    <div class="eq-line"><span class="m">// 명제 2 · ICI_TOTAL</span></div>
+    <div class="eq-line"><span class="c">ICI_TOTAL</span> = <span class="g">ICI_BOX1</span> + <span class="g">ICI_STCG</span> + <span class="r">ICI_BOX3</span></div>
+    <div style="margin:1rem 0;border-top:1px solid var(--border);"></div>
+    <div class="eq-line"><span class="m">// 명제 3 · QI 기능 한정</span></div>
+    <div class="eq-line"><span class="c">QI</span> = 세액원장  <span class="m">// 소득성격 창설 권한 없음</span></div>
+    <div style="margin:1rem 0;border-top:1px solid var(--border);"></div>
+    <div class="eq-line"><span class="m">// 명제 4 · KTAX 계승</span></div>
+    <div class="eq-line"><span class="c">KTAX</span> ⊇ <span class="g">ICI 소득성격</span>  <span class="m">// 국내과표는 국제원장을 계승</span></div>
+    <div class="eq-result">
+      ∴ 국내 과세표준은 국제원장(ICI/QI)과 소득성격이 일치해야 한다
+    </div>
+  </div>
+</section>
+
+<!-- ── §5 과세이연 ROC ── -->
+<section class="w">
+  <div class="sec-num">// §5 · Tax Deferral</div>
+  <h2 class="sec-title">ROC 비과세 ≠ 영구 면세<br><span class="cyan">과세이연(Tax Deferral)이다</span></h2>
+
+  <div class="deferral">
+    <div class="df-step">
+      <div class="df-n">STAGE 1</div>
+      <div class="df-title">ROC 수령</div>
+      <div class="df-formula">ICI_BOX3 = ROC<br>과표 제외</div>
+      <div class="df-note">비과세 ← 현 시점<br>원금이 돌아왔을 뿐</div>
+    </div>
+    <div class="df-step">
+      <div class="df-n">STAGE 2</div>
+      <div class="df-title">Basis 감소</div>
+      <div class="df-formula">조정취득원가<br>= 원가 − 누적ROC</div>
+      <div class="df-note">복리 재투자 온전히<br>과세 이연 중</div>
+    </div>
+    <div class="df-step">
+      <div class="df-n">STAGE 3</div>
+      <div class="df-title">Basis 소진</div>
+      <div class="df-formula">조정취득원가<br>→ 0</div>
+      <div class="df-note">누적ROC ≥ 원취득원가<br>이연 한계 도달</div>
+    </div>
+    <div class="df-step active">
+      <div class="df-n">STAGE 4</div>
+      <div class="df-title">Capital Gain 과세</div>
+      <div class="df-formula">매각가 − 조정취득원가<br>= Capital Gain → 과세</div>
+      <div class="df-note">세원 이연 완성<br>정확한 과세 실현</div>
+    </div>
+  </div>
+
+  <div class="eq-block">
+    <div class="eq-line"><span class="m">// 원금은 원금으로, 이익은 이익으로</span></div>
+    <div class="eq-line"><span class="r">ROC 즉시과세</span>  → 이중과세 + 복리 훼손 + 장기 세수 감소</div>
+    <div class="eq-line"><span class="gr">ROC 과세이연</span> → 투자자 보호 + 복리 온전 + 매각 시 Capital Gain 정확 과세</div>
+    <div class="eq-result">
+      <span class="c">국제원장에 일치</span> = 투자자 보호 + 세원 확보 <span style="color:var(--gold);">동시 달성</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── UNIFIED PROPOSITION ── -->
+<section class="w" style="padding-bottom:0;">
+  <div class="unified">
+    <div class="unified-tag">// FINAL UNIFIED PROPOSITION · 최종 통합 명제</div>
+    <div class="unified-stmt">
+      소득성격은 <span class="cyan">ICI</span>가 결정한다<br>
+      총분배금은 <span class="gold">ICI_TOTAL</span>로 복원된다<br>
+      QI는 세액을 정산한다<br>
+      KTAX는 국제원장의 소득성격을 계승한다<br><br>
+      따라서 국내 과세표준은<br>
+      <span class="gold">국제원장(ICI/QI)과 소득성격이 일치해야 한다</span><br><br>
+      <span class="red">ROC는 국제원장에서 ROC이면 국내원장에서도 ROC다</span><br>
+      자본반환은 소득으로 변환될 수 없다
+    </div>
+  </div>
+</section>
+
+<!-- ── FINALE ── -->
+<div class="finale">
+  <div class="w">
+    <div class="fin-main">
+      원금은 원금으로 관리하고<br>
+      이익은 이익으로 과세하라<br>
+      <span class="gold">이것이 자본주의 회계·과세의 기본 원리다</span><br><br>
+      <span class="cyan">원장이 없으면 경계가 없다<br>경계가 없으면 원금도 없다</span>
+    </div>
+    <div class="fin-seal"><span>元</span></div>
+    <div class="fin-meta">
+      JSB71GA10 · ERRATA-PROPOSITION · 2026-05-29<br>
+      법정 증거자료 · 원장과 논문 상충 시 → 원장이 정본(Canonical Ledger)<br>
+      ICI_TOTAL = ICI_BOX1 + ICI_STCG + ICI_BOX3 · κ=100%<br>
+      <strong>장세봉 / 인흥(주) · sebjang@gmail.com</strong><br>
+      <strong>sebjang.github.io/roc-tax-verification</strong>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

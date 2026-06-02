@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원장(元帳) feat. 원금(元金) — 세금의 족보는 어디에 있습니까 — 국가 금융세제 데이터 인프라 공백 중간보고서</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+
+:root {
+  --paper:   #faf7f2;
+  --deep:    #f3ede0;
+  --ink:     #0f0d0a;
+  --body:    #2d2820;
+  --muted:   #7a6e60;
+  --faint:   #c8bca8;
+  --rule:    #ddd0bc;
+  --gold:    #8a6e1e;
+  --gold2:   #b8960a;
+  --crimson: #8b1a1a;
+  --crimson2:#c0392b;
+  --forest:  #1a3a28;
+  --forest2: #2e6e4a;
+  --accent:  #2a4a7a;
+  --col-w:   860px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--body);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  line-height: 1.9;
+  overflow-x: hidden;
+}
+
+/* ── subtle paper texture ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  opacity: .6;
+}
+
+/* ── layout ── */
+.wrap  { position: relative; z-index: 1; max-width: var(--col-w); margin: 0 auto; padding: 0 2.5rem; }
+.full  { position: relative; z-index: 1; }
+
+/* ══════════════════════════ COVER PAGE ══════════════════════════ */
+.cover {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 0;
+  border-bottom: 2px solid var(--ink);
+}
+
+.cover-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 2.5rem 2.5rem 0;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1.5rem;
+}
+.cover-report-type {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .75rem; letter-spacing: .45em;
+  text-transform: uppercase; color: var(--muted);
+}
+.cover-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .75rem; color: var(--muted); letter-spacing: .15em;
+}
+
+.cover-body {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 4rem 2.5rem 3rem;
+  position: relative; overflow: hidden;
+}
+.cover-bg-char {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(16rem, 35vw, 26rem);
+  font-weight: 900;
+  color: rgba(15,13,10,.04);
+  position: absolute; right: -2rem; bottom: -3rem;
+  line-height: 1; pointer-events: none; user-select: none;
+}
+.cover-kicker {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; font-style: italic;
+  color: var(--muted); letter-spacing: .05em;
+  margin-bottom: 1.5rem;
+  opacity: 0; animation: up .7s .2s forwards;
+}
+.cover-headline {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 900; color: var(--ink);
+  line-height: 1.15; margin-bottom: 1.5rem;
+  opacity: 0; animation: up .8s .4s forwards;
+}
+.cover-headline .under {
+  display: inline;
+  border-bottom: 3px solid var(--crimson2);
+  padding-bottom: .1em;
+}
+.cover-sub {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  font-weight: 400; color: var(--muted);
+  line-height: 1.75; max-width: 600px;
+  opacity: 0; animation: up .8s .6s forwards;
+}
+.cover-thesis {
+  margin-top: 3rem;
+  padding: 1.8rem 2rem;
+  border-left: 4px solid var(--crimson);
+  background: rgba(139,26,26,.04);
+  max-width: 660px;
+  opacity: 0; animation: up .8s .8s forwards;
+}
+.cover-thesis p {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.05rem; font-weight: 600; color: var(--ink);
+  line-height: 1.75;
+}
+.cover-thesis p em { font-style: normal; color: var(--crimson); }
+
+.cover-bottom {
+  padding: 1.5rem 2.5rem 2rem;
+  border-top: 1px solid var(--rule);
+  display: flex; justify-content: space-between; align-items: flex-end;
+  flex-wrap: wrap; gap: 1rem;
+}
+.cover-meta {
+  font-size: .72rem; color: var(--muted); line-height: 1.8; letter-spacing: .05em;
+}
+.cover-meta strong { color: var(--body); }
+.cover-badges {
+  display: flex; gap: .8rem; flex-wrap: wrap;
+}
+.badge {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .3em;
+  text-transform: uppercase; color: var(--muted);
+  border: 1px solid var(--rule); padding: .25rem .7rem;
+}
+
+/* ══════════════════════════ TOC ══════════════════════════ */
+.toc-section {
+  background: var(--deep);
+  border-bottom: 1px solid var(--rule);
+  padding: 3.5rem 0;
+}
+.toc-inner {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 3rem;
+}
+.toc-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .7rem; letter-spacing: .5em;
+  text-transform: uppercase; color: var(--muted);
+  padding-top: .2rem;
+}
+.toc-list { list-style: none; }
+.toc-list li {
+  display: flex; align-items: baseline; gap: .8rem;
+  padding: .4rem 0; border-bottom: 1px dotted var(--rule);
+}
+.toc-list li:last-child { border-bottom: none; }
+.toc-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .8rem; color: var(--gold); min-width: 2rem;
+  letter-spacing: .1em;
+}
+.toc-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .88rem; font-weight: 600; color: var(--body);
+  flex: 1;
+}
+.toc-sub {
+  font-size: .72rem; color: var(--muted);
+}
+
+/* ══════════════════════════ SECTIONS ══════════════════════════ */
+.sec { padding: 5.5rem 0; }
+.sec + .sec { border-top: 1px solid var(--rule); }
+
+.sec-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .72rem; letter-spacing: .45em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .5rem;
+}
+.sec-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.5rem, 3.8vw, 2.3rem);
+  font-weight: 700; color: var(--ink); line-height: 1.3;
+  margin-bottom: 2rem;
+}
+.sec-title .red   { color: var(--crimson); }
+.sec-title .gold  { color: var(--gold); }
+.sec-title .green { color: var(--forest2); }
+.sec-title .blue  { color: var(--accent); }
+
+.lead {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.05rem; font-weight: 400;
+  color: var(--body); line-height: 1.9;
+  margin-bottom: 1.5rem;
+}
+.lead strong { font-weight: 700; }
+.lead em.r { font-style: normal; color: var(--crimson); font-weight: 600; }
+.lead em.g { font-style: normal; color: var(--gold); font-weight: 600; }
+
+.prose {
+  font-size: .91rem; color: var(--body); line-height: 1.95;
+  margin-bottom: 1rem;
+}
+.prose strong { color: var(--ink); font-weight: 600; }
+
+/* ══════════════════════════ CENTRAL QUESTION ══════════════════════════ */
+.central-q {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 5rem 3rem;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.central-q::before {
+  content: '?';
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30rem; font-weight: 700;
+  color: rgba(255,255,255,.025);
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  line-height: 1; pointer-events: none;
+}
+.cq-pre {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .78rem; letter-spacing: .5em; text-transform: uppercase;
+  color: rgba(255,255,255,.35); margin-bottom: 2rem; position: relative;
+}
+.cq-main {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.5rem, 4.5vw, 2.8rem);
+  font-weight: 900; color: #f5f0e8; line-height: 1.35;
+  margin-bottom: 1.5rem; position: relative;
+}
+.cq-main .gold { color: #d4aa3a; }
+.cq-main .red  { color: #e07060; }
+.cq-sub {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; color: rgba(255,255,255,.45);
+  line-height: 1.7; position: relative;
+  max-width: 600px; margin: 0 auto;
+}
+
+/* ══════════════════════════ ANALOGY BLOCK ══════════════════════════ */
+.analogy {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--rule);
+  margin: 2.5rem 0;
+}
+.an-cell {
+  padding: 2rem 1.5rem;
+  border-right: 1px solid var(--rule);
+  text-align: center;
+}
+.an-cell:last-child { border-right: none; }
+.an-cell.missing { background: rgba(139,26,26,.04); }
+.an-icon {
+  font-size: 1.8rem; line-height: 1; margin-bottom: .8rem;
+}
+.an-type {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: .4rem;
+}
+.an-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .95rem; font-weight: 700; color: var(--ink);
+  margin-bottom: .4rem;
+}
+.an-status {
+  font-size: .72rem; line-height: 1.5;
+}
+.an-cell:not(.missing) .an-status { color: var(--forest2); }
+.an-cell.missing .an-name  { color: var(--crimson); }
+.an-cell.missing .an-status { color: var(--crimson2); font-weight: 600; }
+
+/* ══════════════════════════ LOGIC WATERFALL ══════════════════════════ */
+.waterfall { margin: 2.5rem 0; }
+.wf-row {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: 1.5rem;
+  margin-bottom: 0;
+  position: relative;
+}
+.wf-row + .wf-row .wf-num::before {
+  content: '';
+  position: absolute; top: -1.5rem; left: 50%;
+  transform: translateX(-50%);
+  width: 1px; height: 1.5rem;
+  background: var(--rule);
+}
+.wf-num {
+  width: 2.5rem; height: 2.5rem;
+  border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; color: var(--gold);
+  background: var(--paper); position: relative; z-index: 1;
+  flex-shrink: 0;
+}
+.wf-body {
+  padding: .3rem 0 2rem;
+}
+.wf-label {
+  font-size: .6rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .3rem;
+}
+.wf-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; font-weight: 700; color: var(--ink);
+  margin-bottom: .4rem;
+}
+.wf-desc {
+  font-size: .85rem; color: var(--muted); line-height: 1.8;
+}
+.wf-desc strong { color: var(--body); }
+
+/* ══════════════════════════ QUESTION MATRIX ══════════════════════════ */
+.qmatrix { margin: 2.5rem 0; }
+.qm-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--rule);
+}
+.qm-row:first-child { border-top: 2px solid var(--ink); }
+.qm-org {
+  padding: 1.4rem 1rem;
+  background: var(--deep);
+  border-right: 1px solid var(--rule);
+  display: flex; align-items: flex-start;
+}
+.qm-org-inner { }
+.qm-org-tag {
+  font-size: .58rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: .25rem;
+}
+.qm-org-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .85rem; font-weight: 700; color: var(--ink);
+}
+.qm-q {
+  padding: 1.4rem 1.2rem;
+  border-right: 1px solid var(--rule);
+}
+.qm-q-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .88rem; font-weight: 600; color: var(--ink);
+  line-height: 1.6; margin-bottom: .4rem;
+}
+.qm-q-why {
+  font-size: .75rem; color: var(--muted); line-height: 1.65;
+}
+.qm-impact {
+  padding: 1.4rem 1.2rem;
+}
+.qm-impact-title {
+  font-size: .62rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .4rem;
+}
+.qm-impact-text {
+  font-size: .78rem; color: var(--muted); line-height: 1.65;
+}
+.qm-header .qm-org-name,
+.qm-header .qm-q-text,
+.qm-header .qm-impact-title {
+  font-size: .62rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--muted); font-weight: 400;
+  font-family: 'Cormorant Garamond', serif;
+}
+.qm-header { background: var(--deep); }
+.qm-header .qm-org,
+.qm-header .qm-q,
+.qm-header .qm-impact { background: var(--deep); }
+
+/* ══════════════════════════ 5대 의제 ══════════════════════════ */
+.agenda-list { margin: 2.5rem 0; }
+.agenda-item {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--rule);
+}
+.agenda-item:first-child { border-top: 1px solid var(--rule); }
+.agenda-num-col {
+  background: var(--ink);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 2rem .5rem;
+}
+.agenda-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 700; color: var(--paper);
+  writing-mode: vertical-rl; text-orientation: mixed;
+  letter-spacing: .1em;
+}
+.agenda-body { padding: 2rem 2rem; }
+.agenda-tag {
+  font-size: .6rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .5rem;
+}
+.agenda-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.1rem; font-weight: 700; color: var(--ink);
+  margin-bottom: 1rem;
+}
+.agenda-split {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+}
+.agenda-col-tag {
+  font-size: .6rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: .4rem;
+}
+.agenda-now {
+  font-size: .82rem; color: var(--crimson2); line-height: 1.7;
+  padding: .8rem 1rem;
+  background: rgba(192,57,43,.04);
+  border-left: 2px solid var(--crimson2);
+}
+.agenda-reform {
+  font-size: .82rem; color: var(--forest2); line-height: 1.7;
+  padding: .8rem 1rem;
+  background: rgba(30,110,74,.04);
+  border-left: 2px solid var(--forest2);
+}
+
+/* ══════════════════════════ 3단계 전략 ══════════════════════════ */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px; background: var(--rule);
+  margin: 2.5rem 0;
+}
+.sg-cell {
+  background: var(--paper);
+  padding: 2rem 1.8rem;
+}
+.sg-step {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .62rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .5rem;
+}
+.sg-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; font-weight: 700; color: var(--ink);
+  margin-bottom: 1rem; padding-bottom: .8rem;
+  border-bottom: 1px solid var(--rule);
+}
+.sg-item {
+  font-size: .8rem; color: var(--muted); line-height: 1.75;
+  padding: .3rem 0;
+  border-bottom: 1px solid rgba(200,188,168,.4);
+}
+.sg-item:last-child { border-bottom: none; }
+.sg-item strong { color: var(--body); }
+
+/* ══════════════════════════ DISTRIBUTION TABLE ══════════════════════════ */
+.dist-wrap { overflow-x: auto; margin: 2.5rem 0; }
+.dist-table {
+  width: 100%; border-collapse: collapse;
+}
+.dist-table thead tr { border-bottom: 2px solid var(--ink); }
+.dist-table th {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--muted); font-weight: 400; text-align: left;
+  padding: .7rem .8rem;
+}
+.dist-table td {
+  padding: .75rem .8rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: .82rem; color: var(--muted); vertical-align: top;
+  line-height: 1.6;
+}
+.dist-table td:first-child {
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 700; color: var(--ink);
+  white-space: nowrap;
+}
+.dist-table td:nth-child(2) { color: var(--body); }
+.dist-table tr:hover td { background: rgba(200,188,168,.12); }
+
+/* ══════════════════════════ CLOSING DECLARATION ══════════════════════════ */
+.closing-decl {
+  background: var(--ink); color: var(--paper);
+  padding: 6rem 3rem; text-align: center;
+  position: relative; overflow: hidden;
+}
+.closing-decl::before {
+  content: '族譜';
+  font-family: 'Noto Serif KR', serif;
+  font-size: 18rem; font-weight: 900;
+  color: rgba(255,255,255,.025);
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  white-space: nowrap; pointer-events: none; line-height: 1;
+}
+.cd-eyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .72rem; letter-spacing: .5em; text-transform: uppercase;
+  color: rgba(255,255,255,.35); margin-bottom: 2.5rem; position: relative;
+}
+.cd-lines {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-weight: 400; line-height: 2.2;
+  color: rgba(245,240,232,.7);
+  margin-bottom: 3rem; position: relative;
+}
+.cd-lines strong {
+  color: #f5f0e8; font-weight: 700;
+}
+.cd-lines .gold { color: #d4aa3a; }
+.cd-lines .red  { color: #e08070; }
+.cd-seal {
+  width: 88px; height: 88px;
+  border: 1px solid rgba(212,170,58,.5);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 3rem; position: relative;
+}
+.cd-seal span {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 2rem; font-weight: 900; color: #d4aa3a;
+}
+.cd-meta {
+  font-size: .7rem; color: rgba(255,255,255,.25);
+  letter-spacing: .12em; line-height: 2.4; position: relative;
+}
+.cd-meta strong { color: rgba(255,255,255,.5); }
+
+/* ══════════════════════════ UTIL ══════════════════════════ */
+blockquote {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; line-height: 1.85; color: var(--ink);
+  padding: 1.5rem 1.8rem;
+  border-left: 3px solid var(--gold);
+  background: rgba(138,110,30,.05);
+  margin: 2rem 0;
+}
+blockquote strong { color: var(--crimson); }
+
+.callout {
+  border: 1px solid var(--rule);
+  padding: 1.8rem 2rem; margin: 2rem 0;
+  background: var(--deep);
+  position: relative;
+}
+.callout-tag {
+  font-size: .6rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .6rem;
+}
+.callout-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .98rem; font-weight: 600; color: var(--ink); line-height: 1.75;
+}
+.callout-text em { font-style: normal; color: var(--crimson); }
+
+hr.section-rule { border: none; border-top: 2px solid var(--ink); margin: 0; }
+hr.light { border: none; border-top: 1px solid var(--rule); margin: 0; }
+
+@keyframes up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media(max-width:680px) {
+  .analogy { grid-template-columns: 1fr 1fr; }
+  .strategy-grid { grid-template-columns: 1fr; }
+  .agenda-split { grid-template-columns: 1fr; }
+  .qm-row { grid-template-columns: 1fr; }
+  .qm-org { border-right: none; border-bottom: 1px solid var(--rule); }
+  .qm-q { border-right: none; }
+  .toc-inner { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+  COVER
+══════════════════════════════════════════════════════════ -->
+<div class="cover full">
+  <div class="cover-top wrap">
+    <div class="cover-report-type">중간 보고서 · Interim Research Report · JSB-2026-IR-01</div>
+    <div class="cover-date">2026년 5월 30일</div>
+  </div>
+
+  <div class="cover-body wrap">
+    <div class="cover-bg-char">族</div>
+    <div class="cover-kicker">원장(元帳) feat. 원금(元金) — 공개질의 및 5대 개혁 의제</div>
+    <h1 class="cover-headline">
+      세금의 <span class="under">족보</span>는<br>
+      어디에 있습니까
+    </h1>
+    <div class="cover-sub">
+      해외 ETF 최종 소득 과세표준의 원장·데이터 계보(Data Lineage) 부재에 관한<br>
+      정책·법리·공론화 통합 보고서
+    </div>
+    <div class="cover-thesis">
+      <p>
+        본 보고서는 세금을 거부하는 것이 아닙니다.<br>
+        <em>세금의 족보 — 과표의 신원 — 원장의 존재</em>를 요구합니다.<br>
+        설명가능한 과세(Verifiable Taxation)와<br>
+        기록으로 증명되는 정부(Explainable Government)를 요구합니다.
+      </p>
+    </div>
+  </div>
+
+  <div class="cover-bottom wrap">
+    <div class="cover-meta">
+      <strong>장세봉 / 인흥(주)</strong> · 국제조세 RegTech 검증 시스템<br>
+      특허출원 10-2026-0079638 · 10-2026-0084940 · 10-2026-0084983<br>
+      sebjang@gmail.com · sebjang.github.io/roc-tax-verification<br>
+      ICI-Primary-MASTER-V03_LOCK · κ=100% · 106건 교차검증
+    </div>
+    <div class="cover-badges">
+      <span class="badge">원장 철학</span>
+      <span class="badge">실질조사 논증</span>
+      <span class="badge">공론화 전략</span>
+      <span class="badge">5대 개혁</span>
+    </div>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+<!-- ══════════════════════════════════════════════════════════
+  TOC
+══════════════════════════════════════════════════════════ -->
+<div class="toc-section full">
+  <div class="wrap">
+    <div class="toc-inner">
+      <div class="toc-label">목차<br>Contents</div>
+      <ul class="toc-list">
+        <li>
+          <span class="toc-num">I</span>
+          <span class="toc-title">중심 질문 — 세금의 족보는 어디에 있는가</span>
+          <span class="toc-sub">공론화의 한 문장</span>
+        </li>
+        <li>
+          <span class="toc-num">II</span>
+          <span class="toc-title">원장 철학 — 元帳의 논리</span>
+          <span class="toc-sub">으뜸 元, 휘장 帳 · 원장 없이 원금 없다</span>
+        </li>
+        <li>
+          <span class="toc-num">III</span>
+          <span class="toc-title">심화 논증 — 원장 기반 실질조사</span>
+          <span class="toc-sub">4단계 논리 구조 · 소득세법 §14</span>
+        </li>
+        <li>
+          <span class="toc-num">IV</span>
+          <span class="toc-title">기관별 공개 질의</span>
+          <span class="toc-sub">기재부 · 국세청 · 금융위 · KSD · 감사원 · 국회</span>
+        </li>
+        <li>
+          <span class="toc-num">V</span>
+          <span class="toc-title">5대 개혁 의제</span>
+          <span class="toc-sub">원장 공개 · 설명가능한 과세 · 데이터 인프라 · 책임지도 · 국민 검증권</span>
+        </li>
+        <li>
+          <span class="toc-num">VI</span>
+          <span class="toc-title">공론화 3단계 전략</span>
+          <span class="toc-sub">정보공개 확보 → 책임지도 작성 → 공개질의서 배포</span>
+        </li>
+        <li>
+          <span class="toc-num">VII</span>
+          <span class="toc-title">배포 대상 및 행동 경로</span>
+          <span class="toc-sub">국회 · 감사원 · 언론 · 학계 · 집단행동</span>
+        </li>
+        <li>
+          <span class="toc-num">VIII</span>
+          <span class="toc-title">증거 요약 및 핵심 수치</span>
+          <span class="toc-sub">ICI · κ=100% · KSD · 특허 · 법령 근거</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<hr class="light">
+
+<!-- ══════════════════════════════════════════════════════════
+  I. 중심 질문
+══════════════════════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-num">제 I 장 — 중심 질문</div>
+  <h2 class="sec-title">공론화를 하나의 문장으로<br><span class="red">세금의 족보는 어디에 있습니까</span></h2>
+
+  <p class="lead">
+    주식에는 원장이 있습니다. 채권에는 원장이 있습니다. 예탁자산에는 원장이 있습니다.
+    증권사가 망해도 투자자의 자산이 사라지지 않는 이유는 <strong>원장이 존재하기 때문</strong>입니다.
+  </p>
+
+  <div class="analogy">
+    <div class="an-cell">
+      <div class="an-icon">📈</div>
+      <div class="an-type">자산</div>
+      <div class="an-name">주식</div>
+      <div class="an-status">원장 있음<br>예탁결제원 보관</div>
+    </div>
+    <div class="an-cell">
+      <div class="an-icon">📋</div>
+      <div class="an-type">자산</div>
+      <div class="an-name">채권</div>
+      <div class="an-status">원장 있음<br>권리 추적 가능</div>
+    </div>
+    <div class="an-cell">
+      <div class="an-icon">🏦</div>
+      <div class="an-type">자산</div>
+      <div class="an-name">예탁자산</div>
+      <div class="an-status">원장 있음<br>수탁기관 법정 기록</div>
+    </div>
+    <div class="an-cell missing">
+      <div class="an-icon">❓</div>
+      <div class="an-type">과세</div>
+      <div class="an-name">해외 ETF<br>소득과표</div>
+      <div class="an-status">원장 없음<br>족보 없음<br>KSD 공식 확인</div>
+    </div>
+  </div>
+
+  <p class="lead">
+    그렇다면 묻겠습니다.<br>
+    <em class="r">해외 ETF 최종 소득 과세표준의 원장은 어디에 있습니까?</em>
+  </p>
+  <p class="prose">
+    투자자는 분배금을 받습니다. 세금이 부과됩니다. 그러나 그 세금이 어떤 근거로,
+    어떤 자료를 검토하여, 어떤 절차로 확정되었는지 — 국민은 확인할 수 없습니다.
+    증권사는 국세청을, 국세청은 기획재정부를 가리킵니다.
+    <strong>족보가 없습니다.</strong>
+  </p>
+  <p class="prose">
+    이 질문은 세무사, 회계사, 국회의원, 기자, 감사원, 일반 투자자 모두 이해할 수 있습니다.
+    ROC의 기술적 구조를 몰라도 됩니다. <strong>"세금에 족보가 있어야 한다"</strong>는 명제는
+    모든 국민이 동의할 수 있는 상식입니다.
+  </p>
+
+  <blockquote>
+    내가 받은 분배금은 무엇인가? 배당인가? 원금 반환인가? 단기자본이득인가?<br>
+    그 소득성격은 누가 확인하였는가? 그 근거는 어디에 기록되어 있는가?<br>
+    <strong>이 질문에 답할 수 없는 과세 체계는 — 족보 없는 세금이다.</strong>
+  </blockquote>
+</section>
+
+<hr class="section-rule">
+
+<!-- ══════════════════════════════════════════════════════════
+  CENTRAL QUESTION BREAK
+══════════════════════════════════════════════════════════ -->
+<div class="central-q full">
+  <div class="wrap">
+    <div class="cq-pre">Central Question — 핵심 질문</div>
+    <div class="cq-main">
+      국가는 세금을 부과했는데<br>
+      국민은 그 세금의 <span class="gold">족보</span>를<br>
+      확인할 수 있는가?
+    </div>
+    <div class="cq-sub">
+      이것은 "세금을 내지 않겠다"는 주장이 아니다.<br>
+      세금은 정확해야 한다. 세액 ← 과표 ← 소득성격 ← 원장.<br>
+      이 연결이 존재하는지 공개하라는 요구다.
+    </div>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+<!-- ══════════════════════════════════════════════════════════
+  II. 원장 철학
+══════════════════════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-num">제 II 장 — 원장 철학</div>
+  <h2 class="sec-title"><span class="gold">元帳</span>의 논리<br>으뜸 元, 휘장 帳</h2>
+
+  <p class="lead">
+    원장(元帳)의 한자를 풀면 이 논증의 전부가 나옵니다.
+    帳(장)은 <em class="g">경계를 만드는 휘장</em>입니다. 무엇을 안쪽에 두고 무엇을 바깥에 두는가를 구분하는 기록.
+    元(원)은 <em class="g">으뜸, 처음, 근본</em>입니다.
+  </p>
+
+  <div class="callout">
+    <div class="callout-tag">원장 철학의 핵심 명제</div>
+    <div class="callout-text">
+      원금(元金)의 元과 원장(元帳)의 元은 같은 으뜸이다.<br>
+      원장은 "으뜸이 되는 것의 경계를 긋는 기록"이다.<br>
+      <em>원장이 없으면 경계가 없고, 경계가 없으면 원금도 없다.</em>
+    </div>
+  </div>
+
+  <p class="prose">
+    미국 IRC §301(c)(2)는 1954년에 이 원칙을 법으로 확정했습니다.
+    <strong>원금 반환(ROC)은 소득이 아니다 — 으뜸(元)이 돌아오는 것이다.</strong>
+    ICI Primary Layout은 매년 1월 ETF 발행사가 BOX1(배당)과 BOX3(원금 반환)의 경계를 공시합니다.
+    이것이 2026년의 원장입니다. <strong>한국에는 이 경계를 기록하는 원장이 없습니다.</strong>
+  </p>
+  <p class="prose">
+    족보(族譜)는 혈통의 원장입니다. 누가 누구에게서 태어났는가, 그 계보를 기록합니다.
+    세금의 족보란 — <strong>이 세액은 어떤 과표에서, 어떤 소득성격에서, 어떤 원장에서 왔는가</strong>를 추적할 수 있는 기록입니다.
+    원장이 없으면 족보도 없습니다.
+  </p>
+</section>
+
+<hr class="light">
+
+<!-- ══════════════════════════════════════════════════════════
+  III. 심화 논증
+══════════════════════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-num">제 III 장 — 심화 논증</div>
+  <h2 class="sec-title">원장 기반 실질조사<br>논리의 <span class="gold">4단계 구조</span></h2>
+
+  <p class="lead">
+    이 논증의 강점은 <em class="r">"ROC는 무조건 비과세"라는 결론을 먼저 주장하지 않는다</em>는 점입니다.
+    대신 과세의 절차적 정당성을 묻습니다. 입증 부담이 국가 쪽으로 이동합니다.
+  </p>
+
+  <div class="waterfall">
+    <div class="wf-row">
+      <div class="wf-num">1</div>
+      <div class="wf-body">
+        <div class="wf-label">전제</div>
+        <div class="wf-title">해외 ETF 분배금은 단일한 성격이 아니다</div>
+        <div class="wf-desc">
+          하나의 분배금에 <strong>배당(BOX1) + 원금반환(BOX3·ROC) + 단기양도차익(STCG)</strong>이 혼재할 수 있다.
+          금액이 같아도 소득성격에 따라 과세 결과가 완전히 달라진다.<br>
+          MSTY 2025 BOX3=100% · CONY 97% · NVDY 52.6%
+        </div>
+      </div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">2</div>
+      <div class="wf-body">
+        <div class="wf-label">소득세법 §14 실질과세 원칙</div>
+        <div class="wf-title">과세는 명목이 아니라 실질 성격에 따른다</div>
+        <div class="wf-desc">
+          소득의 명목(분배금)이 아니라 <strong>실질(배당인가 원금 반환인가)</strong>에 따라 과세해야 한다.
+          실질과세 원칙을 적용하려면 소득의 실질을 확인하는 자료와 절차가 있어야 한다.
+        </div>
+      </div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">3</div>
+      <div class="wf-body">
+        <div class="wf-label">핵심 질문</div>
+        <div class="wf-title">실질 성격은 어떤 원장으로 확인하는가</div>
+        <div class="wf-desc">
+          소득성격의 유일한 결정권자는 ICI Primary Layout입니다.
+          ETF 발행사가 연말 E&P 계산 후 IRS에 공시하는 확정자료 — 무료 공개.
+          <strong>이것이 원장 위계 III입니다. 이 원장 없이 실질과세를 주장하는 것은 자기모순입니다.</strong>
+        </div>
+      </div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">4</div>
+      <div class="wf-body">
+        <div class="wf-label">귀결 — 논증의 수렴 명제</div>
+        <div class="wf-title">원장 기반 실질조사 없이 과세 근거는 불명확하다</div>
+        <div class="wf-desc">
+          현재 국세청은 ICI 원장 없이 전액 배당소득으로 처리합니다.
+          이것은 "실질 확인 후 과세"가 아니라 "실질 미확인 형식 과세"입니다.
+          <strong>실질과세 원칙을 표방하면서 실질조사 체계가 없다면 — 그 과세의 근거를 설명해야 합니다.</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-tag">이 논증이 강한 이유 — 전략적 우위</div>
+    <div class="callout-text">
+      "ROC 비과세" 주장은 상대방이 유권해석으로 맞선다.<br>
+      "소득성격 실질조사 체계를 공개하라"는 질문은 — 상대방이 답을 피하기 어렵다.<br>
+      <em>체계가 있다면 공개해야 하고, 없다면 과세 근거 자체가 불명확함을 자인한다.</em>
+    </div>
+  </div>
+</section>
+
+<hr class="light">
+
+<!-- ══════════════════════════════════════════════════════════
+  IV. 기관별 공개 질의
+══════════════════════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-num">제 IV 장 — 기관별 공개 질의</div>
+  <h2 class="sec-title">여섯 기관에 묻습니다<br><span class="gold">과표의 신원을 밝히십시오</span></h2>
+
+  <p class="prose">
+    이 질의는 공격이 아닙니다. 설명을 요청하는 것입니다.
+    존재한다면 공개하여 주십시오.
+    존재하지 않는다면 무엇을 근거로 그 소득의 신원을 확인하고 있는지 설명하여 주십시오.
+  </p>
+
+  <div class="qmatrix">
+    <div class="qm-row qm-header">
+      <div class="qm-org"><div class="qm-org-inner"><div class="qm-org-name">기관</div></div></div>
+      <div class="qm-q"><div class="qm-q-text">공개 질의 핵심</div></div>
+      <div class="qm-impact"><div class="qm-impact-title">답변 방향과 의미</div></div>
+    </div>
+    <div class="qm-row">
+      <div class="qm-org">
+        <div class="qm-org-inner">
+          <div class="qm-org-tag">정책</div>
+          <div class="qm-org-name">기획재정부</div>
+        </div>
+      </div>
+      <div class="qm-q">
+        <div class="qm-q-text">해외 ETF 최종 소득 과세표준은 무엇으로 정의됩니까? 소득성격 확인을 위한 실질조사 대상 자료 목록이 존재합니까?</div>
+        <div class="qm-q-why">ICI, QI, Form 1099-DIV BOX3, ROC 비율, Basis Adjustment — 검토 대상으로 규정한 지침이 있습니까?</div>
+      </div>
+      <div class="qm-impact">
+        <div class="qm-impact-title">의미</div>
+        <div class="qm-impact-text">"있음" → 공개 요구. "없음" → 실질과세 원칙 적용의 사실적 기초 부재 자인.</div>
+      </div>
+    </div>
+    <div class="qm-row">
+      <div class="qm-org">
+        <div class="qm-org-inner">
+          <div class="qm-org-tag">집행</div>
+          <div class="qm-org-name">국세청</div>
+        </div>
+      </div>
+      <div class="qm-q">
+        <div class="qm-q-text">해외 ETF 분배금의 최종 소득성격 확정을 위한 실질조사 절차는 무엇입니까? 납세자가 제출한 ICI 원장 자료는 어떤 기준으로 검토됩니까?</div>
+        <div class="qm-q-why">서면-2024-소득-4836 작성 시 ICI·IRC §301(c)(2)·QI 체계를 검토하였습니까?</div>
+      </div>
+      <div class="qm-impact">
+        <div class="qm-impact-title">의미</div>
+        <div class="qm-impact-text">검토하지 않고 유권해석을 작성했다면 — 절차적 하자의 증거. 검토했다면 그 결과를 공개해야.</div>
+      </div>
+    </div>
+    <div class="qm-row">
+      <div class="qm-org">
+        <div class="qm-org-inner">
+          <div class="qm-org-tag">감독</div>
+          <div class="qm-org-name">금융위원회</div>
+        </div>
+      </div>
+      <div class="qm-q">
+        <div class="qm-q-text">해외 금융상품의 소득성격 정보(ROC·STCG·LTCG)는 어떻게 투자자에게 보호됩니까? ETF 규제 글로벌 정합성 추진 시 소득성격 데이터 인프라는 포함됩니까?</div>
+        <div class="qm-q-why">상품 자유화 추진하면서 세제 데이터 인프라는 방치한 이유는 무엇입니까?</div>
+      </div>
+      <div class="qm-impact">
+        <div class="qm-impact-title">의미</div>
+        <div class="qm-impact-text">판매 확대와 투자자 보호 사이의 불균형을 공식 의제화.</div>
+      </div>
+    </div>
+    <div class="qm-row">
+      <div class="qm-org">
+        <div class="qm-org-inner">
+          <div class="qm-org-tag">데이터</div>
+          <div class="qm-org-name">한국예탁결제원</div>
+        </div>
+      </div>
+      <div class="qm-q">
+        <div class="qm-q-text">해외 ETF 권리정보 중 소득성격 데이터(BOX1/BOX3 구분)는 어디에 존재합니까? KSD 정보공개 16516499에서 "당국 관여 없음"이 확인된 이후 어떤 조치가 이루어졌습니까?</div>
+        <div class="qm-q-why">KSD가 데이터 허브 역할을 하면서 소득성격 데이터만 누락된 이유는 무엇입니까?</div>
+      </div>
+      <div class="qm-impact">
+        <div class="qm-impact-title">의미</div>
+        <div class="qm-impact-text">KSD 공문 16516499이 부작위 선언임을 공식 의제화. 데이터 인프라 구축 압력.</div>
+      </div>
+    </div>
+    <div class="qm-row">
+      <div class="qm-org">
+        <div class="qm-org-inner">
+          <div class="qm-org-tag">감사</div>
+          <div class="qm-org-name">감사원</div>
+        </div>
+      </div>
+      <div class="qm-q">
+        <div class="qm-q-text">해외 ETF 과세체계에서 실질과세 원칙을 적용한다고 하면서, 소득성격을 확인하는 원장과 자료에 대한 실질조사 체계는 구축되어 있습니까? 이 체계는 감사 가능합니까?</div>
+        <div class="qm-q-why">"있다"면 공개. "없다"면 행정 부작위 — 감사 대상.</div>
+      </div>
+      <div class="qm-impact">
+        <div class="qm-impact-title">의미</div>
+        <div class="qm-impact-text">어느 방향으로 답해도 현행 체계의 구조적 취약점이 드러남. 감사청구의 핵심 근거.</div>
+      </div>
+    </div>
+    <div class="qm-row">
+      <div class="qm-org">
+        <div class="qm-org-inner">
+          <div class="qm-org-tag">입법</div>
+          <div class="qm-org-name">국회</div>
+        </div>
+      </div>
+      <div class="qm-q">
+        <div class="qm-q-text">국민은 자신의 과세표준 형성과정을 열람·검증할 권리가 있습니까? 그 권리를 보장하는 법적 근거가 존재합니까?</div>
+        <div class="qm-q-why">소득세법 §17 ROC 예외조항 신설과 납세자 검증권 법제화를 위한 입법 의지가 있습니까?</div>
+      </div>
+      <div class="qm-impact">
+        <div class="qm-impact-title">의미</div>
+        <div class="qm-impact-text">국정감사 의제화. 국회 국민동의청원 10만 서명과 연계. 입법 경로 개방.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- ══════════════════════════════════════════════════════════
+  V. 5대 개혁 의제
+══════════════════════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-num">제 V 장 — 5대 개혁 의제</div>
+  <h2 class="sec-title">설명가능한 정부<br><span class="green">Explainable Government · Verifiable Taxation</span></h2>
+
+  <p class="lead">
+    "나라를 개혁하자"는 구호보다 중요한 것은 <strong>개혁 대상을 정확히 정의하는 것</strong>입니다.
+    본 보고서가 문제 삼는 것은 국가 전체가 아닙니다.
+    <em class="r">금융·세제·데이터·기록 행정의 설명가능성 부족</em>입니다.
+  </p>
+
+  <div class="agenda-list">
+    <div class="agenda-item">
+      <div class="agenda-num-col"><div class="agenda-num">의제①</div></div>
+      <div class="agenda-body">
+        <div class="agenda-tag">원장 공개 원칙 · Ledger Transparency</div>
+        <div class="agenda-title">국민의 세액 산출 근거가 되는 원장·데이터 계보를 열람할 권리를 보장한다</div>
+        <div class="agenda-split">
+          <div>
+            <div class="agenda-col-tag">현재 문제</div>
+            <div class="agenda-now">과표는 있는데 원장은 없다.<br>세금의 족보를 납세자가 확인할 수 없다.<br>KSD 공문 16516499 — "당국 관여 없음"</div>
+          </div>
+          <div>
+            <div class="agenda-col-tag">개혁안</div>
+            <div class="agenda-reform">국민의 세액 산출 근거가 되는 원장·데이터 계보(Data Lineage)를 열람할 권리를 법제화한다. ICI Primary Layout 공식 수용 의무화.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num-col"><div class="agenda-num">의제②</div></div>
+      <div class="agenda-body">
+        <div class="agenda-tag">설명가능한 과세 · Verifiable Taxation</div>
+        <div class="agenda-title">세액 ← 과표 ← 소득성격 ← 원천자료를 납세자가 추적 가능하도록 법제화한다</div>
+        <div class="agenda-split">
+          <div>
+            <div class="agenda-col-tag">현재 문제</div>
+            <div class="agenda-now">세금은 부과되는데 생성과정은 보이지 않는다.<br>소득성격 확인 절차 자체가 없다.<br>유권해석 한 줄이 72년 원칙을 대체한다.</div>
+          </div>
+          <div>
+            <div class="agenda-col-tag">개혁안</div>
+            <div class="agenda-reform">세액 → 과표 → 소득성격 → 원천자료의 추적 연결(Audit Trail)을 납세자가 확인할 수 있도록 법제화. 소득세법 §17 ROC 예외조항 신설.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num-col"><div class="agenda-num">의제③</div></div>
+      <div class="agenda-body">
+        <div class="agenda-tag">금융세제 데이터 인프라 · Data Infrastructure</div>
+        <div class="agenda-title">해외 금융상품 소득성격 원장 국가 표준 데이터 모델을 구축한다</div>
+        <div class="agenda-split">
+          <div>
+            <div class="agenda-col-tag">현재 문제</div>
+            <div class="agenda-now">기관마다 일부 데이터만 보유.<br>ROC·STCG·LTCG·Basis·Corporate Action — 표준 없음.<br>미국 2012년 의무화 대비 한국 72년 격차.</div>
+          </div>
+          <div>
+            <div class="agenda-col-tag">개혁안</div>
+            <div class="agenda-reform">ICI Data ↔ 국세청 자동 연결. 증권사 BT(Basis Tracking) 의무화. ROC·STCG·LTCG·Basis·Corporate Action 국가 표준 데이터 모델 구축.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num-col"><div class="agenda-num">의제④</div></div>
+      <div class="agenda-body">
+        <div class="agenda-tag">기관 책임지도 공개 · Accountability Map</div>
+        <div class="agenda-title">정책·집행·감독·데이터 책임을 분리하여 공개한다</div>
+        <div class="agenda-split">
+          <div>
+            <div class="agenda-col-tag">현재 문제</div>
+            <div class="agenda-now">증권사 → 국세청 → 기재부<br>책임이 이동하며 소멸한다.<br>아무도 책임지지 않는 구조.</div>
+          </div>
+          <div>
+            <div class="agenda-col-tag">개혁안</div>
+            <div class="agenda-reform">정책책임(기재부) · 집행책임(국세청) · 감독책임(금융위) · 데이터책임(KSD)을 분리 명시하고 공개. 책임 이동 금지 법제화.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num-col"><div class="agenda-num">의제⑤</div></div>
+      <div class="agenda-body">
+        <div class="agenda-tag">국민 검증권 신설 · Taxpayer Verification Right</div>
+        <div class="agenda-title">납세자는 자신의 과세표준 형성과정을 열람·검증할 권리를 가진다</div>
+        <div class="agenda-split">
+          <div>
+            <div class="agenda-col-tag">현재 문제</div>
+            <div class="agenda-now">과세는 받지만 검증은 어렵다.<br>ICI 원장 제출해도 검토 거부.<br>경정청구 18개월 대기.</div>
+          </div>
+          <div>
+            <div class="agenda-col-tag">개혁안</div>
+            <div class="agenda-reform">납세자가 자신의 과표 형성 Audit Trail을 열람·검증하는 법적 권리 신설. 국세기본법 §81의2 납세자 보호의무 강화. 경정청구 자동화·기간 단축.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <blockquote>
+    우리는 세금을 거부하는 것이 아니다.<br>
+    우리는 <strong>세금의 족보를 요구한다.</strong><br>
+    과표의 신원을 요구한다. 원장의 존재를 요구한다.<br>
+    <strong>설명가능한 국가를 요구한다.</strong>
+  </blockquote>
+</section>
+
+<hr class="light">
+
+<!-- ══════════════════════════════════════════════════════════
+  VI. 공론화 3단계 전략
+══════════════════════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-num">제 VI 장 — 공론화 전략</div>
+  <h2 class="sec-title">3단계 <span class="gold">공론화 로드맵</span></h2>
+
+  <p class="prose">
+    공론화의 핵심은 특정 기관 비난이 아닙니다.
+    <strong>"과표의 신원은 무엇으로 증명되는가?"</strong>라는 질문을 국가 전체에 던지는 것입니다.
+    세무 문제를 넘어 <em>설명가능한 정부(Explainable Government)</em>와
+    <em>검증가능한 과세(Verifiable Taxation)</em>의 제도개혁 의제로 확장합니다.
+  </p>
+
+  <div class="strategy-grid">
+    <div class="sg-cell">
+      <div class="sg-step">1단계 · 즉시</div>
+      <div class="sg-title">정보공개 회신 확보<br><em style="font-style:normal;color:var(--gold);font-size:.8rem;">기록을 만든다</em></div>
+      <div class="sg-item"><strong>목표:</strong> 기관의 공식 답변을 기록화</div>
+      <div class="sg-item">"자료 있음" → 공개 요구로 전환</div>
+      <div class="sg-item">"자료 없음" → 인프라 부재 공식 확인</div>
+      <div class="sg-item">"소관 아님" → 책임 이동 경로 추적</div>
+      <div class="sg-item"><strong>도구:</strong> 정보공개청구 · 국민신문고</div>
+      <div class="sg-item"><strong>수신:</strong> 기재부·국세청·금융위·KSD</div>
+    </div>
+    <div class="sg-cell">
+      <div class="sg-step">2단계 · 단기</div>
+      <div class="sg-title">기관별 책임지도 작성<br><em style="font-style:normal;color:var(--gold);font-size:.8rem;">구조를 드러낸다</em></div>
+      <div class="sg-item"><strong>목표:</strong> 책임 소재의 시각화</div>
+      <div class="sg-item">기재부 → 정책 책임</div>
+      <div class="sg-item">국세청 → 집행 책임</div>
+      <div class="sg-item">금융위 → 감독 책임</div>
+      <div class="sg-item">KSD → 데이터 책임</div>
+      <div class="sg-item">증권사 → 원천징수 책임</div>
+      <div class="sg-item"><strong>도구:</strong> 1단계 회신 결과 기반</div>
+    </div>
+    <div class="sg-cell">
+      <div class="sg-step">3단계 · 중기</div>
+      <div class="sg-title">공개질의서 배포<br><em style="font-style:normal;color:var(--gold);font-size:.8rem;">의제를 확산한다</em></div>
+      <div class="sg-item"><strong>목표:</strong> 제도개혁 압력 형성</div>
+      <div class="sg-item">국회 기재위·정무위</div>
+      <div class="sg-item">국회입법조사처·예산정책처</div>
+      <div class="sg-item">감사원 감사청구</div>
+      <div class="sg-item">언론 (슈카월드·MBC·삼프로TV)</div>
+      <div class="sg-item">학계 (조세법·금융법 연구자)</div>
+      <div class="sg-item"><strong>도구:</strong> 본 보고서 + 특허 + ICI 데이터</div>
+    </div>
+  </div>
+</section>
+
+<hr class="light">
+
+<!-- ══════════════════════════════════════════════════════════
+  VII. 배포 대상
+══════════════════════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-num">제 VII 장 — 배포 대상 및 행동 경로</div>
+  <h2 class="sec-title">누구에게 <span class="gold">무엇을 요청하는가</span></h2>
+
+  <div class="dist-wrap">
+    <table class="dist-table">
+      <thead>
+        <tr>
+          <th>배포 대상</th>
+          <th>전달 메시지</th>
+          <th>기대 효과</th>
+          <th>수단</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>국회<br>기재위·정무위</td>
+          <td>해외 ETF 소득성격 원장 부재 — 국정감사 의제화 요청. 소득세법 §17 ROC 예외조항 신설 청원.</td>
+          <td>국정감사 질의 의제화. 입법 경로 개방.</td>
+          <td>국민동의청원 10만 서명 + 보고서 배포</td>
+        </tr>
+        <tr>
+          <td>국회입법조사처<br>예산정책처</td>
+          <td>해외 ETF 세제 데이터 인프라 현황 조사 요청. 미국 Cost Basis Reporting 비교 연구 의뢰.</td>
+          <td>공식 조사보고서 → 입법 근거 강화.</td>
+          <td>보고서 + ICI 데이터 제출</td>
+        </tr>
+        <tr>
+          <td>감사원</td>
+          <td>실질과세 원칙 표방하면서 실질조사 체계 없음 — 행정 부작위 감사 청구. 국세기본법 §81의2 위반 소지.</td>
+          <td>감사 시정 권고 → 시스템 개선 압력.</td>
+          <td>감사청구서 + KSD 16516499 첨부</td>
+        </tr>
+        <tr>
+          <td>언론<br>(경제·투자)</td>
+          <td>"원금에 세금" 프레임 → "세금의 족보" 프레임으로 전환. 은퇴자 노후 안전망 피해 사례 구체화.</td>
+          <td>여론 형성 → 정치적 압력 → 행정 변화.</td>
+          <td>슈카월드·MBC 탐사·삼프로TV 제보</td>
+        </tr>
+        <tr>
+          <td>학계<br>(조세법·금융법)</td>
+          <td>소득성격 원장 없는 실질과세의 법리적 문제 연구 요청. 국제 비교(IRC §301(c)(2)) 학술 검토.</td>
+          <td>학술 논문 → 법원·헌재 인용 가능성.</td>
+          <td>보고서 + 특허 + κ=100% 실증 자료</td>
+        </tr>
+        <tr>
+          <td>투자자 커뮤니티<br>(300만+)</td>
+          <td>"세금의 족보" 질문 공유. 경정청구 권리 행사. 집단 민원 참여.</td>
+          <td>집단 경정청구 → 처리 행정 과부하 → 제도 변화 압력.</td>
+          <td>GitHub Pages 포렌식 플랫폼 공유</td>
+        </tr>
+        <tr>
+          <td>헌법재판소<br>(중기)</td>
+          <td>소득세법 §17 포괄과세의 헌법 §23 재산권 침해. 담세력 없는 원금에 과세 — 헌재 2001헌바63 위반.</td>
+          <td>헌재 위헌 결정 → 구조적 과세 체계 변화.</td>
+          <td>헌법소원 + κ=100% 실증 + 특허</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="light">
+
+<!-- ══════════════════════════════════════════════════════════
+  VIII. 증거 요약
+══════════════════════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-num">제 VIII 장 — 증거 요약 및 핵심 수치</div>
+  <h2 class="sec-title">원장이 말한다<br><span class="gold">κ=100% · 오차 없음</span></h2>
+
+  <div class="dist-wrap">
+    <table class="dist-table">
+      <thead>
+        <tr>
+          <th>증거 유형</th>
+          <th>내용</th>
+          <th>의의</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ICI 원장<br>MSTY 2025</td>
+          <td>BOX3(ROC) = 100.0% · 주당 $18.63. ICI-Primary-MASTER-V03_LOCK 직접 계산.</td>
+          <td>2025년 분배금 전액이 원금 반환. 경제적 소득 ₩0에 부과된 세금의 근거 부재.</td>
+        </tr>
+        <tr>
+          <td>ICI 원장<br>CONY 2025</td>
+          <td>BOX3 = 97.0% · 주당 $9.54.</td>
+          <td>97%가 원금 반환. 3%만 배당소득 과세 대상.</td>
+        </tr>
+        <tr>
+          <td>ICI 원장<br>NVDY 2025</td>
+          <td>BOX3 = 52.6% · 주당 $6.39.</td>
+          <td>절반 이상이 원금 반환. 소득성격 구분 없으면 전액 과세.</td>
+        </tr>
+        <tr>
+          <td>검증 정합률</td>
+          <td>κ=100% · 106건 교차검증 · 오차 없음.</td>
+          <td>원장 데이터의 신뢰성 실증. 법원·헌재 제출 가능한 수준.</td>
+        </tr>
+        <tr>
+          <td>KSD 공문</td>
+          <td>정보공개 접수번호 16516499 · 2026.05.07<br>"ROC 성격 구분은 현지 발행사 결정 사항. 국내 금융당국·과세당국 관여 없음."</td>
+          <td>국가 기관이 공식 문서로 인프라 부재를 자인. 반복 부작위의 직접 증거.</td>
+        </tr>
+        <tr>
+          <td>환급 대상</td>
+          <td>₩4,741,810 (2024귀속 ₩1,375,010 + 2025귀속 ₩3,366,800)<br>비과세 근거 $24,734.81 (BOX3: 2024 $7,354.28 + 2025 $17,380.53)</td>
+          <td>구체적 피해 수치. κ=100% 검증 완료. 경정청구 근거 완비.</td>
+        </tr>
+        <tr>
+          <td>특허출원</td>
+          <td>10-2026-0079638 · 10-2026-0084940 · 10-2026-0084983</td>
+          <td>포렌식 ROC 검증시스템. 제3자 신뢰도 확보. 언론·법원 인용 가능.</td>
+        </tr>
+        <tr>
+          <td>법령 근거</td>
+          <td>소득세법 §14·§17 · 국세기본법 §45의2·§81의2<br>헌재 2001헌바63 · 대법원 2012두22485 · IRC §301(c)(2) 1954</td>
+          <td>국내외 법령·판례의 3중 교차 지지.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+  CLOSING DECLARATION
+══════════════════════════════════════════════════════════ -->
+<div class="closing-decl full">
+  <div class="wrap">
+    <div class="cd-eyebrow">Closing Declaration — 최종 선언</div>
+    <div class="cd-lines">
+      주식에는 족보가 있습니다<br>
+      채권에는 족보가 있습니다<br>
+      예탁자산에는 족보가 있습니다<br><br>
+      <strong>그렇다면</strong><br>
+      <strong>해외 ETF 최종 소득 과세표준의</strong><br>
+      <span class="gold"><strong>족보는 어디에 있습니까</strong></span><br><br>
+      존재한다면 — <span class="gold">공개하여 주십시오</span><br>
+      존재하지 않는다면 — <span class="red">무엇을 근거로 소득의 신원을 확인하는지 설명하여 주십시오</span><br><br>
+      우리는 세금을 거부하는 것이 아닙니다<br>
+      <strong>우리는 세금의 족보를 요구합니다</strong><br>
+      설명가능한 국가를 요구합니다<br>
+      <span class="gold">기록으로 증명되는 정부를 요구합니다</span>
+    </div>
+    <div class="cd-seal"><span>元</span></div>
+    <div class="cd-meta">
+      중간 보고서 · JSB-2026-IR-01 · 2026년 5월 30일<br>
+      ICI-Primary-MASTER-V03_LOCK · κ=100% · 106건 교차검증<br>
+      환급 대상 ₩4,741,810 · KSD 정보공개 16516499<br>
+      특허출원 10-2026-0079638 · 10-2026-0084940 · 10-2026-0084983<br>
+      소득세법 §14·§17 · 국세기본법 §45의2·§81의2 · 헌재 2001헌바63 · IRC §301(c)(2)<br><br>
+      <strong>장세봉 / 인흥(주) · sebjang@gmail.com</strong><br>
+      <strong>sebjang.github.io/roc-tax-verification</strong><br><br>
+      <span style="opacity:.4;font-size:.65rem;">
+        元帳 feat. 元金 — 으뜸이 기록될 때 살아남는다
+      </span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

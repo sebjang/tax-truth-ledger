@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원장(元帳) feat. 원금(元金) — 통합 분석 · JSB71GA10</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --paper:  #f8f4ec;
+  --deep:   #f0e9d8;
+  --ink:    #100e0b;
+  --body:   #2a2418;
+  --muted:  #7a6e5a;
+  --rule:   #d8ccb4;
+  --faint:  #ede5d0;
+  --gold:   #7a5e14;
+  --gold2:  #b08a20;
+  --red:    #7a1a10;
+  --red2:   #c0392b;
+  --forest: #1a3828;
+  --w: 820px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  background: var(--paper);
+  color: var(--body);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  line-height: 1.9;
+  overflow-x: hidden;
+}
+/* ruled paper lines */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: repeating-linear-gradient(
+    180deg, transparent 0, transparent 47px,
+    rgba(216,204,180,.22) 47px, rgba(216,204,180,.22) 48px
+  );
+}
+.w { position: relative; z-index: 1; max-width: var(--w); margin: 0 auto; padding: 0 2.5rem; }
+
+/* ── JOURNAL HEADER ── */
+.journal-bar {
+  background: var(--ink);
+  color: rgba(255,255,255,.55);
+  padding: .6rem 2.5rem;
+  font-size: .62rem; letter-spacing: .35em;
+  text-transform: uppercase;
+  display: flex; justify-content: space-between; align-items: center;
+  position: relative; z-index: 1;
+}
+.journal-bar span { color: rgba(255,255,255,.85); }
+
+/* ── TITLE PAGE ── */
+.title-page {
+  padding: 5rem 0 4rem;
+  border-bottom: 2px solid var(--ink);
+  position: relative; overflow: hidden;
+}
+.tp-bg {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(14rem,32vw,24rem);
+  font-weight: 900;
+  color: rgba(16,14,11,.04);
+  position: absolute; right: -3rem; top: 50%;
+  transform: translateY(-50%);
+  line-height: 1; pointer-events: none; user-select: none;
+}
+.tp-section {
+  font-size: .65rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.2rem;
+}
+.tp-hanja {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(2.5rem,7vw,4.5rem);
+  font-weight: 900; color: var(--ink);
+  line-height: 1; letter-spacing: .1em; margin-bottom: .5rem;
+}
+.tp-hanja .red { color: var(--red2); }
+.tp-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.2rem,3vw,1.8rem);
+  font-weight: 700; color: var(--ink);
+  line-height: 1.4; margin-bottom: .8rem;
+}
+.tp-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem,2.2vw,1.3rem);
+  font-style: italic; color: var(--muted);
+  line-height: 1.5; margin-bottom: 2rem;
+}
+.tp-rule { width: 60px; height: 1px; background: var(--gold); margin: 2rem 0; }
+.tp-meta { font-size: .78rem; color: var(--muted); line-height: 2; }
+.tp-meta strong { color: var(--body); }
+.tp-badges {
+  margin-top: 1.5rem; display: flex; gap: .8rem; flex-wrap: wrap;
+}
+.badge {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .25em; text-transform: uppercase;
+  border: 1px solid var(--rule); color: var(--muted);
+  padding: .2rem .7rem;
+}
+.badge.gold { border-color: var(--gold); color: var(--gold); }
+.badge.red  { border-color: var(--red2); color: var(--red2); }
+
+/* ── ABSTRACT ── */
+.abstract {
+  background: var(--deep);
+  border: 1px solid var(--rule);
+  padding: 2.5rem 2.5rem;
+  margin: 3rem 0;
+}
+.abs-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .68rem; letter-spacing: .45em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1rem;
+}
+.abs-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .9rem; font-weight: 400;
+  color: var(--body); line-height: 1.95;
+}
+.abs-text strong { font-weight: 700; }
+.abs-keywords {
+  margin-top: 1.5rem; padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: .75rem; color: var(--muted);
+}
+.abs-keywords strong { color: var(--gold); }
+
+/* ── SECTION ── */
+.sec {
+  padding: 4rem 0;
+  border-top: 1px solid var(--rule);
+}
+.sec-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .7rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .5rem;
+}
+.sec-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.2rem,3vw,1.7rem);
+  font-weight: 700; color: var(--ink); line-height: 1.35;
+  margin-bottom: 1.8rem;
+}
+.sec-title .gold { color: var(--gold); }
+.sec-title .red  { color: var(--red2); }
+.lead {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .98rem; color: var(--body); line-height: 1.9;
+  margin-bottom: 1.2rem;
+}
+.lead strong { font-weight: 700; }
+.lead em.g { font-style: normal; color: var(--gold); font-weight: 600; }
+.lead em.r { font-style: normal; color: var(--red2); font-weight: 600; }
+.prose { font-size: .88rem; color: var(--body); line-height: 1.95; margin-bottom: 1rem; }
+.prose strong { color: var(--ink); font-weight: 600; }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; margin: 2rem 0; }
+.tbl-cap {
+  font-size: .68rem; letter-spacing: .25em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: .5rem;
+  font-family: 'Cormorant Garamond', serif;
+}
+table { width: 100%; border-collapse: collapse; }
+thead tr { border-bottom: 2px solid var(--ink); }
+th {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .68rem; letter-spacing: .25em; text-transform: uppercase;
+  color: var(--muted); font-weight: 400; text-align: left;
+  padding: .6rem .7rem;
+}
+td {
+  padding: .7rem .7rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: .82rem; color: var(--muted); vertical-align: top; line-height: 1.6;
+}
+td:first-child { font-family: 'Noto Serif KR', serif; font-weight: 700; color: var(--ink); }
+tr.hl td { background: rgba(122,94,20,.05); }
+tr.hl td:first-child { color: var(--gold); }
+.roc-hi { color: var(--red2); font-weight: 700; }
+.roc-zero { color: var(--muted); font-style: italic; }
+
+/* ── CALLOUT QUOTE ── */
+.cquote {
+  border-left: 3px solid var(--gold);
+  padding: 1.5rem 1.8rem;
+  background: rgba(122,94,20,.04);
+  margin: 2rem 0;
+}
+.cquote p {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; color: var(--ink); line-height: 1.8;
+}
+.cquote p strong { color: var(--red2); }
+.cquote cite {
+  display: block; margin-top: .8rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .75rem; letter-spacing: .15em; color: var(--muted);
+}
+
+/* ── LEDGER SPLIT ── */
+.l-split {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px; background: var(--rule); margin: 2rem 0;
+}
+.ls-panel { background: var(--paper); padding: 2rem 1.8rem; }
+.ls-panel.dark { background: var(--ink); }
+.ls-head {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .62rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1rem;
+}
+.ls-panel.dark .ls-head { color: rgba(200,168,74,.7); }
+.ls-item {
+  font-size: .82rem; color: var(--red2); line-height: 1.7;
+  padding: .4rem 0; border-bottom: 1px solid var(--rule);
+}
+.ls-item span { color: var(--muted); }
+.ls-panel.dark .ls-item { color: rgba(232,240,236,.6); border-bottom-color: rgba(255,255,255,.08); }
+.ls-panel.dark .ls-item span { color: rgba(255,255,255,.3); }
+
+/* ── CHAIN BLOCK (4중 피해) ── */
+.harm-chain { margin: 2rem 0; }
+.hc-row {
+  display: grid; grid-template-columns: 2.5rem 1fr;
+  gap: 1.2rem; margin-bottom: 0; position: relative;
+}
+.hc-row + .hc-row::before {
+  content: '↓';
+  position: absolute; left: .9rem; top: -1.2rem;
+  color: var(--rule); font-size: .9rem; line-height: 1;
+}
+.hc-n {
+  width: 2.5rem; height: 2.5rem;
+  border: 1px solid var(--rule); background: var(--deep);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; color: var(--gold); flex-shrink: 0;
+}
+.hc-body { padding: .2rem 0 1.8rem; }
+.hc-tag {
+  font-size: .6rem; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .25rem;
+}
+.hc-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .95rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem;
+}
+.hc-desc { font-size: .82rem; color: var(--muted); line-height: 1.75; }
+
+/* ── TIMELINE ── */
+.tl-compact { margin: 2rem 0; }
+.tl-row {
+  display: grid; grid-template-columns: 60px 1fr 1fr;
+  gap: 1rem; border-bottom: 1px solid var(--rule);
+  padding: .8rem 0;
+}
+.tl-row:first-child { border-top: 2px solid var(--ink); }
+.tl-yr {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .85rem; color: var(--gold); letter-spacing: .05em;
+}
+.tl-us, .tl-kr { font-size: .8rem; color: var(--muted); line-height: 1.6; }
+.tl-us strong { color: var(--forest); }
+.tl-kr strong { color: var(--red2); }
+.tl-head .tl-yr, .tl-head .tl-us, .tl-head .tl-kr {
+  font-size: .6rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--muted); font-family: 'Cormorant Garamond', serif;
+}
+
+/* ── POLICY ITEMS ── */
+.policy-list { margin: 2rem 0; }
+.policy-item {
+  display: grid; grid-template-columns: 48px 1fr;
+  gap: 0; border-bottom: 1px solid var(--rule);
+}
+.policy-item:first-child { border-top: 1px solid var(--rule); }
+.policy-n-col {
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.2rem .5rem; background: var(--deep);
+  border-right: 1px solid var(--rule);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; color: var(--gold);
+}
+.policy-body { padding: 1.2rem 1.5rem; }
+.policy-tag {
+  font-size: .58rem; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .3rem;
+}
+.policy-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .92rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem;
+}
+.policy-desc { font-size: .8rem; color: var(--muted); line-height: 1.65; }
+
+/* ── CONCLUSION BAND ── */
+.conclusion {
+  background: var(--ink); color: rgba(232,240,236,.75);
+  padding: 4rem 2.5rem; margin-top: 4rem;
+  text-align: center; position: relative; overflow: hidden;
+}
+.conclusion::before {
+  content: '元帳';
+  font-family: 'Noto Serif KR', serif;
+  font-size: 16rem; font-weight: 900;
+  color: rgba(255,255,255,.025);
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  white-space: nowrap; pointer-events: none; line-height: 1;
+}
+.conc-main {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.1rem,3vw,1.6rem);
+  font-weight: 700; color: #e8f0ec; line-height: 1.75;
+  margin-bottom: 2rem; position: relative;
+}
+.conc-main .gold { color: #c8a84a; }
+.conc-main .red  { color: #e07060; }
+.conc-seal {
+  width: 72px; height: 72px;
+  border: 1px solid rgba(200,168,74,.5); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 2rem; position: relative;
+}
+.conc-seal span {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.6rem; font-weight: 900; color: #c8a84a;
+}
+.conc-meta {
+  font-size: .68rem; color: rgba(255,255,255,.25);
+  letter-spacing: .1em; line-height: 2.2; position: relative;
+}
+.conc-meta strong { color: rgba(255,255,255,.5); }
+
+hr.sec-rule { border: none; border-top: 1px solid var(--rule); }
+
+@media(max-width:600px){
+  .l-split { grid-template-columns: 1fr; }
+  .tl-row  { grid-template-columns: 50px 1fr; }
+  .tl-kr   { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="journal-bar w" style="max-width:100%;">
+  <span>元帳 연구 시리즈 · JSB71GA10 · PAPER-ROC-INTEGRATED-REVIEW</span>
+  <span>2026.05.30 · κ=100%</span>
+</div>
+
+<!-- ── TITLE PAGE ── -->
+<div class="title-page w">
+  <div class="tp-bg">元</div>
+  <div class="tp-section">통합 분석 리뷰 · Integrated Review · A Multi-Layer Analysis</div>
+  <div class="tp-hanja"><span class="red">元</span>帳<span style="font-size:.45em;font-weight:400;color:var(--muted);letter-spacing:.05em;"> feat. </span><span style="font-size:.6em;font-weight:900;color:var(--ink);">元金</span></div>
+  <div class="tp-title">
+    해외 ETF ROC 오분류 과세의 다층적 피해 구조와<br>
+    원장 기반 정책 시정 방향 — 통합 분석
+  </div>
+  <div class="tp-subtitle">
+    A Multi-Layer Harm Analysis of Misclassified Return-of-Capital Taxation<br>
+    in Korean Overseas ETF Regulation: An Integrated Review
+  </div>
+  <div class="tp-rule"></div>
+  <div class="tp-meta">
+    <strong>장세봉</strong> · 인흥(주) · 경상북도 구미시<br>
+    sebjang@gmail.com · sebjang.github.io/roc-tax-verification<br>
+    투고: 2026.05.30 · 특허출원: 10-2026-0079638 · 84940 · 84983
+  </div>
+  <div class="tp-badges">
+    <span class="badge gold">ICI P/L 2025</span>
+    <span class="badge gold">κ=100%</span>
+    <span class="badge gold">106건 교차검증</span>
+    <span class="badge red">원장 삼분론</span>
+    <span class="badge">5대 정책 제언</span>
+    <span class="badge">실화 기반</span>
+  </div>
+</div>
+
+<!-- ── ABSTRACT ── -->
+<div class="w">
+  <div class="abstract">
+    <div class="abs-label">초록 · Abstract</div>
+    <div class="abs-text">
+      본 논문은 저자의 기존 연구 시리즈를 통합하여, 대한민국 해외 ETF 자본반환(ROC) 오분류 과세 문제를
+      경제학·법리학·사회정책학·문화사적 관점에서 종합 분석한다.
+      ICI P/L 2025 원장 검증(κ=100%, 106건 교차검증)에 의하면,
+      <strong>MSTY 2025 BOX3=100%, CONY 97%, AIYY 100%</strong> 등 주요 종목의 분배금 대부분이
+      IRC §301(c)(2)상 자본반환으로 확정됨에도 불구하고,
+      한국 세제는 이를 배당소득으로 일괄 과세한다.
+      이 오분류는 종합소득세 누진, 건강보험료 급등, 피부양자 자격 상실, 기초연금 위협으로 이어지는
+      <strong>4중 연쇄 피해 구조</strong>를 발생시킨다.
+      본 논문은 소득세법 §17 예외조항 신설, ICI 데이터–국세청 자동 연결,
+      BT(Basis Tracking) 의무화 등 5대 정책 제언을 제시하며,
+      이것이 과세 포기가 아니라 <strong>더 건전한 세원 확보 전략(Tax Deferral)</strong>임을 논증한다.
+    </div>
+    <div class="abs-keywords">
+      <strong>키워드:</strong> Return of Capital · ROC · 해외 ETF · ICI Primary Layout ·
+      BT(Basis Tracking) · IRC §301(c)(2) · 배당소득 오분류 · 원장 삼분론 · 경정청구 · 족보 없는 과세
+    </div>
+  </div>
+</div>
+
+<!-- ── §1 서론 ── -->
+<section class="sec w">
+  <div class="sec-num">§ 1 — 서론</div>
+  <h2 class="sec-title">원장이 없으면 <span class="gold">소득도 없다</span><br>문제의 소재와 연구 범위</h2>
+
+  <p class="lead">
+    대한민국 해외 ETF 투자자는 2024년 기준 약 <strong>300만 명</strong>으로 추산된다.
+    이들이 수령하는 YieldMax 시리즈(MSTY, CONY, NVDY 등) 분배금의 상당 부분은
+    미국 세법 IRC §301(c)(2)에 따른 <em class="g">자본반환(Return of Capital, ROC)</em>이다.
+    자본반환은 소득이 아니라 투자자의 취득원가 감소로 처리되는 것이 <strong>미국 세제의 72년 원칙</strong>이다.
+  </p>
+  <p class="lead">
+    그러나 대한민국 세제는 이를 배당소득으로 일괄 분류하여 과세하고 있다.
+    원인은 하나다 — <em class="r">원장이 없기 때문이다.</em>
+    ICI Primary Layout이라는 소득성격 원장을 국세청이 수신하지 않는다.
+    帳(경계)이 없으면 元(으뜸)도 없다. 원장이 없으면 원금도 없다.
+  </p>
+
+  <div class="tbl-wrap">
+    <div class="tbl-cap">표 1. JSB71GA10 연구 시리즈 구성 및 주요 기여</div>
+    <table>
+      <thead><tr><th>문서</th><th>주요 기여</th><th>원장 철학 관점</th></tr></thead>
+      <tbody>
+        <tr><td>2024-KRTAX-S04</td><td>ICI_BOX3 과표 제외 · KTAX_BASE=20,167,677 KRW · S01~S04 원장 변환</td><td>KTAX는 ICI 소득성격을 계승해야 한다 (명제 4)</td></tr>
+        <tr><td>2025-KRTAX-S04</td><td>§871(k) STCG 14건 · KTAX_BASE=15,063,272 KRW · S01~S04 원장 변환</td><td>원장연속성 S01→S04 실증</td></tr>
+        <tr class="hl"><td>ERRATA-PROPOSITION</td><td>원장 삼분론(DVCA·QI·ICI) 정식화 · S01~S04 체계 정의</td><td>원장 위계론의 수학적 기초</td></tr>
+        <tr class="hl"><td>ROC-DECLARATION-V8A</td><td>법리·수치·정책·서사 통합 · 헌법 제1조 주권 선언</td><td>帳이 없으면 元도 없다 — 선언</td></tr>
+        <tr><td>NETFLIX-FULL-PITCH</td><td>한류 서사 기반 사회고발 콘텐츠 기획</td><td>으뜸 元, 휘장 帳 — 문화적 확산</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── §2 ICI 원장 검증 ── -->
+<section class="sec w">
+  <div class="sec-num">§ 2 — ICI 원장 검증</div>
+  <h2 class="sec-title">κ=100% — <span class="gold">원장은 거짓말하지 않는다</span></h2>
+
+  <p class="lead">
+    ICI(Investment Company Institute) Primary Layout은 미국 내 모든 규제 펀드·ETF의
+    소득성격 구분 데이터를 연 1회(1월) <strong>무료 공시</strong>하는 공식 원장이다.
+    BOX1은 배당소득, BOX3는 자본반환. 이것이 <em class="g">소득성격 결정의 유일한 권한자</em>다.
+  </p>
+
+  <div class="tbl-wrap">
+    <div class="tbl-cap">표 2. ICI P/L 2024·2025 — 주요 종목 BOX3(ROC) 비중 · κ=100% 검증</div>
+    <table>
+      <thead><tr><th>종목</th><th>기초자산</th><th>2024 ROC%</th><th>2025 ROC%</th><th>원장 판정</th></tr></thead>
+      <tbody>
+        <tr class="hl"><td>MSTY</td><td>MicroStrategy</td><td class="roc-zero">0.0%</td><td class="roc-hi">100.0%</td><td>전액 원금 반환</td></tr>
+        <tr class="hl"><td>CONY</td><td>Coinbase</td><td class="roc-hi">59.0%</td><td class="roc-hi">97.0%</td><td>거의 전액 원금</td></tr>
+        <tr><td>AIYY</td><td>C3.ai</td><td class="roc-hi">74.4%</td><td class="roc-hi">100.0%</td><td>전액 원금</td></tr>
+        <tr><td>TSLY</td><td>Tesla</td><td class="roc-hi">76.8%</td><td class="roc-hi">73.0%</td><td>대부분 원금</td></tr>
+        <tr class="hl"><td>NVDY</td><td>NVIDIA</td><td>15.2%</td><td class="roc-hi">52.6%</td><td>과반 원금</td></tr>
+        <tr><td>AMZY</td><td>Amazon</td><td class="roc-hi">56.5%</td><td class="roc-hi">64.7%</td><td>과반 원금</td></tr>
+        <tr><td>APLY</td><td>Apple</td><td>47.0%</td><td class="roc-hi">73.7%</td><td>대부분 원금</td></tr>
+        <tr><td>MSFO</td><td>Microsoft</td><td>50.2%</td><td>49.5%</td><td>절반 원금</td></tr>
+        <tr><td>GOOY</td><td>Alphabet</td><td class="roc-hi">75.4%</td><td class="roc-zero">0.0%</td><td>2025 BOX1</td></tr>
+        <tr><td>BITO</td><td>Bitcoin선물</td><td class="roc-zero">0.0%</td><td class="roc-zero">0.0%</td><td>전액 BOX1</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cquote">
+    <p>
+      κ = 직접계산 ROC% 일치 건수 ÷ 전체 검증 건수 = <strong>106 ÷ 106 = 1.000</strong><br>
+      ICI_TOTAL = ICI_BOX1(배당) + ICI_STCG(단기양도차익) + ICI_BOX3(자본반환)<br>
+      2024귀속: $14,318.42 + $101.20 + $7,354.27 = <strong>$21,773.89</strong><br>
+      2025귀속: $10,306.62 + $324.87 + $17,380.53 = <strong>$28,012.02</strong>
+    </p>
+    <cite>ICI-Primary-MASTER-V03_LOCK.xlsx 직접 계산 · 환급 대상 ₩4,741,810</cite>
+  </div>
+</section>
+
+<!-- ── §3 법리 근거 ── -->
+<section class="sec w">
+  <div class="sec-num">§ 3 — 법리 근거</div>
+  <h2 class="sec-title">원장 위계론 — <span class="gold">소득성격 결정권은 누구에게 있는가</span></h2>
+
+  <div class="tbl-wrap">
+    <div class="tbl-cap">표 3. 원장 삼분론 — DVCA · QI · ICI의 역할과 한계</div>
+    <table>
+      <thead><tr><th>원장</th><th>역할</th><th>결정 가능</th><th>결정 불가</th><th>한국 현실</th></tr></thead>
+      <tbody>
+        <tr><td>DVCA</td><td>현금지급 원장</td><td>지급금액·지급일</td><td>ROC 여부 · 소득성격</td><td>증권사 수령</td></tr>
+        <tr><td>QI</td><td>세액정산 원장</td><td>원천세액·환급액</td><td>소득성격 최종 결정 불가</td><td>BOX 구분 무시</td></tr>
+        <tr class="hl"><td>ICI ★</td><td>소득성격 원장<br>유일 결정권자</td><td>BOX1·BOX3·ICI_TOTAL</td><td>—</td><td>국세청 미연결</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="lead">
+    IRC §301(c)(2)는 1954년 법제화된 자본주의 세제의 첫 번째 원칙이다:
+    <em class="g">"자본반환은 소득이 아니며 취득원가를 감소시킨다."</em>
+    ETF 이사회가 분배금의 일부를 ROC로 확정하면 — 이 결정이 ICI 원장에 기록되고 — 그것이 최종 법적 판단이다.
+  </p>
+
+  <div class="l-split">
+    <div class="ls-panel">
+      <div class="ls-head">한국 세제 — 원장 없는 과세</div>
+      <div class="ls-item">유권해석 서면-2024-소득-4836 <span>→ "명칭 무관 배당소득 과세"</span></div>
+      <div class="ls-item">ICI 원장 미연결 <span>→ 소득성격 확인 절차 없음</span></div>
+      <div class="ls-item">소득세법 §14 실질과세 <span>→ 선언만, 실질조사 체계 없음</span></div>
+      <div class="ls-item">경제적 소득 ₩0 <span>→ 최대 57.63% 부과</span></div>
+    </div>
+    <div class="ls-panel dark">
+      <div class="ls-head">ICI 원장 — 확정된 진실</div>
+      <div class="ls-item">MSTY 2025 BOX3=100% <span>→ 전액 원금 반환</span></div>
+      <div class="ls-item">CONY 2025 BOX3=97% <span>→ 97% 원금 반환</span></div>
+      <div class="ls-item">IRC §301(c)(2) 1954 <span>→ 72년 확립된 원칙</span></div>
+      <div class="ls-item">κ=100% · 106건 검증 <span>→ 오차 없음</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── §4 4중 피해 ── -->
+<section class="sec w">
+  <div class="sec-num">§ 4 — 4중 연쇄 피해 구조</div>
+  <h2 class="sec-title">원장 오분류 1건이<br><span class="red">노후 안전망 전체를 흔든다</span></h2>
+
+  <p class="prose">
+    ROC 오분류는 단순한 세금 과다 납부가 아니다.
+    은퇴 투자자의 노후 안전망 전체를 연쇄적으로 붕괴시키는 구조적 피해다.
+    잠재 피해 규모: <strong>300만명 × 150만원/년 = 4.5조원/년</strong> (보수적 추산).
+  </p>
+
+  <div class="harm-chain">
+    <div class="hc-row">
+      <div class="hc-n">①</div>
+      <div class="hc-body">
+        <div class="hc-tag">직접 과세</div>
+        <div class="hc-title">종합소득세 누진 편입 — 경제적 소득 ₩0에 최대 49.5%</div>
+        <div class="hc-desc">ROC → 금융소득 산정 → 연 2,000만원 기준 초과 → 최대 49.5%(소득세+지방세) 누진과세. 원장이 없어서 발생한 과표 왜곡.</div>
+      </div>
+    </div>
+    <div class="hc-row">
+      <div class="hc-n">②</div>
+      <div class="hc-body">
+        <div class="hc-tag">건강보험</div>
+        <div class="hc-title">건강보험료 급등 — 지역가입자 전환 시 8.13%</div>
+        <div class="hc-desc">금융소득 증가 → 지역가입자 전환 또는 보험료 폭등 → 월 수십만원 추가 부담. ROC는 경제적 이익이 아님에도 건보 과표에 포함.</div>
+      </div>
+    </div>
+    <div class="hc-row">
+      <div class="hc-n">③</div>
+      <div class="hc-body">
+        <div class="hc-tag">복지 탈락</div>
+        <div class="hc-title">피부양자 자격 상실 — 배우자·자녀 건보 급등</div>
+        <div class="hc-desc">금융소득 1,000만원 초과 시 피부양자 소득요건 이탈 → 배우자·자녀 건강보험료 급등. 원장 오분류 1건이 가족 전체에 영향.</div>
+      </div>
+    </div>
+    <div class="hc-row">
+      <div class="hc-n">④</div>
+      <div class="hc-body">
+        <div class="hc-tag">노후 안전망</div>
+        <div class="hc-title">기초연금 수급 위협 — 노후 설계 전체 붕괴</div>
+        <div class="hc-desc">소득인정액 상승 → 기초연금 수급액 감소 또는 대상 제외 → 노후 안전망 붕괴. 원장 오분류 ROC $1이 이 연쇄를 시작한다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── §5 72년 역사 ── -->
+<section class="sec w">
+  <div class="sec-num">§ 5 — 72년 제도 공백</div>
+  <h2 class="sec-title">경부고속도로는 놓았다<br><span class="red">금융 원장 인프라는 72년간 방치했다</span></h2>
+
+  <div class="tl-compact">
+    <div class="tl-row tl-head">
+      <div class="tl-yr">연도</div>
+      <div class="tl-us">🇺🇸 미국 — 원장 인프라</div>
+      <div class="tl-kr">🇰🇷 한국 — 원장 부재</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">1954</div>
+      <div class="tl-us"><strong>IRC §301(c)(2) 법제화</strong> — ROC는 소득 아님. 帳의 첫 경계선.</div>
+      <div class="tl-kr">한국전쟁 복구 중 <strong>— 양해 가능</strong></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">1993</div>
+      <div class="tl-us"><strong>ICI Primary Layout 표준화</strong> — BOX1/BOX3 소득성격 공시 가동.</div>
+      <div class="tl-kr">금융실명제 <strong>— 기회 방치</strong></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">2002</div>
+      <div class="tl-us"><strong>IRS Box3 "Nondividend Distributions" 명칭 확정</strong> — 취득원가 감소 성격 명문화.</div>
+      <div class="tl-kr"><strong>관련 제도 없음</strong></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">2012</div>
+      <div class="tl-us"><strong>BT(Basis Tracking) 의무화</strong> — 증권사 전사 취득원가 추적.</div>
+      <div class="tl-kr">IT 강국 선언 <strong>— 금융 원장 미추진</strong></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">2026</div>
+      <div class="tl-us"><strong>완전 자동화 세제 데이터 인프라</strong></div>
+      <div class="tl-kr"><strong>KSD "당국 관여 없음" 공식 확인</strong> — 72년 격차 지속</div>
+    </div>
+  </div>
+
+  <div class="cquote">
+    <p>
+      "조선 사관은 왕도 볼 수 없는 기록을 남겼다.<br>
+      우리는 관료도 지울 수 없는 <strong>원장</strong>을 남긴다."
+    </p>
+    <cite>JSB71GA10-ROC-DECLARATION-V8A · 元帳 선언</cite>
+  </div>
+
+  <p class="prose">
+    KSD 정보공개(접수번호 16516499)는 "ROC 성격 구분은 발행사 결정이며 당국이 관여하지 않는다"고 공식 확인했다.
+    이것은 국가가 스스로 <strong>원장 인프라 부재</strong>를 인정한 기록이다.
+  </p>
+</section>
+
+<!-- ── §6 조선 기록 정신 ── -->
+<section class="sec w">
+  <div class="sec-num">§ 6 — 문화사적 분석</div>
+  <h2 class="sec-title">조선왕조실록의 정신<br><span class="gold">원장은 권력을 견제하는 기록이다</span></h2>
+
+  <p class="lead">
+    조선왕조실록. 872권, 6,400만 자. 세계 유일의 단일 왕조 연속 기록.
+    <em class="g">왕도 볼 수 없었다.</em> 사관이 붓을 놓지 않았기 때문이다.
+    권력이 진실을 왜곡할 수 없도록 — 그것이 조선의 기록 시스템이었다.
+  </p>
+  <p class="prose">
+    2026년 세제 공무원들은 기록을 남기지 않는다. 공청회를 열지 않는다.
+    정보 공개를 거부한다. ICI 무료 공개 데이터를 시스템에 연결하지 않는다.
+    <strong>세계 최고의 기록 문명을 가진 나라에서, 조선 사관보다 낮은 기록 투명성이다.</strong>
+  </p>
+  <p class="prose">
+    그 DNA가 오늘의 한류가 되었다. 기생충, 오징어게임, BTS.
+    그리고 지금 — ICI 원장과 κ=100% 수치로 기록을 남기는 연구자가 있다.
+    <strong>원장(元帳)은 2026년의 조선왕조실록이다.</strong>
+  </p>
+</section>
+
+<!-- ── §7 5대 정책 제언 ── -->
+<section class="sec w">
+  <div class="sec-num">§ 7 — 5대 정책 제언</div>
+  <h2 class="sec-title">과세 포기가 아니라<br><span class="gold">더 건전한 세원 확보 전략이다</span></h2>
+
+  <p class="prose">
+    ROC 정합 처리는 영구 비과세가 아니다. <strong>Tax Deferral — 과세이연</strong>이다.
+    ROC 수령 → 취득원가 감액 → 복리 재투자 → 매각 시 Capital Gain 정확 과세.
+    투자자 보호와 세원 확보는 상충하지 않는다. 원장이 있으면 둘 다 가능하다.
+  </p>
+
+  <div class="policy-list">
+    <div class="policy-item">
+      <div class="policy-n-col">①</div>
+      <div class="policy-body">
+        <div class="policy-tag">즉시 · 입법</div>
+        <div class="policy-title">소득세법 §17 ROC 예외조항 신설</div>
+        <div class="policy-desc">"IRC §301(c)(2)에 따라 자본반환으로 확정된 분배금은 배당소득에서 제외하며 취득가액 감소로 처리한다." — 문장 하나면 된다. 담당: 기재부 금융세제과.</div>
+      </div>
+    </div>
+    <div class="policy-item">
+      <div class="policy-n-col">②</div>
+      <div class="policy-body">
+        <div class="policy-tag">즉시 · 행정</div>
+        <div class="policy-title">ICI Data ↔ 국세청 자동 연결 · 경정·환급 자동화</div>
+        <div class="policy-desc">ICI Primary Layout을 세무행정 시스템에 통합. BOX3 확정 즉시 원천징수 자동 면제. 18개월 대기 → 2개월. KSD 허브 이미 존재 — 기술 장벽 없음.</div>
+      </div>
+    </div>
+    <div class="policy-item">
+      <div class="policy-n-col">③</div>
+      <div class="policy-body">
+        <div class="policy-tag">6개월 · 금융위</div>
+        <div class="policy-title">외국납부세액영수증 BOX 3분할 개편</div>
+        <div class="policy-desc">BOX1(배당) / BOX3(원금반환) / STCG(단기양도) 3분할 표기 의무화. 원장의 경계를 영수증에 새긴다. 근거: 자본시장법 §174.</div>
+      </div>
+    </div>
+    <div class="policy-item">
+      <div class="policy-n-col">④</div>
+      <div class="policy-body">
+        <div class="policy-tag">2년 · 증권사</div>
+        <div class="policy-title">BT(Basis Tracking) 의무화</div>
+        <div class="policy-desc">LOT 단위 취득원가 추적 시스템 의무 구축. ROC 수령 시 조정취득원가 자동 감액. 미국 2012년 의무화 준용. 담당: 금융위·금투협.</div>
+      </div>
+    </div>
+    <div class="policy-item">
+      <div class="policy-n-col">⑤</div>
+      <div class="policy-body">
+        <div class="policy-tag">3년 · 외교</div>
+        <div class="policy-title">한미 QI 협정 개정 — 국제 세무 데이터 자동 공유</div>
+        <div class="policy-desc">IRS QI 협정 개정: BOX3 재분류 데이터 국세청 직접 전송 파이프라인. 잠정 원천징수 즉시 면제 조항 신설. 근거: 한미조세조약 §27.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONCLUSION ── -->
+<div class="conclusion">
+  <div class="w">
+    <div class="conc-main">
+      元帳 feat. 元金 — 같은 으뜸이다<br>
+      원장 없이 원금 없고, 기록 없이 경계 없다<br>
+      <span class="gold">국제원장에 일치해야<br>투자자 보호와 세원 확보가 동시에 가능하다</span><br><br>
+      <span class="red">원금은 원금으로 관리하고<br>이익은 이익으로 과세하라</span><br>
+      이것이 자본주의 세제의 첫 번째 원칙이다
+    </div>
+    <div class="conc-seal"><span>元</span></div>
+    <div class="conc-meta">
+      ICI-Primary-MASTER-V03_LOCK · κ=100% · 106건 교차검증<br>
+      환급 대상 ₩4,741,810 · KSD 정보공개 16516499<br>
+      특허출원 10-2026-0079638 · 0084940 · 0084983<br>
+      소득세법 §14·§17 · 국세기본법 §45의2·§81의2 · 헌재 2001헌바63 · IRC §301(c)(2)<br>
+      <strong>장세봉 / 인흥(주) · sebjang@gmail.com · 2026.05.30</strong>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

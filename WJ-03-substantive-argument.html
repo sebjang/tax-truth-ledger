@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원장(元帳) feat. 원금(元金) — 원장 기반 실질조사 논증 — 해외금융세법의 과세 근거를 묻는다</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+/* ── DESIGN TOKENS ───────────────────────────────
+   All on white (#ffffff):
+   --ink    #0a0806  → 20.0:1 ✓16+
+   --body   #1a1410  → 17.1:1 ✓16+
+   --sub    #2e2620  → 13.8:1 ◑14
+   --muted  #4a3e34  →  9.2:1 △7+
+   --gold   #5c3e06  →  9.8:1 △7+
+   --red    #7a100a  → 11.1:1 △7+
+   --green  #0e3e1a  → 13.0:1 ◑14
+   Panel bg #f5f0e8 (paper tint):
+   --ink on panel    → 17.6:1 ✓16+
+   --body on panel   → 15.2:1 ◑14
+─────────────────────────────────────────────── */
+:root {
+  --white:   #ffffff;
+  --paper:   #f5f0e8;
+  --deep:    #ede6d4;
+  --ink:     #0a0806;
+  --body:    #1a1410;
+  --sub:     #2e2620;
+  --muted:   #4a3e34;
+  --rule:    #c8b89a;
+  --faint:   #e8e0cc;
+  --gold:    #5c3e06;
+  --gold2:   #7a5410;
+  --red:     #7a100a;
+  --red2:    #5a0c08;
+  --green:   #0e3e1a;
+  --green2:  #0a2e12;
+  --accent:  #0a2e50;
+  --w: 860px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--body);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  line-height: 1.9;
+  overflow-x: hidden;
+}
+
+/* subtle ruled paper texture — screen only */
+@media screen {
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: repeating-linear-gradient(
+      180deg, transparent 0, transparent 47px,
+      rgba(200,184,154,.15) 47px, rgba(200,184,154,.15) 48px
+    );
+  }
+}
+
+.wrap { position: relative; z-index: 1; max-width: var(--w); margin: 0 auto; padding: 0 2.5rem; }
+
+/* ══════════════════════════ HERO ══════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 7rem 2.5rem 5rem;
+  border-bottom: 2px solid var(--ink);
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(12rem, 28vw, 20rem);
+  font-weight: 700;
+  color: rgba(10,8,6,.04);
+  position: absolute; right: -2rem; top: 50%;
+  transform: translateY(-50%);
+  line-height: 1; pointer-events: none; user-select: none;
+}
+.hero-tag {
+  font-size: .65rem; letter-spacing: .5em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+  opacity: 0; animation: up .7s .1s forwards;
+}
+.hero-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(2rem, 5.5vw, 3.5rem);
+  font-weight: 900; color: var(--ink);
+  line-height: 1.2; margin-bottom: 1rem;
+  opacity: 0; animation: up .8s .3s forwards;
+}
+.hero-title .gold { color: var(--gold); }
+.hero-rule {
+  width: 56px; height: 3px;
+  background: var(--ink);
+  margin: 2rem 0;
+  opacity: 0; animation: up .7s .5s forwards;
+}
+.hero-sub {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  font-weight: 400; color: var(--sub);
+  line-height: 1.75; max-width: 680px;
+  opacity: 0; animation: up .8s .6s forwards;
+}
+.hero-sub em { color: var(--gold2); font-style: italic; font-weight: 600; }
+.hero-core {
+  margin-top: 2.5rem;
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.05rem, 2.5vw, 1.4rem);
+  font-weight: 700; color: var(--ink);
+  line-height: 1.65; max-width: 700px;
+  border-left: 4px solid var(--gold);
+  padding-left: 1.5rem;
+  opacity: 0; animation: up .8s .8s forwards;
+}
+.hero-core .red { color: var(--red); }
+
+/* ══════════════════════════ SECTIONS ══════════════════════════ */
+.sec { padding: 5.5rem 0; border-top: 1px solid var(--rule); }
+
+.sec-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .72rem; letter-spacing: .5em; text-transform: uppercase;
+  color: var(--gold2); margin-bottom: .6rem;
+}
+.sec-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.5rem, 3.8vw, 2.3rem);
+  font-weight: 700; color: var(--ink);
+  line-height: 1.3; margin-bottom: 2rem;
+}
+.sec-title .gold { color: var(--gold); }
+.sec-title .red  { color: var(--red);  }
+
+.prose {
+  font-size: .92rem; color: var(--body); line-height: 1.95;
+  margin-bottom: 1.2rem;
+}
+.prose strong { color: var(--ink); font-weight: 700; }
+.prose em.g { color: var(--gold2); font-style: normal; font-weight: 600; }
+.prose em.r { color: var(--red);   font-style: normal; font-weight: 600; }
+
+/* ══════════════════════════ LOGIC CHAIN ══════════════════════════ */
+.chain { margin: 2.5rem 0; position: relative; }
+.chain::before {
+  content: '';
+  position: absolute; left: 1.9rem; top: 3rem; bottom: 3rem;
+  width: 1px; background: var(--rule);
+}
+.chain-step {
+  display: grid; grid-template-columns: 3.8rem 1fr;
+  gap: 1.5rem; margin-bottom: .25rem; position: relative;
+}
+.chain-num {
+  width: 3.8rem; height: 3.8rem;
+  border: 2px solid var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-weight: 700; color: var(--ink);
+  background: var(--white);
+  position: relative; z-index: 1;
+}
+.chain-body { padding: .5rem 0 2.2rem; }
+.chain-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .3rem;
+}
+.chain-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; font-weight: 700; color: var(--ink);
+  margin-bottom: .4rem;
+}
+.chain-desc {
+  font-size: .85rem; color: var(--sub); line-height: 1.8;
+}
+.chain-desc strong { color: var(--ink); font-weight: 700; }
+
+/* ══════════════════════════ DARK PANEL → now PAPER panel ══════════════════════════ */
+.dpanel {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--gold);
+  padding: 2.5rem 2rem;
+  margin: 2.5rem 0;
+  position: relative; overflow: hidden;
+}
+.dpanel::before {
+  content: attr(data-c);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10rem; font-weight: 700;
+  color: rgba(10,8,6,.05);
+  position: absolute; right: -.5rem; bottom: -1.5rem;
+  line-height: 1; pointer-events: none;
+}
+.dpanel-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .45em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .8rem;
+}
+.dpanel-stmt {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  font-weight: 700; color: var(--ink); line-height: 1.6;
+  position: relative;
+}
+.dpanel-stmt em  { font-style: normal; color: var(--gold2); }
+.dpanel-stmt .red { color: var(--red); }
+.dpanel-body {
+  margin-top: 1.2rem;
+  font-size: .87rem; color: var(--sub); line-height: 1.85;
+  position: relative;
+}
+.dpanel-body strong { color: var(--ink); font-weight: 700; }
+
+/* ══════════════════════════ QUESTION BLOCK ══════════════════════════ */
+.qblock {
+  margin: 2rem 0;
+  border-left: 3px solid var(--gold);
+  padding: 1.8rem 2rem;
+  background: var(--paper);
+}
+.qblock-target {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .45em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .8rem;
+}
+.qblock-q {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .98rem; font-weight: 700; color: var(--ink);
+  line-height: 1.75; margin-bottom: .6rem;
+}
+.qblock-q::before { content: 'Q. '; color: var(--gold2); }
+.qblock-why {
+  font-size: .8rem; color: var(--muted); line-height: 1.7;
+  border-top: 1px solid var(--rule); padding-top: .8rem; margin-top: .8rem;
+}
+.qblock-why strong { color: var(--sub); font-weight: 700; }
+
+/* ══════════════════════════ RED BLOCK ══════════════════════════ */
+.rblock {
+  border: 2px solid var(--red2);
+  padding: 2rem 1.8rem;
+  margin: 2rem 0;
+  background: #fff8f6;
+}
+.rblock-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--red); margin-bottom: .6rem;
+}
+.rblock-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; font-weight: 700; color: var(--red2);
+  margin-bottom: .5rem;
+}
+.rblock-body {
+  font-size: .85rem; color: var(--sub); line-height: 1.85;
+}
+.rblock-body strong { color: var(--red2); font-weight: 700; }
+
+/* ══════════════════════════ VERDICT GRID ══════════════════════════ */
+.verdict-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.5rem; margin: 2.5rem 0;
+}
+.vcard {
+  border: 1px solid var(--rule);
+  padding: 1.8rem 1.6rem;
+}
+.vcard.bad  { border-color: var(--red2);  background: #fff8f6; border-width: 2px; }
+.vcard.good { border-color: var(--green2); background: #f4faf6; border-width: 2px; }
+
+.vcard-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .4em; text-transform: uppercase;
+  margin-bottom: .6rem;
+}
+.vcard.bad  .vcard-tag { color: var(--red); }
+.vcard.good .vcard-tag { color: var(--green); }
+
+.vcard-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .98rem; font-weight: 700;
+  margin-bottom: .6rem;
+}
+.vcard.bad  .vcard-title { color: var(--red2); }
+.vcard.good .vcard-title { color: var(--green2); }
+
+.vcard-item {
+  font-size: .8rem; color: var(--sub); line-height: 1.75;
+  padding: .35rem 0; border-bottom: 1px solid var(--faint);
+}
+.vcard-item:last-child { border-bottom: none; }
+
+/* ══════════════════════════ PROCEDURE TABLE ══════════════════════════ */
+.ptable { width: 100%; border-collapse: collapse; margin: 2.5rem 0; }
+.ptable thead tr { border-bottom: 2px solid var(--ink); }
+.ptable th {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600; text-align: left;
+  padding: .7rem .8rem;
+}
+.ptable td {
+  padding: .8rem .8rem;
+  border-bottom: 1px solid var(--faint);
+  font-size: .83rem; color: var(--sub); vertical-align: top;
+  line-height: 1.7;
+}
+.ptable td:first-child {
+  color: var(--gold2); font-weight: 700;
+  font-family: 'Noto Serif KR', serif;
+}
+.ptable .miss { background: #fff8f6; }
+.ptable .miss td:first-child { color: var(--red); }
+.ptable .miss td strong { color: var(--red2); }
+
+/* ══════════════════════════ AXIOM ══════════════════════════ */
+.axiom {
+  border: 2px solid var(--ink);
+  padding: 2rem 2rem;
+  margin: 2.5rem 0;
+  background: var(--deep);
+  position: relative;
+}
+.axiom::before {
+  content: '§';
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 5rem; font-weight: 700;
+  color: rgba(10,8,6,.07);
+  position: absolute; right: 1.5rem; bottom: -.3rem;
+  line-height: 1; pointer-events: none;
+}
+.axiom-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .45em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .6rem;
+}
+.axiom-body {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--ink); line-height: 1.75;
+  position: relative;
+}
+.axiom-body em  { font-style: normal; color: var(--gold2); }
+.axiom-body .r  { color: var(--red); }
+
+/* ══════════════════════════ FLOW DIAGRAM ══════════════════════════ */
+.flow { margin: 2.5rem 0; }
+.flow-row {
+  display: grid; grid-template-columns: 150px 1fr;
+  gap: 0; border-bottom: 1px solid var(--rule);
+}
+.flow-row:first-child { border-top: 2px solid var(--ink); }
+.flow-stage {
+  background: var(--paper);
+  padding: 1.2rem 1.2rem;
+  display: flex; flex-direction: column; justify-content: center;
+  border-right: 1px solid var(--rule);
+}
+.flow-stage-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .25em; color: var(--gold); margin-bottom: .2rem;
+}
+.flow-stage-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .9rem; font-weight: 700; color: var(--ink);
+}
+.flow-body { padding: 1.2rem 1.5rem; }
+.flow-current {
+  font-size: .8rem; color: var(--red); line-height: 1.65; margin-bottom: .4rem;
+  font-weight: 600;
+}
+.flow-should {
+  font-size: .8rem; color: var(--sub); line-height: 1.65;
+}
+.flow-row.highlight { background: var(--deep); }
+.flow-row.highlight .flow-stage { background: var(--deep); }
+.flow-row.highlight .flow-stage-name { color: var(--gold); }
+.flow-row.highlight .flow-should { color: var(--gold2); font-weight: 600; }
+
+/* ══════════════════════════ FINALE ══════════════════════════ */
+.finale {
+  background: var(--ink);
+  color: #f5f0e8;
+  padding: 6rem 2.5rem;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.finale::before {
+  content: '元帳';
+  font-family: 'Noto Serif KR', serif;
+  font-size: 16rem; font-weight: 900;
+  color: rgba(255,255,255,.05);
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  white-space: nowrap; pointer-events: none; line-height: 1;
+}
+.finale-core {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.2rem, 3.5vw, 2rem);
+  font-weight: 700; color: #f5f0e8; line-height: 1.75;
+  margin-bottom: 3rem; position: relative;
+}
+.finale-core em  { font-style: normal; color: #d4aa40; }
+.finale-core .r  { color: #e88070; }
+.finale-seal {
+  width: 80px; height: 80px;
+  border: 2px solid #d4aa40; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 3rem; position: relative;
+}
+.finale-seal span {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.8rem; font-weight: 900; color: #d4aa40;
+}
+.finale-meta {
+  font-size: .72rem; color: rgba(245,240,232,.5);
+  letter-spacing: .1em; line-height: 2.3; position: relative;
+}
+.finale-meta strong { color: rgba(245,240,232,.85); }
+
+/* ══════════════════════════ DIVIDER ══════════════════════════ */
+hr { border: none; border-top: 1px solid var(--rule); margin: 0; }
+hr.heavy { border-top: 2px solid var(--ink); }
+
+/* ══════════════════════════ PRINT ══════════════════════════ */
+@media print {
+  body { font-size: 10pt; line-height: 1.6; }
+  body::before { display: none; }
+
+  .hero { min-height: unset; padding: 2cm 0 1.5cm; page-break-after: always; }
+  .hero-bg { display: none; }
+  .hero-tag, .hero-title, .hero-sub, .hero-core, .hero-rule {
+    opacity: 1 !important; animation: none !important;
+  }
+
+  .sec { padding: 1.2cm 0; page-break-inside: avoid; }
+  .sec-title { font-size: 14pt; }
+  .prose { font-size: 9.5pt; }
+  .chain-desc, .qblock-why, .rblock-body, .dpanel-body { font-size: 9pt; }
+  .dpanel, .axiom, .qblock, .rblock { page-break-inside: avoid; }
+  .verdict-grid { page-break-inside: avoid; }
+  .ptable { page-break-inside: avoid; font-size: 8.5pt; }
+  .flow { page-break-inside: avoid; }
+
+  /* Print: keep all colors fully visible — no ink-saving grey */
+  .finale {
+    background: var(--ink) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .dpanel, .axiom, .rblock, .qblock, .vcard.bad, .vcard.good,
+  .ptable .miss, .flow-row.highlight {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .wrap { max-width: 100%; padding: 0; }
+}
+
+@keyframes up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .verdict-grid { grid-template-columns: 1fr; }
+  .flow-row { grid-template-columns: 1fr; }
+  .flow-stage { border-right: none; border-bottom: 1px solid var(--rule); }
+  .chain::before { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+  HERO
+════════════════════════════════════════ -->
+<section class="hero wrap">
+  <div class="hero-bg">帳</div>
+  <div class="hero-tag">원장(元帳) feat. 원금(元金) · 심화 법리·정책 문서 · 2026</div>
+  <h1 class="hero-title">
+    해외금융세법은<br>
+    <span class="gold">원장 기반 실질조사</span> 위에서만<br>
+    정의될 수 있다
+  </h1>
+  <div class="hero-rule"></div>
+  <div class="hero-sub">
+    이 논증은 <em>"ROC는 무조건 비과세"</em>를 주장하지 않는다.<br>
+    과세의 사실적·데이터적 기초가 무엇인지 공개하라는<br>
+    <em>절차적 정당성의 요구</em>다.
+  </div>
+  <div class="hero-core">
+    소득성격을 결정하는 원장과 실질조사 체계가 없다면,<br>
+    국가는 <span class="red">어떤 자료를 근거로 최종 소득 과세표준을 형성하는지</span><br>
+    설명해야 한다.
+  </div>
+</section>
+
+<hr class="heavy">
+
+<!-- ════════════════════════════════════════
+  제1부
+════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-tag">제1부 — 논증의 출발점</div>
+  <h2 class="sec-title">과세는 <span class="gold">금액</span>이 아니라<br><span class="gold">소득성격</span>에서 시작한다</h2>
+
+  <p class="prose">
+    해외 ETF 분배금은 단일한 성격의 소득이 아니다.
+    하나의 분배금 안에 <strong>배당(BOX1), 단기양도차익(STCG), 원금 반환(BOX3·ROC), 장기양도차익(LTCG)</strong>이 혼재할 수 있다.
+    이것은 회계의 문제가 아니라 <em class="g">과세 법리의 출발점</em>이다.
+  </p>
+  <p class="prose">
+    소득세법 §14는 실질과세 원칙을 규정한다 — <strong>"명목이 아니라 실질에 따라 과세한다."</strong>
+    그렇다면 질문은 자연스럽게 이어진다:
+    해외 ETF 분배금의 <em class="g">실질</em>은 무엇으로 확인하는가?
+    그 확인에 사용한 자료와 절차는 무엇인가?
+  </p>
+
+  <div class="chain">
+    <div class="chain-step">
+      <div class="chain-num">1</div>
+      <div class="chain-body">
+        <div class="chain-label">전제</div>
+        <div class="chain-title">해외 ETF 분배금은 단일 성격이 아니다</div>
+        <div class="chain-desc">
+          하나의 분배금이 동시에 <strong>배당 + ROC + STCG</strong>를 포함할 수 있다.<br>
+          MSTY 2025: BOX3(ROC) 100% / CONY 2025: BOX3 97% / NVDY 2025: BOX3 52.6%<br>
+          → 분배금 금액이 같아도 과세 결과는 성격에 따라 완전히 달라진다.
+        </div>
+      </div>
+    </div>
+    <div class="chain-step">
+      <div class="chain-num">2</div>
+      <div class="chain-body">
+        <div class="chain-label">소득세법 §14 실질과세 원칙</div>
+        <div class="chain-title">과세는 명목이 아니라 실질 성격에 따른다</div>
+        <div class="chain-desc">
+          <strong>소득의 명목(분배금)이 아니라 실질(배당인가 원금 반환인가)</strong>에 따라 과세해야 한다.<br>
+          "배당"이라는 명칭이 붙어 있어도, 실질이 원금 반환이라면 배당소득이 아니다.<br>
+          → 실질 확인 없는 과세는 §14 위반의 소지가 있다.
+        </div>
+      </div>
+    </div>
+    <div class="chain-step">
+      <div class="chain-num">3</div>
+      <div class="chain-body">
+        <div class="chain-label">핵심 질문의 발생</div>
+        <div class="chain-title">실질 성격은 무엇으로 확인하는가</div>
+        <div class="chain-desc">
+          실질과세 원칙을 적용하려면 <strong>소득의 실질을 확인하는 자료와 절차</strong>가 있어야 한다.<br>
+          그 자료가 <strong>원장(ICI Primary Layout)</strong>이다.<br>
+          → 원장 없이 실질과세를 주장하는 것은 — 논리적으로 자기모순이다.
+        </div>
+      </div>
+    </div>
+    <div class="chain-step">
+      <div class="chain-num">4</div>
+      <div class="chain-body">
+        <div class="chain-label">귀결 명제</div>
+        <div class="chain-title">원장 기반 실질조사 없이는 과세 근거 자체가 불명확하다</div>
+        <div class="chain-desc">
+          <strong>현재 국세청은 ICI 원장 없이 전액 배당소득으로 처리한다.</strong><br>
+          이것은 "실질 확인 후 과세"가 아니라 "실질 미확인 후 형식 과세"다.<br>
+          → 실질과세 원칙을 표방하면서 실질조사 체계가 없다면 — 그 과세의 근거를 설명해야 한다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="axiom">
+    <div class="axiom-num">핵심 명제 — 이 논증의 뼈대</div>
+    <div class="axiom-body">
+      해외금융세법은 <em>원장 기반 실질조사</em> 위에서만 정의될 수 있다.<br>
+      소득성격을 결정하는 원장과 조사체계가 없다면,<br>
+      국가는 <span class="r">어떤 자료를 근거로 최종 소득 과세표준을 형성하는지</span> 설명해야 한다.
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ════════════════════════════════════════
+  제2부
+════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-tag">제2부 — 원장 위계론</div>
+  <h2 class="sec-title">소득성격 결정권은<br><span class="gold">원장의 위계</span>에 따른다</h2>
+
+  <p class="prose">
+    해외 ETF 분배금의 소득성격을 확인하는 자료에는 위계가 있다.
+    모든 자료가 같은 권한을 갖지 않는다.
+    <strong>무엇이 얼마를 지급했는가(금액)</strong>와
+    <strong>그것이 무엇인가(성격)</strong>는 서로 다른 원장이 답한다.
+  </p>
+
+  <div class="flow">
+    <div class="flow-row">
+      <div class="flow-stage">
+        <div class="flow-stage-num">원장 I</div>
+        <div class="flow-stage-name">DVCA<br>지급금액 원장</div>
+      </div>
+      <div class="flow-body">
+        <div class="flow-current">▶ 권한: 얼마를 지급했는가</div>
+        <div class="flow-should">→ ETF가 투자자에게 지급한 총금액. 소득성격 결정 권한 없음.<br>
+        금액 확인 기능만 있다. 이 자료만으로 과세하는 것은 성격 불명확 과세다.</div>
+      </div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-stage">
+        <div class="flow-stage-num">원장 II</div>
+        <div class="flow-stage-name">QI<br>세액정산 원장</div>
+      </div>
+      <div class="flow-body">
+        <div class="flow-current">▶ 권한: 세금을 얼마나 원천징수·환급했는가</div>
+        <div class="flow-should">→ IRS QI 협정에 따른 세액 처리. 소득성격 창설 권한 없음.<br>
+        <strong>명제 3:</strong> QI는 세액원장이다. 증권사가 QI로 환급은 처리하면서 과세표준 정정은 거부하는 것은
+        원장 위계를 선택적으로 적용하는 이중 기준이다.</div>
+      </div>
+    </div>
+    <div class="flow-row highlight">
+      <div class="flow-stage">
+        <div class="flow-stage-num">원장 III ★</div>
+        <div class="flow-stage-name">ICI<br>소득성격 원장</div>
+      </div>
+      <div class="flow-body">
+        <div class="flow-current">▶ 권한: 무엇을 지급했는가 — 유일한 결정권자</div>
+        <div class="flow-should">→ ETF 발행사가 연말 E&P 계산 후 IRS에 공시하는 확정자료.<br>
+        BOX1(배당) / BOX3(ROC·원금반환) / STCG의 소득성격을 유일하게 확정한다.<br>
+        매년 1월 무료 공개. 이것이 실질조사의 1차 대상 자료다.</div>
+      </div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-stage">
+        <div class="flow-stage-num">원장 IV</div>
+        <div class="flow-stage-name">KTAX<br>국내과세표준</div>
+      </div>
+      <div class="flow-body">
+        <div class="flow-current">▶ 역할: 국제원장의 소득성격을 계승하여 국내 과표를 형성</div>
+        <div class="flow-should">→ <strong>명제 4:</strong> KTAX는 ICI 소득성격을 계승해야 한다.<br>
+        ICI_BOX3(원금)는 국내 과세표준에서 제외되어야 한다.<br>
+        이것이 소득세법 §14 실질과세 원칙의 요구다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dpanel" data-c="⇒">
+    <div class="dpanel-tag">원장 위계론의 귀결</div>
+    <div class="dpanel-stmt">
+      현재 한국의 과세 체계는 원장 III(ICI)를 건너뛰고<br>
+      원장 I(금액) → 원장 IV(과표)로 직행한다<br>
+      <em>소득성격 확인 단계가 없다</em>
+    </div>
+    <div class="dpanel-body">
+      이것은 실질과세 원칙(소득세법 §14)을 표방하면서
+      실질(소득성격)을 확인하는 절차를 생략한 것이다.<br>
+      <strong>원장 III 없는 과세 = 실질 미확인 과세.</strong>
+      국가가 이 과정을 설명하지 않는 한, 과세의 사실적 기초는 불명확하다.
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ════════════════════════════════════════
+  제3부
+════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-tag">제3부 — 기관별 핵심 질문</div>
+  <h2 class="sec-title">세 기관에 던지는<br><span class="gold">원장 기반 질문</span></h2>
+
+  <p class="prose">
+    이 질문들은 "세금을 내지 않겠다"는 주장이 아니다.
+    <strong>과세의 사실적·데이터적 기초가 무엇인지 공개하라는 절차적 요구</strong>다.
+    정보공개청구, 민원, 감사청구, 헌법소원 모두에서 핵심 쟁점이 된다.
+  </p>
+
+  <div class="qblock">
+    <div class="qblock-target">→ 기획재정부 · 금융세제과</div>
+    <div class="qblock-q">
+      해외 ETF 분배금의 소득성격이 과세의 핵심이라면,<br>
+      기획재정부는 그 소득성격을 확인하기 위한<br>
+      실질조사 대상 자료를 무엇으로 정의하고 있는가?
+    </div>
+    <div class="qblock-q">
+      ICI Primary Layout, QI 재분류 데이터, Form 1099-DIV BOX3,<br>
+      ROC 비율, Basis Adjustment 등 관련 자료를<br>
+      검토 대상으로 규정한 문서 또는 지침이 존재하는가?
+    </div>
+    <div class="qblock-why">
+      <strong>이 질문이 강한 이유:</strong>
+      기재부가 "검토한다"고 답하면 그 근거를 공개해야 한다.
+      "검토하지 않는다"고 답하면 실질과세 원칙 적용의 사실적 기초가 없음을 자인하는 것이다.
+      어느 쪽이든 현행 과세 체계의 취약점이 드러난다.
+    </div>
+  </div>
+
+  <div class="qblock">
+    <div class="qblock-target">→ 국세청 · 소득세과</div>
+    <div class="qblock-q">
+      해외 ETF 분배금의 최종 소득성격을 확정하기 위한<br>
+      실질조사 절차는 무엇인가?<br>
+      그 절차를 규정한 내부 지침 또는 유권해석이 존재하는가?
+    </div>
+    <div class="qblock-q">
+      납세자가 ICI Primary Layout 원장 자료를 제출했을 때,<br>
+      국세청은 어떤 기준으로 그 자료를 검토하는가?<br>
+      검토 거부 시 그 근거는 무엇인가?
+    </div>
+    <div class="qblock-why">
+      <strong>이 질문이 강한 이유:</strong>
+      서면-2024-소득-4836 유권해석이 ICI · IRC §301(c)(2) · QI 체계를 검토했는지 여부가 드러난다.
+      검토하지 않고 유권해석을 작성했다면 — 그것이 절차적 하자의 증거다.
+    </div>
+  </div>
+
+  <div class="qblock">
+    <div class="qblock-target">→ M/S/T 증권사 · 금융투자협회</div>
+    <div class="qblock-q">
+      동일한 ICI/QI 원장 데이터를 세금 환급에는 사용하면서<br>
+      과세표준 정정에는 사용하지 않는 근거는 무엇인가?<br>
+      이 이중 기준을 정당화하는 내부 규정이 존재하는가?
+    </div>
+    <div class="qblock-q">
+      투자자에게 해외 ETF를 판매하면서<br>
+      ROC(원금 반환)의 세무적 속성을 안내한 문서가 존재하는가?<br>
+      존재하지 않는다면 판매 적합성 원칙 위반의 소지가 있지 않는가?
+    </div>
+    <div class="qblock-why">
+      <strong>이 질문이 강한 이유:</strong>
+      KSD 정보공개 16516499에서 "ROC 성격 구분은 발행사 결정 사항, 당국 관여 없음"이 확인되었다.
+      증권사가 이 구조를 알고 있으면서 판매했다면 — 설명 의무 위반의 문제가 발생한다.
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ════════════════════════════════════════
+  제4부
+════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-tag">제4부 — 감사원형 논증</div>
+  <h2 class="sec-title">감사원에 던지는<br><span class="red">가장 강한 질문</span></h2>
+
+  <p class="prose">
+    감사원 감사청구는 특정 처분의 위법성을 다투는 것이 아니다.
+    <strong>행정 체계 전체의 구조적 문제</strong>를 지적하는 것이다.
+    이 질문이 감사원 논리에서 가장 파괴력이 높다.
+  </p>
+
+  <div class="dpanel" data-c="?">
+    <div class="dpanel-tag">감사원 핵심 질문 — 이것이 가장 중요하다</div>
+    <div class="dpanel-stmt">
+      해외 ETF 과세체계에서 실질과세 원칙을 적용한다고 하면서,<br>
+      소득성격을 확인하는 <em>원장과 자료에 대한 실질조사 체계</em>는 구축되어 있는가?<br><br>
+      <span class="red">구축되어 있다면 공개하라.</span><br>
+      구축되어 있지 않다면 어떤 자료를 근거로 최종 소득 과세표준을 형성하는가?
+    </div>
+  </div>
+
+  <div class="verdict-grid">
+    <div class="vcard bad">
+      <div class="vcard-tag">만약 "체계 없음"이라 답하면</div>
+      <div class="vcard-title">실질과세 원칙의 공동화 확인</div>
+      <div class="vcard-item">소득세법 §14 실질과세 원칙 — 선언만, 절차 없음</div>
+      <div class="vcard-item">실질 확인 없는 형식 과세 — 법원칙과 실행의 분리</div>
+      <div class="vcard-item">ICI 무료 공개 데이터를 72년간 미통합 — 행정 의지 부재</div>
+      <div class="vcard-item">납세자 보호의무 (국세기본법 §81의2) 위반 소지</div>
+      <div class="vcard-item">감사 지적 사항으로 직결됨</div>
+    </div>
+    <div class="vcard good">
+      <div class="vcard-tag">만약 "체계 있음"이라 답하면</div>
+      <div class="vcard-title">그 체계의 내용을 공개해야 한다</div>
+      <div class="vcard-item">어떤 자료를 실질조사 대상으로 규정했는가</div>
+      <div class="vcard-item">ICI 원장을 포함하는가, 배제하는가</div>
+      <div class="vcard-item">배제한다면 그 근거는 무엇인가</div>
+      <div class="vcard-item">납세자가 ICI 원장을 제출할 때 처리 기준은 무엇인가</div>
+      <div class="vcard-item">공개된 체계와 실제 처리가 일치하는지 검증 가능해진다</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    어느 방향으로 답해도 현행 과세 체계의 <strong>구조적 취약점이 드러난다.</strong>
+    이것이 이 논증이 "ROC 비과세 주장"보다 훨씬 강한 이유다.
+    결론을 먼저 주장하는 것이 아니라, 절차의 정당성을 묻기 때문이다.
+  </p>
+
+  <div class="rblock">
+    <div class="rblock-tag">감사원 감사청구 핵심 논거</div>
+    <div class="rblock-title">해외 ETF 과세체계의 절차적 정당성 결여</div>
+    <div class="rblock-body">
+      ① 소득세법 §14는 실질과세를 요구한다.<br>
+      ② 실질과세를 위해서는 소득의 실질(성격)을 확인하는 절차가 있어야 한다.<br>
+      ③ 해외 ETF 분배금의 소득성격을 확인하는 원장(ICI Primary Layout)이 존재한다.<br>
+      ④ 국세청은 이 원장을 검토 대상으로 규정하지 않았다 (KSD 공문 16516499로 확인).<br>
+      ⑤ 따라서 현행 과세는 실질 미확인 상태의 형식 과세다.<br>
+      <strong>⑥ 이것은 §14 위반 소지가 있으며, 납세자 보호의무(§81의2) 위반의 가능성이 있다.</strong>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ════════════════════════════════════════
+  제5부
+════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-tag">제5부 — 절차 정합성 분석</div>
+  <h2 class="sec-title">있어야 할 것이 없고<br><span class="red">없어야 할 것이 있다</span></h2>
+
+  <table class="ptable">
+    <thead>
+      <tr>
+        <th>절차 단계</th>
+        <th>있어야 할 것 (정합)</th>
+        <th>현재 상황 (부정합)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>①<br>소득성격 자료 수집</td>
+        <td>ICI Primary Layout을 공식 실질조사 대상으로 규정.<br>발행사 확정 BOX1/BOX3 데이터 자동 수신.</td>
+        <td>ICI 데이터 국세청 미연동. 납세자가 개인적으로 수집해야 함. 공식 검토 기준 없음.</td>
+      </tr>
+      <tr class="miss">
+        <td>②<br>소득성격 확인</td>
+        <td>원장 위계에 따라 ICI → QI → DVCA 순으로 소득성격 확정.<br>BOX3 = 원금 반환으로 과세표준 제외 처리.</td>
+        <td><strong>이 단계가 없다.</strong> 금액(DVCA) → 과세표준(KTAX)으로 직행.<br>소득성격 확인 절차 자체가 부재.</td>
+      </tr>
+      <tr>
+        <td>③<br>과세표준 형성</td>
+        <td>실질 확인 후 BOX1(배당소득) 부분만 과세표준에 산입.<br>BOX3는 취득원가 감액 처리.</td>
+        <td>전액 배당소득으로 일괄 처리. 유권해석 서면-2024-소득-4836 한 줄 근거.</td>
+      </tr>
+      <tr class="miss">
+        <td>④<br>납세자 제출 자료 처리</td>
+        <td>납세자가 ICI 원장 제출 시 공식 검토 절차 있어야 함.<br>검토 결과 통보 의무.</td>
+        <td><strong>"QI 그룹신고 기준이므로 개인별 수정 불가."</strong><br>제출 자료 검토 기준 없음. 증빙 책임 납세자에게 전가.</td>
+      </tr>
+      <tr>
+        <td>⑤<br>Basis Tracking</td>
+        <td>ROC 수령 시 취득원가 자동 감액. 증권사 BT 의무화.<br>미국은 2012년부터 의무화.</td>
+        <td>BT 체계 전무. 납세자가 LOT별 원가 직접 추적해야 함.<br>KSD "당국 관여 없음" 공식 확인.</td>
+      </tr>
+      <tr class="miss">
+        <td>⑥<br>세무 영수증 정확성</td>
+        <td>최종 국외납세 과표가 ICI 원장과 일치하는 영수증 발급.<br>BOX3 부분 제외 후 정정 영수증 발급 가능.</td>
+        <td><strong>정정 영수증 발급 거부.</strong> QI 재분류 데이터 보유하면서도 정정 불가 통보.<br>이중 기준의 핵심 증거.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="axiom">
+    <div class="axiom-num">절차 정합성 명제</div>
+    <div class="axiom-body">
+      실질과세 원칙(§14)은 선언만으로 완성되지 않는다.<br>
+      소득의 실질을 <em>확인하는 절차</em>와 <em>자료</em>가 있어야 한다.<br>
+      <span class="r">절차 없는 실질과세는 형식과세와 구별되지 않는다.</span>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ════════════════════════════════════════
+  제6부
+════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-tag">제6부 — 법적 근거 체계</div>
+  <h2 class="sec-title">논증을 지지하는<br><span class="gold">법령·판례·원칙</span></h2>
+
+  <table class="ptable">
+    <thead>
+      <tr>
+        <th>근거</th>
+        <th>내용</th>
+        <th>이 논증에서의 역할</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>소득세법<br>§14</td>
+        <td>실질과세 원칙. "명목이 아닌 실질에 따라 과세."</td>
+        <td>소득성격 실질 확인을 요구하는 근거 조항. ICI 원장이 "실질"을 확인하는 도구다.</td>
+      </tr>
+      <tr>
+        <td>소득세법<br>§17</td>
+        <td>배당소득의 열거 요건.</td>
+        <td>BOX3(ROC)가 §17 열거 요건을 충족하는지 여부의 판단 기준. 요건 미충족 시 배당소득 부과 불가.</td>
+      </tr>
+      <tr>
+        <td>국세기본법<br>§45의2</td>
+        <td>경정청구권. 잘못 납부한 세액 환급 청구 권리.</td>
+        <td>ICI 원장 기반 경정청구의 법적 근거. 5년 소멸시효.</td>
+      </tr>
+      <tr>
+        <td>국세기본법<br>§81의2</td>
+        <td>납세자 보호 의무.</td>
+        <td>국가가 소득성격 확인 체계를 구축하지 않음으로써 납세자에게 증빙 부담을 전가하는 것 — 보호의무 위반 소지.</td>
+      </tr>
+      <tr>
+        <td>헌재<br>2001헌바63</td>
+        <td>담세력 원칙. 실질적 납세능력(경제적 이익)에 따라 과세해야 한다.</td>
+        <td>경제적 소득 ₩0인 ROC에 과세하는 것은 담세력 없는 과세다. 위헌 소지.</td>
+      </tr>
+      <tr>
+        <td>대법원<br>2012두22485</td>
+        <td>실질과세 원칙 적용. 경제적 실질에 따른 소득 귀속 판단.</td>
+        <td>ROC의 경제적 실질(원금 반환)을 기준으로 과세 여부를 판단해야 함의 근거.</td>
+      </tr>
+      <tr>
+        <td>IRC<br>§301(c)(2)</td>
+        <td>1954년 미국 세법. ROC는 즉시 과세소득이 아니라 취득원가 감액.</td>
+        <td>ICI 원장이 BOX3로 확정한 금액의 세무적 성격 근거. 국제적으로 확립된 원칙.</td>
+      </tr>
+      <tr>
+        <td>ICI Primary<br>Layout</td>
+        <td>ETF 발행사 연말 E&P 계산 후 무료 공시. BOX1/BOX3 소득성격 확정.</td>
+        <td>실질조사의 1차 대상 자료. κ=100% · 106건 교차검증. 원장 위계 III.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<hr>
+
+<!-- ════════════════════════════════════════
+  제7부
+════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-tag">제7부 — 전략적 강점 분석</div>
+  <h2 class="sec-title">이 논증이 강한 이유<br><span class="gold">결론 없이 절차를 묻는다</span></h2>
+
+  <p class="prose">
+    "ROC는 비과세다"라고 먼저 주장하면 상대방이 반박할 여지가 생긴다.
+    그러나 "어떤 자료로 소득성격을 확인했는가"를 먼저 묻는 것은 — <strong>상대방이 답을 피하기 어렵다.</strong>
+  </p>
+
+  <div class="verdict-grid">
+    <div class="vcard bad">
+      <div class="vcard-tag">약한 논증 방식</div>
+      <div class="vcard-title">"ROC는 무조건 비과세다"</div>
+      <div class="vcard-item">결론 선행 → 반박 여지 큼</div>
+      <div class="vcard-item">국세청이 유권해석으로 맞선다</div>
+      <div class="vcard-item">납세자의 입증 부담이 커진다</div>
+      <div class="vcard-item">법령 해석 다툼으로 소모적 싸움</div>
+      <div class="vcard-item">"세금을 내지 않으려는 것"으로 프레임</div>
+    </div>
+    <div class="vcard good">
+      <div class="vcard-tag">강한 논증 방식 — 이 논증</div>
+      <div class="vcard-title">"소득성격 확인 절차가 무엇인가"</div>
+      <div class="vcard-item">절차 질문 → 답변 회피 불가</div>
+      <div class="vcard-item">국가가 체계 설명 의무를 진다</div>
+      <div class="vcard-item">입증 부담이 국가 쪽으로 이동</div>
+      <div class="vcard-item">정보공개청구·감사청구 모두에 유효</div>
+      <div class="vcard-item">"투명성 요구"로 프레임 — 도덕적 우위</div>
+    </div>
+  </div>
+
+  <div class="dpanel" data-c="∴">
+    <div class="dpanel-tag">논증의 수렴 명제</div>
+    <div class="dpanel-stmt">
+      해외금융세법은 <em>원장 기반 실질조사</em> 위에서만 정의될 수 있다.<br><br>
+      국가가 실질과세 원칙을 표방한다면,<br>
+      소득의 실질(성격)을 <em>어떤 자료로 어떤 절차로 확인하는지</em> 공개해야 한다.<br><br>
+      <span class="red">그 자료가 ICI 원장이 아니라면 — 무엇인가?</span><br>
+      그 절차가 없다면 — 지금 당장 만들어야 한다.
+    </div>
+    <div class="dpanel-body">
+      이것은 세금을 내지 않겠다는 주장이 아니다.<br>
+      <strong>과세의 사실적 기초를 투명하게 공개하고, 소득의 실질에 맞게 과표를 형성하라는 요구다.</strong><br>
+      투자자 보호와 세원 확보는 상충하지 않는다 — 원장이 있으면 둘 다 가능하다.
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ════════════════════════════════════════
+  제8부
+════════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="sec-tag">제8부 — 행동 경로</div>
+  <h2 class="sec-title">논증을 무기로<br><span class="gold">세 갈래 행동 경로</span></h2>
+
+  <table class="ptable">
+    <thead>
+      <tr>
+        <th>경로</th>
+        <th>수단</th>
+        <th>핵심 쟁점</th>
+        <th>기대 효과</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>경로 ①<br>행정</td>
+        <td>정보공개청구<br>+ 경정청구</td>
+        <td>"해외 ETF 소득성격 실질조사 체계를 공개하라" / ICI 원장 기반 경정청구</td>
+        <td>체계 부재 공식 확인 또는 체계 공개 → 후속 법적 행동 근거 확보</td>
+      </tr>
+      <tr>
+        <td>경로 ②<br>감사</td>
+        <td>감사원<br>감사청구</td>
+        <td>실질과세 원칙 표방하면서 실질조사 체계 없음 — 행정 부작위</td>
+        <td>감사원 감사 → 시스템 개선 권고 → 제도 변화 압력</td>
+      </tr>
+      <tr>
+        <td>경로 ③<br>입법</td>
+        <td>국회 청원<br>+ 헌법소원</td>
+        <td>소득세법 §17 ROC 예외조항 신설 / 헌재 2001헌바63 담세력 원칙 위반</td>
+        <td>입법 개정 / 헌재 위헌 결정 → 구조적 과세 체계 변화</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="rblock">
+    <div class="rblock-tag">정보공개청구 핵심 문구 — 복사 사용 가능</div>
+    <div class="rblock-title">기획재정부 / 국세청 정보공개청구</div>
+    <div class="rblock-body">
+      "해외 ETF 분배금의 소득성격(배당소득 vs ROC·원금반환)을 확인하기 위한
+      실질조사 절차 및 검토 대상 자료 목록을 공개하여 주시기 바랍니다.<br>
+      특히 ICI Primary Layout, Form 1099-DIV BOX3, QI 재분류 데이터, IRC §301(c)(2)에 따른
+      ROC 처리 지침 등 관련 자료를 <strong>실질조사 대상으로 규정한 내부 문서 또는 지침</strong>이
+      존재하는지 여부와 그 내용을 공개하여 주시기 바랍니다.<br>
+      존재하지 않는 경우, 현행 해외 ETF 배당소득 과표는
+      <strong>어떤 자료를 근거로 최종 확정되는지</strong>의 근거 문서를 공개하여 주시기 바랍니다."
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+  FINALE
+════════════════════════════════════════ -->
+<div class="finale">
+  <div class="wrap">
+    <div class="finale-core">
+      해외금융세법은 <em>원장 기반 실질조사</em> 위에서만 정의될 수 있다<br>
+      소득성격을 결정하는 원장과 조사체계가 없다면<br>
+      국가는 <span class="r">어떤 자료를 근거로 최종 소득 과표를 형성하는지</span><br>
+      설명해야 한다<br><br>
+      <em>이것은 세금을 내지 않겠다는 주장이 아니다</em><br>
+      과세의 사실적 기초를 공개하라는 절차적 요구다
+    </div>
+    <div class="finale-seal"><span>元</span></div>
+    <div class="finale-meta">
+      원장 위계: DVCA(금액) → QI(세액) → <strong>ICI ★ (소득성격 유일 결정권)</strong> → KTAX(국내과표)<br>
+      ICI_BOX1(배당) + ICI_STCG + ICI_BOX3(ROC) = ICI_TOTAL · κ=100% · 106건 교차검증<br>
+      MSTY 2025 BOX3=100% · CONY 97% · NVDY 52.6% · ICI-Primary-MASTER-V03_LOCK<br>
+      KSD 정보공개 16516499 · 특허출원 10-2026-0079638 · 0084940 · 0084983<br><br>
+      소득세법 §14 실질과세 · §17 배당소득 · 국세기본법 §45의2 · §81의2<br>
+      헌재 2001헌바63 담세력 원칙 · 대법원 2012두22485 · IRC §301(c)(2) 1954<br><br>
+      <strong>장세봉 / 인흥(주) · sebjang@gmail.com · sebjang.github.io/roc-tax-verification</strong>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

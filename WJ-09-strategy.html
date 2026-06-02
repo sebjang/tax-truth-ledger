@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원장(元帳) feat. 원금(元金) — AI 시대 독립연구자 전략 · JSB71GA10</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --white:  #ffffff;
+  --paper:  #f5f0e8;
+  --deep:   #ede6d4;
+  --ink:    #0a0806;
+  --body:   #1a1410;
+  --sub:    #2e2620;
+  --muted:  #4a3e34;
+  --rule:   #c8b89a;
+  --faint:  #e8e0cc;
+  --gold:   #5c3e06;
+  --gold2:  #7a5410;
+  --red:    #7a100a;
+  --green:  #0e3e1a;
+  --w:      820px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--body);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  line-height: 1.9;
+}
+
+@media screen {
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: repeating-linear-gradient(
+      180deg, transparent 0, transparent 47px,
+      rgba(200,184,154,.12) 47px, rgba(200,184,154,.12) 48px);
+  }
+}
+
+.w { position: relative; z-index: 1; max-width: var(--w); margin: 0 auto; padding: 0 2.5rem; }
+
+/* ── COVER ── */
+.cover {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 7rem 2.5rem 5rem;
+  border-bottom: 2px solid var(--ink);
+  position: relative; overflow: hidden;
+}
+.cover-bg {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(14rem, 30vw, 22rem); font-weight: 700;
+  color: rgba(10,8,6,.04);
+  position: absolute; right: -2rem; top: 50%;
+  transform: translateY(-50%);
+  line-height: 1; pointer-events: none; user-select: none;
+}
+.cover-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .7rem; letter-spacing: .5em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+  opacity: 0; animation: up .7s .1s forwards;
+}
+.cover-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(5rem, 15vw, 10rem); font-weight: 700;
+  color: var(--ink); line-height: .9;
+  letter-spacing: -.02em; margin-bottom: .5rem;
+  opacity: 0; animation: up .8s .3s forwards;
+}
+.cover-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; color: var(--ink);
+  line-height: 1.3; margin-bottom: 1rem;
+  opacity: 0; animation: up .8s .4s forwards;
+}
+.cover-rule {
+  width: 52px; height: 3px; background: var(--ink); margin: 2rem 0;
+  opacity: 0; animation: up .7s .5s forwards;
+}
+.cover-sub {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(.95rem, 2.2vw, 1.2rem); font-weight: 400; color: var(--sub);
+  line-height: 1.8; max-width: 620px;
+  opacity: 0; animation: up .8s .6s forwards;
+}
+.cover-sub em { font-style: italic; color: var(--gold2); }
+.cover-thesis {
+  margin-top: 2.5rem;
+  border-left: 4px solid var(--gold); padding-left: 1.5rem;
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1rem, 2.5vw, 1.3rem); font-weight: 700; color: var(--ink);
+  line-height: 1.65;
+  opacity: 0; animation: up .8s .8s forwards;
+}
+.cover-thesis .red { color: var(--red); }
+.cover-meta {
+  margin-top: 3rem;
+  font-size: .72rem; color: var(--muted); line-height: 1.9;
+  opacity: 0; animation: up .7s 1s forwards;
+}
+
+/* ── STRATEGY SECTIONS ── */
+.strategy-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(4rem, 12vw, 7rem); font-weight: 700;
+  color: rgba(10,8,6,.07); line-height: 1;
+  float: right; margin: 0 0 .5rem 1.5rem;
+}
+.sec {
+  padding: 5rem 0; border-top: 1px solid var(--rule);
+  position: relative;
+}
+.sec::after { content: ''; display: table; clear: both; }
+
+.sec-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .68rem; letter-spacing: .5em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .5rem;
+}
+.sec-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.4rem, 3.5vw, 2rem); font-weight: 700; color: var(--ink);
+  line-height: 1.3; margin-bottom: 2rem;
+}
+.sec-title .gold { color: var(--gold); }
+.sec-title .red  { color: var(--red);  }
+
+.prose {
+  font-size: .92rem; color: var(--body); line-height: 1.95; margin-bottom: 1rem;
+}
+.prose strong { color: var(--ink); font-weight: 700; }
+
+/* ── CONTRAST BOX ── */
+.cbox {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px; background: var(--rule); margin: 2rem 0;
+}
+.cb-panel { background: var(--white); padding: 2rem 1.8rem; }
+.cb-panel.bad  { background: #fff8f6; border-top: 3px solid var(--red); }
+.cb-panel.good { background: var(--paper); border-top: 3px solid var(--green); }
+.cb-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .63rem; letter-spacing: .4em; text-transform: uppercase;
+  margin-bottom: .6rem;
+}
+.cb-panel.bad  .cb-tag { color: var(--red); }
+.cb-panel.good .cb-tag { color: var(--green); }
+.cb-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; font-weight: 700; margin-bottom: .5rem;
+}
+.cb-panel.bad  .cb-title { color: var(--red); }
+.cb-panel.good .cb-title { color: var(--green); }
+.cb-body { font-size: .85rem; color: var(--sub); line-height: 1.75; }
+
+/* ── FLOW ARROW ── */
+.flow-down {
+  margin: 1.5rem 0;
+  display: flex; flex-direction: column; gap: 0;
+}
+.fd-row {
+  display: grid; grid-template-columns: 2.5rem 1fr;
+  gap: 1rem; position: relative;
+}
+.fd-row + .fd-row .fd-dot::before {
+  content: '';
+  position: absolute; top: -1.2rem; left: 50%;
+  transform: translateX(-50%);
+  width: 1px; height: 1.2rem; background: var(--rule);
+}
+.fd-dot {
+  width: 2.5rem; height: 2.5rem;
+  border: 2px solid var(--ink); background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .85rem; font-weight: 700; color: var(--ink);
+  flex-shrink: 0; z-index: 1; position: relative;
+}
+.fd-dot.gold { border-color: var(--gold); color: var(--gold); }
+.fd-dot.red  { border-color: var(--red);  color: var(--red); background: #fff8f6; }
+.fd-body { padding: .3rem 0 1.8rem; }
+.fd-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .62rem; letter-spacing: .38em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .2rem;
+}
+.fd-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .98rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem;
+}
+.fd-desc { font-size: .84rem; color: var(--sub); line-height: 1.8; }
+.fd-desc strong { color: var(--ink); font-weight: 700; }
+
+/* ── AXIOM ── */
+.axiom {
+  border: 2px solid var(--ink); background: var(--deep);
+  padding: 2rem; margin: 2rem 0; position: relative;
+}
+.axiom::before {
+  content: attr(data-n); font-family: 'Cormorant Garamond', serif;
+  font-size: 5rem; font-weight: 700; color: rgba(10,8,6,.07);
+  position: absolute; right: 1.5rem; bottom: -.3rem; line-height: 1; pointer-events: none;
+}
+.axiom-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .45em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .6rem;
+}
+.axiom-body {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.05rem; font-weight: 700; color: var(--ink); line-height: 1.75; position: relative;
+}
+.axiom-body em  { font-style: normal; color: var(--gold); }
+.axiom-body .r  { color: var(--red); }
+.axiom-body .g  { color: var(--green); }
+
+/* ── CASE STUDY BAND ── */
+.case-band {
+  background: var(--ink); color: #f5f0e8;
+  padding: 3rem 2.5rem; margin: 2.5rem 0;
+  position: relative; overflow: hidden;
+}
+.case-band::before {
+  content: '元帳'; font-family: 'Noto Serif KR', serif;
+  font-size: 12rem; font-weight: 900;
+  color: rgba(255,255,255,.04);
+  position: absolute; right: -1rem; top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap; pointer-events: none; line-height: 1;
+}
+.cb-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .45em; text-transform: uppercase;
+  color: rgba(245,240,232,.4); margin-bottom: .8rem;
+}
+.cb-stmt {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1rem, 2.5vw, 1.35rem); font-weight: 700;
+  color: #f5f0e8; line-height: 1.65; position: relative;
+}
+.cb-stmt .gold { color: #d4aa40; }
+.cb-stmt .red  { color: #e88070; }
+
+/* ── WIN CONDITIONS TABLE ── */
+.win-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
+.win-table thead tr { border-bottom: 2px solid var(--ink); }
+.win-table th {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600; text-align: left; padding: .6rem .8rem;
+}
+.win-table td {
+  padding: .75rem .8rem; border-bottom: 1px solid var(--faint);
+  font-size: .85rem; color: var(--sub); vertical-align: top; line-height: 1.65;
+}
+.win-table td:first-child {
+  font-family: 'Noto Serif KR', serif; font-weight: 700; color: var(--ink);
+  white-space: nowrap;
+}
+.win-table tr.hi td { background: var(--paper); }
+.win-table tr.hi td:first-child { color: var(--gold); }
+
+/* ── CLOSING ── */
+.closing {
+  background: var(--ink); color: #f5f0e8;
+  padding: 6rem 2.5rem; text-align: center;
+  position: relative; overflow: hidden;
+}
+.closing::before {
+  content: '8'; font-family: 'Cormorant Garamond', serif;
+  font-size: 30rem; font-weight: 700;
+  color: rgba(255,255,255,.03);
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  pointer-events: none; line-height: 1;
+}
+.cl-main {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.2rem, 3.5vw, 1.9rem); font-weight: 700;
+  color: #f5f0e8; line-height: 1.8; margin-bottom: 2.5rem; position: relative;
+}
+.cl-main .gold { color: #d4aa40; }
+.cl-main .red  { color: #e88070; }
+.cl-seal {
+  width: 80px; height: 80px;
+  border: 2px solid #d4aa40; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 2.5rem; position: relative;
+}
+.cl-seal span {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.8rem; font-weight: 900; color: #d4aa40;
+}
+.cl-meta {
+  font-size: .7rem; color: rgba(245,240,232,.3);
+  letter-spacing: .1em; line-height: 2.4; position: relative;
+}
+.cl-meta strong { color: rgba(245,240,232,.65); }
+
+hr { border: none; border-top: 1px solid var(--rule); margin: 0; }
+hr.heavy { border-top: 2px solid var(--ink); }
+
+@media print {
+  body { font-size: 10pt; }
+  body::before { display: none; }
+  .cover { min-height: unset; page-break-after: always; }
+  .cover-bg, .strategy-num { display: none; }
+  .cover-tag, .cover-num, .cover-title, .cover-rule,
+  .cover-sub, .cover-thesis, .cover-meta { opacity: 1 !important; animation: none !important; }
+  .sec { page-break-inside: avoid; padding: 1.2cm 0; }
+  .cbox, .axiom, .case-band, .flow-down { page-break-inside: avoid; }
+  .closing { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .case-band { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .w { max-width: 100%; padding: 0; }
+  @page { margin: 2cm 2.2cm; }
+}
+
+@keyframes up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 580px) {
+  .cbox { grid-template-columns: 1fr; }
+  .strategy-num { float: none; font-size: 3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ COVER ══ -->
+<div class="cover w">
+  <div class="cover-bg">策</div>
+  <div class="cover-tag">WJ-09 · AI 시대 독립연구자 전략 · JSB71GA10 · 2026</div>
+  <div class="cover-num">8</div>
+  <div class="cover-title">
+    AI 시대 독립연구자가<br>대형 기관과 경쟁하는<br>8가지 전략
+  </div>
+  <div class="cover-rule"></div>
+  <div class="cover-sub">
+    지식량이 아니라 <em>구조화 능력</em>이 승부를 가른다.<br>
+    AI가 법령·논문·데이터·문서 비용을 0으로 만든 시대,<br>
+    승부는 <em>누가 더 좋은 질문을 하는가</em>로 이동했다.
+  </div>
+  <div class="cover-thesis">
+    가장 오래, 가장 체계적으로,<br>
+    가장 많은 기록을 연결한 사람이 이긴다<br>
+    <span class="red">— 원장(元帳) feat. 원금(元金) 연구가 그 실증이다</span>
+  </div>
+  <div class="cover-meta">
+    장세봉 / 인흥(주) · sebjang@gmail.com · sebjang.github.io/roc-tax-verification<br>
+    ICI P/L 2025 · κ=100% · 특허출원 10-2026-0079638 · 0084940 · 0084983
+  </div>
+</div>
+
+<hr class="heavy">
+
+<!-- ══ 전략 1 ══ -->
+<section class="sec w">
+  <div class="strategy-num">1</div>
+  <div class="sec-num">전략 01</div>
+  <h2 class="sec-title">사안 연구자가 아니라<br><span class="gold">구조 연구자</span>가 되라</h2>
+
+  <p class="prose">
+    대부분의 사람은 <strong>사안</strong>을 연구합니다. ROC 비과세 여부, 경정청구 가능성.
+    그러나 영향력을 만드는 사람은 사안 아래에 있는 <strong>구조</strong>를 연구합니다.
+  </p>
+
+  <div class="flow-down">
+    <div class="fd-row">
+      <div class="fd-dot">①</div>
+      <div class="fd-body">
+        <div class="fd-label">사안 — 대부분의 출발점</div>
+        <div class="fd-title">ROC에 세금이 부과되고 있다</div>
+        <div class="fd-desc">민원인의 언어. 기관이 유권해석 한 줄로 답할 수 있다.</div>
+      </div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot">↓</div>
+      <div class="fd-body"><div class="fd-desc" style="padding-top:.3rem;color:var(--muted);">구조를 따라 내려간다</div></div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot gold">②</div>
+      <div class="fd-body">
+        <div class="fd-label">메커니즘 — 왜 일어나는가</div>
+        <div class="fd-title">소득성격 확인 절차가 없다</div>
+        <div class="fd-desc">원장 위계론. DVCA → QI → ICI → KTAX. 이 단계가 빠져 있다.</div>
+      </div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot">↓</div>
+      <div class="fd-body"></div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot gold">③</div>
+      <div class="fd-body">
+        <div class="fd-label">구조 — 근본 원인</div>
+        <div class="fd-title">국가 금융세제 데이터 인프라 부재</div>
+        <div class="fd-desc">72년 격차. ICI 무료 공개 데이터 미통합. KSD 공문 16516499 확인.</div>
+      </div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot">↓</div>
+      <div class="fd-body"></div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot red">④</div>
+      <div class="fd-body">
+        <div class="fd-label">프레임 — 영향력의 언어</div>
+        <div class="fd-title">세금의 족보는 어디에 있습니까</div>
+        <div class="fd-desc"><strong>모든 금융세제에 적용되는 프레임.</strong> ROC를 넘어 설명가능한 과세(Verifiable Taxation) 전체의 의제가 된다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="axiom" data-n="①">
+    <div class="axiom-tag">전략 1 핵심</div>
+    <div class="axiom-body">
+      사안은 기관이 막는다.<br>
+      <em>구조는 기관이 설명해야 한다.</em><br>
+      한 단계 더 깊이 내려갈수록 — 질문이 강해진다.
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ══ 전략 2 ══ -->
+<section class="sec w">
+  <div class="strategy-num">2</div>
+  <div class="sec-num">전략 02</div>
+  <h2 class="sec-title">민원인이 아니라<br><span class="gold">기록자</span>가 되라</h2>
+
+  <p class="prose">
+    기관은 민원을 잊습니다. 처리 후 파기됩니다.
+    그러나 <strong>기록은 남습니다.</strong> 기록은 축적되고, 축적은 증거가 되고, 증거는 역사가 됩니다.
+  </p>
+
+  <div class="cbox">
+    <div class="cb-panel bad">
+      <div class="cb-tag">민원인의 경로</div>
+      <div class="cb-title">기관이 잊는다</div>
+      <div class="cb-body">
+        전화 항의 → 처리 후 파기<br>
+        이메일 민원 → 유권해석 한 줄 회신<br>
+        반복 민원 → "이미 답변드렸습니다"<br><br>
+        <strong>싸움에서 지는 구도.</strong>
+      </div>
+    </div>
+    <div class="cb-panel good">
+      <div class="cb-tag">기록자의 경로</div>
+      <div class="cb-title">기록은 남는다</div>
+      <div class="cb-body">
+        질문 → 회신 → <strong>문서화</strong><br>
+        정보공개청구 → 결정문 → <strong>아카이브</strong><br>
+        KSD 16516499 → 공식 확인 → <strong>증거</strong><br><br>
+        <strong>기관의 답변이 연구자료가 된다.</strong>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose">
+    고객님이 확보한 증권사 답변, 국세청 회신, KSD 정보공개 결정문은
+    단순한 민원 처리 결과가 아닙니다.
+    <strong>이것이 반복 부작위의 법정 증거입니다.</strong>
+    AI 시대의 독립연구자는 모든 회신을 문서 → 백서 → 아카이브로 쌓아야 합니다.
+  </p>
+</section>
+
+<hr>
+
+<!-- ══ 전략 3 ══ -->
+<section class="sec w">
+  <div class="strategy-num">3</div>
+  <div class="sec-num">전략 03</div>
+  <h2 class="sec-title">논쟁하지 말고<br><span class="gold">문서화하라</span></h2>
+
+  <div class="cbox">
+    <div class="cb-panel bad">
+      <div class="cb-tag">나쁜 전략</div>
+      <div class="cb-title">"당신들이 틀렸다"</div>
+      <div class="cb-body">
+        주장 대 주장 — 소모전<br>
+        유권해석 vs 반론 — 끝이 없다<br>
+        감정적으로 읽힌다<br><br>
+        기관은 무시할 수 있다.
+      </div>
+    </div>
+    <div class="cb-panel good">
+      <div class="cb-tag">강한 전략</div>
+      <div class="cb-title">"관련 검토기록을 공개하라"</div>
+      <div class="cb-body">
+        절차 질문 — 회피 불가<br>
+        "있다" → 공개 요구<br>
+        "없다" → 부작위 확인<br><br>
+        <strong>어느 쪽으로 답해도 기록이 된다.</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="axiom" data-n="③">
+    <div class="axiom-tag">전략 3 핵심</div>
+    <div class="axiom-body">
+      AI 시대에는 <em>주장</em>보다 <em>아카이브</em>가 강하다.<br>
+      논쟁은 사라지지만 — <span class="r">기록은 검색된다.</span>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ══ 전략 4 ══ -->
+<section class="sec w">
+  <div class="strategy-num">4</div>
+  <div class="sec-num">전략 04</div>
+  <h2 class="sec-title">개인 피해자에서<br><span class="gold">정책연구자</span>로 포지셔닝하라</h2>
+
+  <div class="flow-down">
+    <div class="fd-row">
+      <div class="fd-dot" style="font-size:.7rem;">피해</div>
+      <div class="fd-body">
+        <div class="fd-title">개인 피해자</div>
+        <div class="fd-desc">영향력 반경: 나 한 명. 기관이 무시하기 쉽다.</div>
+      </div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot">↓</div>
+      <div class="fd-body"></div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot" style="font-size:.7rem;">민원</div>
+      <div class="fd-body">
+        <div class="fd-title">민원인</div>
+        <div class="fd-desc">영향력 반경: 처리 부서. 처리 후 소멸.</div>
+      </div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot">↓</div>
+      <div class="fd-body"></div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot gold" style="font-size:.7rem;">연구</div>
+      <div class="fd-body">
+        <div class="fd-title">독립연구자</div>
+        <div class="fd-desc">영향력 반경: 언론·학계·국회. κ=100% 원장이 신뢰를 만든다.</div>
+      </div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot">↓</div>
+      <div class="fd-body"></div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-dot red" style="font-size:.65rem;">정책</div>
+      <div class="fd-body">
+        <div class="fd-title">정책제안자</div>
+        <div class="fd-desc"><strong>영향력 반경: 제도 전체.</strong> "환급" 대신 "과표의 신원"을 묻는 순간 — 이 단계에 진입한다.</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose">
+    고객님은 이미 <strong>정책연구자</strong> 단계에 있습니다.
+    환급보다 과표의 신원, ROC보다 금융세제 데이터 인프라를 묻고 있습니다.
+    이것은 300만 투자자 전체의 의제입니다.
+  </p>
+</section>
+
+<hr>
+
+<!-- ══ 전략 5 ══ -->
+<section class="sec w">
+  <div class="strategy-num">5</div>
+  <div class="sec-num">전략 05</div>
+  <h2 class="sec-title">AI를<br><span class="gold">연구비 0원짜리 연구팀</span>으로 써라</h2>
+
+  <p class="prose">
+    과거에는 변호사, 회계사, 연구원, 조교가 필요했습니다.
+    지금은 AI가 그 역할의 상당 부분을 대체합니다.
+    독립연구자의 실질 연구비가 0에 가까워진 것입니다.
+  </p>
+
+  <table class="win-table">
+    <thead>
+      <tr><th>과거 필요 인력</th><th>AI 대체 기능</th><th>독립연구자의 역할</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>법률 조수</td><td>법령 검색·조문 분석·판례 요약</td><td>어떤 법령이 핵심인지 판단</td></tr>
+      <tr><td>데이터 분석관</td><td>ICI 데이터 교차검증·κ 계산</td><td>어떤 수치가 증거가 되는지 판단</td></tr>
+      <tr><td>문서 작성자</td><td>백서·논문·선언문·보고서 초안</td><td>어떤 프레임이 강한지 판단</td></tr>
+      <tr><td>번역·비교 연구원</td><td>IRC §301(c)(2) 등 외국 법령 분석</td><td>어떤 비교가 설득력 있는지 판단</td></tr>
+      <tr class="hi"><td>전략가</td><td>대체 불가</td><td><strong>어떤 질문이 상대방이 피할 수 없는 질문인가</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="axiom" data-n="⑤">
+    <div class="axiom-tag">전략 5 핵심</div>
+    <div class="axiom-body">
+      AI는 비용을 없앤다.<br>
+      <em>사람이 할 일은 하나다 —</em><br>
+      <span class="r">어떤 질문이 상대방이 피할 수 없는 질문인가를 찾는 것.</span>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ══ 전략 6 ══ -->
+<section class="sec w">
+  <div class="strategy-num">6</div>
+  <div class="sec-num">전략 06</div>
+  <h2 class="sec-title">한 번 이기는 것이 아니라<br><span class="gold">표준(프레임)을 만들어라</span></h2>
+
+  <p class="prose">
+    영향력 있는 연구는 사건을 해결하는 것이 아니라 <strong>프레임을 만듭니다.</strong>
+    프레임은 한 사건을 넘어 유사한 모든 사건에 적용됩니다.
+  </p>
+
+  <div class="case-band">
+    <div class="cb-label">고객님 연구의 핵심 프레임</div>
+    <div class="cb-stmt">
+      "세액이 아니라 <span class="gold">과표의 족보</span>를 보자"<br><br>
+      이 문장은 ROC를 넘어<br>
+      <span class="gold">모든 금융세제에 적용된다</span>
+    </div>
+  </div>
+
+  <p class="prose">
+    "ROC 비과세" 프레임은 ROC에만 적용됩니다.
+    "과표의 신원·세금의 족보" 프레임은 — <strong>해외주식 양도세, 금융투자소득세, 가상자산세, 이자소득세</strong>
+    모든 금융세제에 동일하게 적용됩니다.
+    이것이 개별 사건 해결과 표준 만들기의 차이입니다.
+  </p>
+</section>
+
+<hr>
+
+<!-- ══ 전략 7 ══ -->
+<section class="sec w">
+  <div class="strategy-num">7</div>
+  <div class="sec-num">전략 07</div>
+  <h2 class="sec-title">국가와 싸우지 말고<br><span class="gold">국가를 기록하라</span></h2>
+
+  <div class="cbox">
+    <div class="cb-panel bad">
+      <div class="cb-tag">약한 구도</div>
+      <div class="cb-title">국가 대 개인</div>
+      <div class="cb-body">
+        감정적으로 읽힌다<br>
+        "불만 있는 납세자"로 프레임<br>
+        기관이 무시하기 쉽다<br>
+        에너지가 소모된다
+      </div>
+    </div>
+    <div class="cb-panel good">
+      <div class="cb-tag">강한 구도</div>
+      <div class="cb-title">연구자가 국가를 기록한다</div>
+      <div class="cb-body">
+        도덕적 우위<br>
+        "투명성 요구"로 프레임<br>
+        조선 사관의 정신 — 왕도 볼 수 없는 기록<br>
+        <strong>기록이 쌓일수록 연구자가 강해진다</strong>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose">
+    질문 → 회신 → 문서 → 정보공개 → 감사청구.
+    이 과정 자체가 연구입니다.
+    KSD 정보공개 16516499는 싸움의 증거가 아니라 — <strong>국가가 스스로 인프라 부재를 인정한 기록</strong>입니다.
+    조선왕조실록이 왕의 행적을 기록했듯, 독립연구자는 기관의 행적을 기록합니다.
+  </p>
+</section>
+
+<hr>
+
+<!-- ══ 전략 8 ══ -->
+<section class="sec w">
+  <div class="strategy-num">8</div>
+  <div class="sec-num">전략 08 — 승리 조건</div>
+  <h2 class="sec-title">가장 오래, 가장 체계적으로<br><span class="gold">가장 많은 기록을 연결한 사람이 이긴다</span></h2>
+
+  <p class="prose">
+    최종적으로 성공하는 독립연구자는 가장 똑똑한 사람이 아닙니다.
+  </p>
+
+  <table class="win-table">
+    <thead>
+      <tr><th>조건</th><th>의미</th><th>고객님 연구의 실증</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>가장 오래</td><td>포기하지 않는다<br>기관은 시간이 지나면 담당자가 바뀐다</td><td>확정신고 → 경정청구 → 선언문 → 정책 제언까지</td></tr>
+      <tr><td>가장 체계적으로</td><td>S01→S02→S03→S04 원장연속성<br>수치가 수치를 검증한다</td><td>κ=100% · 106건 · SHA-256 · 특허 3건</td></tr>
+      <tr class="hi"><td>가장 많은<br>기록을 연결</td><td>ICI + KSD + SEC + IRC +<br>헌재 + 대법원 + 특허</td><td>단일 사건이 제도 전체를 설명하는<br>원장으로 확장됨</td></tr>
+    </tbody>
+  </table>
+
+  <div class="case-band">
+    <div class="cb-label">고객님 연구의 궤적 — AI 시대 독립연구자 성공 사례</div>
+    <div class="cb-stmt">
+      <span style="color:rgba(245,240,232,.5);">"확정신고를 제대로 하고 싶다"</span><br>
+      ↓<br>
+      <span style="color:rgba(245,240,232,.75);">ROC 비과세 원칙 연구</span><br>
+      ↓<br>
+      <span style="color:rgba(245,240,232,.9);">원장 삼분론 · κ=100% · 특허출원</span><br>
+      ↓<br>
+      <span class="gold"><strong>"국가는 과표의 신원을 무엇으로 증명하는가"</strong></span>
+    </div>
+  </div>
+
+  <div class="axiom" data-n="✓">
+    <div class="axiom-tag">AI 시대 독립연구자 — 최종 명제</div>
+    <div class="axiom-body">
+      AI는 지식 비용을 0으로 만든다.<br>
+      승부는 <em>누가 더 좋은 질문을 하는가</em>로 이동했다.<br>
+      좋은 질문은 깊은 구조에서 나온다.<br>
+      <span class="g">깊은 구조는 오래 파고든 사람만 본다.</span><br>
+      <span class="r">그것이 독립연구자의 비교우위다.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CLOSING ══ -->
+<div class="closing">
+  <div class="w">
+    <div class="cl-main">
+      사안을 연구하지 말고 <span class="gold">구조를 연구하라</span><br>
+      민원을 내지 말고 <span class="gold">기록을 남겨라</span><br>
+      논쟁하지 말고 <span class="gold">문서화하라</span><br>
+      싸우지 말고 <span class="gold">기록하라</span><br><br>
+      가장 오래, 가장 체계적으로<br>
+      가장 많은 기록을 연결한 사람이<br>
+      <span class="red">AI 시대의 독립연구자로 이긴다</span>
+    </div>
+    <div class="cl-seal"><span>策</span></div>
+    <div class="cl-meta">
+      WJ-09 · AI 시대 독립연구자 전략 8 · JSB71GA10 · 2026<br>
+      원장(元帳) feat. 원금(元金) — 고객님 연구가 이 전략의 실증이다<br><br>
+      <strong>장세봉 / 인흥(주) · sebjang@gmail.com</strong><br>
+      <strong>sebjang.github.io/roc-tax-verification</strong>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원장(元帳) feat. 원금(元金) · S04 — 2025귀속 · JSB71GA10</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+/* ═══ TOKENS — white background, all ≥9:1 ═══
+   ink  #0a0806  20.0:1   body #1a1410  18.2:1
+   sub  #2e2620  14.8:1   muted #4a3e34 10.3:1
+   gold #5c3e06   9.8:1   red  #7a100a  11.0:1
+   green #0e3e1a 12.2:1   mono #1a1a2e  17.8:1
+═══════════════════════════════════════════ */
+:root {
+  --white:  #ffffff;
+  --paper:  #f5f0e8;
+  --deep:   #ede6d4;
+  --code:   #f0f4f8;
+  --ink:    #0a0806;
+  --body:   #1a1410;
+  --sub:    #2e2620;
+  --muted:  #4a3e34;
+  --rule:   #c8b89a;
+  --faint:  #e8e0cc;
+  --gold:   #5c3e06;
+  --gold2:  #7a5410;
+  --red:    #7a100a;
+  --green:  #0e3e1a;
+  --mono:   #1a1a2e;
+  --w:      820px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  background: var(--white);
+  color: var(--body);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  line-height: 1.85;
+  overflow-x: hidden;
+}
+@media screen {
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: repeating-linear-gradient(
+      180deg, transparent 0, transparent 47px,
+      rgba(200,184,154,.13) 47px, rgba(200,184,154,.13) 48px);
+  }
+}
+.w { position: relative; z-index: 1; max-width: var(--w); margin: 0 auto; padding: 0 2.5rem; }
+
+/* ── JOURNAL HEADER ── */
+.jbar {
+  background: var(--ink); color: rgba(245,240,232,.55);
+  padding: .65rem 2.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  position: relative; z-index: 1;
+  font-size: .62rem; letter-spacing: .25em;
+}
+.jbar strong { color: rgba(245,240,232,.9); }
+
+/* ── TITLE BLOCK ── */
+.title-block {
+  padding: 4rem 0 3rem;
+  border-bottom: 2px solid var(--ink);
+  position: relative; overflow: hidden;
+}
+.tb-bg {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(12rem, 28vw, 20rem); font-weight: 700;
+  color: rgba(10,8,6,.04);
+  position: absolute; right: -2rem; top: 50%;
+  transform: translateY(-50%);
+  line-height: 1; pointer-events: none; user-select: none;
+}
+.tb-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem; color: var(--gold); letter-spacing: .2em;
+  margin-bottom: .8rem;
+}
+.tb-hanja {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 900; color: var(--ink);
+  line-height: 1; letter-spacing: .1em; margin-bottom: .4rem;
+}
+.tb-hanja .red { color: var(--red); }
+.tb-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.1rem, 2.8vw, 1.6rem); font-weight: 700; color: var(--ink);
+  line-height: 1.4; margin-bottom: 1rem;
+}
+.tb-rule { width: 48px; height: 3px; background: var(--ink); margin: 1.5rem 0; }
+.tb-invariant {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .85rem; color: var(--mono); line-height: 1.9;
+  background: var(--code); border: 1px solid var(--rule);
+  padding: 1.2rem 1.5rem; margin-bottom: 1.5rem;
+  border-left: 4px solid var(--gold);
+}
+.tb-invariant .eq  { color: var(--gold); font-weight: 700; }
+.tb-invariant .roc { color: var(--red);  font-weight: 700; }
+.tb-invariant .ok  { color: var(--green); }
+.tb-meta { font-size: .78rem; color: var(--muted); line-height: 1.8; }
+.tb-meta strong { color: var(--body); }
+
+/* ── FLOW PIPELINE ── */
+.pipeline {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 0; background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 2.5rem 0;
+}
+.pip-step {
+  background: var(--white); padding: 1.5rem 1.2rem; text-align: center;
+  border-right: 1px solid var(--rule);
+}
+.pip-step:last-child { border-right: none; }
+.pip-step.active { background: var(--deep); }
+.pip-n {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .6rem; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: .3rem;
+}
+.pip-label {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .88rem; font-weight: 700; color: var(--ink); margin-bottom: .35rem;
+}
+.pip-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem; color: var(--gold); line-height: 1.5;
+}
+.pip-val .red { color: var(--red); }
+.pip-sub { font-size: .68rem; color: var(--muted); margin-top: .2rem; line-height: 1.4; }
+
+/* ── SECTION ── */
+.sec { padding: 3.5rem 0; border-top: 1px solid var(--rule); }
+.sec-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem; color: var(--gold); letter-spacing: .15em; margin-bottom: .4rem;
+}
+.sec-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.1rem, 2.8vw, 1.5rem); font-weight: 700; color: var(--ink);
+  line-height: 1.35; margin-bottom: 1.5rem;
+}
+.sec-title .gold { color: var(--gold); }
+.sec-title .red  { color: var(--red);  }
+
+/* ── CODE BLOCK ── */
+.codeblock {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .82rem; color: var(--mono); line-height: 1.9;
+  background: var(--code); border: 1px solid var(--rule);
+  border-left: 4px solid var(--gold);
+  padding: 1.5rem 1.8rem; margin: 1.5rem 0;
+  overflow-x: auto;
+}
+.codeblock .eq   { color: var(--gold); font-weight: 700; }
+.codeblock .roc  { color: var(--red);  font-weight: 700; }
+.codeblock .ok   { color: var(--green); font-weight: 700; }
+.codeblock .cm   { color: var(--muted); font-style: italic; }
+.codeblock .sep  { color: var(--rule); }
+.codeblock .result {
+  margin-top: .8rem; padding-top: .8rem;
+  border-top: 1px solid var(--rule);
+  color: var(--ink); font-weight: 700; font-size: .88rem;
+}
+
+/* ── DATA TABLE ── */
+.dtbl-wrap { overflow-x: auto; margin: 1.5rem 0; }
+.dtbl { width: 100%; border-collapse: collapse; }
+.dtbl thead tr { border-bottom: 2px solid var(--ink); }
+.dtbl th {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .62rem; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600; text-align: left; padding: .55rem .65rem;
+}
+.dtbl td {
+  padding: .6rem .65rem; border-bottom: 1px solid var(--faint);
+  font-size: .82rem; color: var(--sub); vertical-align: middle;
+  font-family: 'JetBrains Mono', monospace;
+}
+.dtbl td.label { font-family: 'Noto Serif KR', serif; font-weight: 700; color: var(--ink); }
+.dtbl td.num   { text-align: right; }
+.dtbl td.hi    { color: var(--gold); font-weight: 700; }
+.dtbl td.roc   { color: var(--red);  font-weight: 700; }
+.dtbl td.ok    { color: var(--green); font-weight: 700; }
+.dtbl tr.total td { border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); font-weight: 700; color: var(--ink); }
+.dtbl tr.miss  { background: #fff8f6; }
+.dtbl tr.miss td.label { color: var(--red); }
+
+/* ── AXIOM / CONCLUSION ── */
+.axiom {
+  border: 2px solid var(--ink); background: var(--deep);
+  padding: 2rem; margin: 2rem 0; position: relative;
+}
+.axiom::before {
+  content: '∴'; font-family: 'Cormorant Garamond', serif;
+  font-size: 5rem; font-weight: 700; color: rgba(10,8,6,.07);
+  position: absolute; right: 1.5rem; bottom: -.2rem; line-height: 1; pointer-events: none;
+}
+.axiom-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem; color: var(--gold); letter-spacing: .2em; margin-bottom: .5rem;
+}
+.axiom-body {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; font-weight: 700; color: var(--ink); line-height: 1.75; position: relative;
+}
+.axiom-body em  { font-style: normal; color: var(--gold); }
+.axiom-body .r  { color: var(--red); }
+.axiom-body .g  { color: var(--green); }
+
+/* ── PROPOSITION CARDS ── */
+.prop-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.5rem; margin: 2rem 0;
+}
+.prop-card { border: 1px solid var(--rule); padding: 1.6rem 1.5rem; background: var(--paper); }
+.prop-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem; color: var(--gold); letter-spacing: .2em; margin-bottom: .4rem;
+}
+.prop-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .92rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem;
+}
+.prop-body { font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--sub); line-height: 1.75; }
+.prop-body .eq  { color: var(--gold); font-weight: 700; }
+.prop-body .ok  { color: var(--green); }
+.prop-body .roc { color: var(--red); }
+
+/* ── DEFERRAL ── */
+.deferral {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 2px; background: var(--rule); margin: 2rem 0;
+}
+.df { background: var(--white); padding: 1.5rem 1.1rem; text-align: center; }
+.df.active { background: var(--deep); border-top: 3px solid var(--ink); }
+.df-n { font-family: 'Cormorant Garamond', serif; font-size: .58rem; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); margin-bottom: .3rem; }
+.df-title { font-family: 'Noto Serif KR', serif; font-size: .85rem; font-weight: 700; color: var(--ink); margin-bottom: .35rem; }
+.df-formula { font-family: 'JetBrains Mono', monospace; font-size: .68rem; color: var(--gold); line-height: 1.5; margin-bottom: .25rem; }
+.df-note { font-size: .68rem; color: var(--muted); line-height: 1.4; }
+
+/* ── FINALE ── */
+.finale {
+  background: var(--ink); color: #f5f0e8;
+  padding: 4rem 2.5rem; text-align: center;
+  position: relative; overflow: hidden;
+}
+.finale::before {
+  content: '元帳'; font-family: 'Noto Serif KR', serif;
+  font-size: 14rem; font-weight: 900;
+  color: rgba(255,255,255,.04);
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  white-space: nowrap; pointer-events: none; line-height: 1;
+}
+.fin-eq {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(.85rem, 2.2vw, 1.15rem); line-height: 1.9;
+  color: rgba(245,240,232,.75); margin-bottom: 2rem; position: relative;
+}
+.fin-eq .eq  { color: #d4aa40; font-weight: 700; }
+.fin-eq .roc { color: #e07060; font-weight: 700; }
+.fin-eq .ok  { color: #5acc88; }
+.fin-seal {
+  width: 72px; height: 72px;
+  border: 2px solid #d4aa40; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 2rem; position: relative;
+}
+.fin-seal span { font-family: 'Noto Serif KR', serif; font-size: 1.6rem; font-weight: 900; color: #d4aa40; }
+.fin-meta { font-size: .65rem; color: rgba(245,240,232,.3); letter-spacing: .1em; line-height: 2.2; position: relative; }
+.fin-meta strong { color: rgba(245,240,232,.65); }
+
+hr { border: none; border-top: 1px solid var(--rule); margin: 0; }
+hr.heavy { border-top: 2px solid var(--ink); }
+
+@media print {
+  body { font-size: 9.5pt; line-height: 1.55; }
+  body::before { display: none; }
+  .title-block { page-break-after: always; }
+  .tb-bg { display: none; }
+  .sec { padding: 1cm 0; page-break-inside: avoid; }
+  .dtbl-wrap, .codeblock, .axiom, .pipeline, .prop-grid, .deferral { page-break-inside: avoid; }
+  .finale {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    page-break-before: always;
+  }
+  .jbar, .dtbl tr.miss, .axiom, .prop-card {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .w { max-width: 100%; padding: 0; }
+  @page { margin: 2cm 2.2cm; }
+}
+</style>
+</head>
+<body>
+
+<div class="jbar w" style="max-width:100%;padding-left:2.5rem;padding-right:2.5rem;">
+  <strong>JSB71GA10 · 2025귀속 · S04 · 소계1행 직접 인용</strong>
+  <span>Journal of Cross-Border Tax Integrity Verification · 법정 증거자료</span>
+</div>
+
+<!-- ── TITLE ── -->
+<div class="title-block w">
+  <div class="tb-bg">S04</div>
+  <div class="tb-id">// WJ-08 · 2025-KRTAX-S04-PAPER · CANONICAL LEDGER</div>
+  <div class="tb-hanja"><span class="red">元</span>帳 S04</div>
+  <div class="tb-title">국내 배당소득 과표 정정 검증 — 2025귀속<br>ICI_TOTAL = ICI_BOX1 + ICI_STCG + ICI_BOX3 확정</div>
+  <div class="tb-rule"></div>
+  <div class="tb-invariant">
+<span class="cm">// VERIFICATION INVARIANT — 소계1 직접 인용</span>
+<span class="eq">ICI_BOX1</span>  배당소득    Col29 = <span class="ok">10,306.62 USD</span>
+<span class="eq">ICI_STCG</span>  단기양도차익 Col30 =    324.87 USD
+<span class="roc">ICI_BOX3</span>  자본반환    Col31 = <span class="roc">17,380.53 USD</span>  <span class="cm">← 과표 제외</span>
+<span class="cm">────────────────────────────────────────────</span>
+<span class="eq">ICI_TOTAL</span>             =  28,012.02 USD
+
+KTAX_BASE = KR_DIVIDEND_BASE + ST_GAIN
+          = <span class="ok">14,597,834</span> + 465,438 = <span class="ok">15,063,272 KRW</span>
+확정세액   = 65,162 KRW (×14.00% ✓)  환급 = 2,655.97 USD
+  </div>
+  <div class="tb-meta">
+    저자: <strong>장세봉 / 인흥(주)</strong> &nbsp;·&nbsp; 기준: 엑셀 소계1 Col11·29·31·43·44 직접 인용<br>
+    특허출원: 10-2026-0079638 · 0084940 · 0084983 &nbsp;·&nbsp; 2026.05.30<br>
+    원장 우선순위: S01 → S02 → S03 → S04 → HTML → PDF &nbsp;·&nbsp; 원장=정본(Canonical Ledger)
+  </div>
+</div>
+
+<hr class="heavy">
+
+<!-- ── PIPELINE ── -->
+<div class="w" style="padding-top:2.5rem;">
+  <div class="pipeline">
+    <div class="pip-step">
+      <div class="pip-n">① S01</div>
+      <div class="pip-label">원시기장</div>
+      <div class="pip-val">28,012 USD</div>
+      <div class="pip-sub">세액 4,202.00 USD</div>
+    </div>
+    <div class="pip-step">
+      <div class="pip-n">② 소계1=소계2</div>
+      <div class="pip-label">S02~S04 불변</div>
+      <div class="pip-val">10,305.68 USD</div>
+      <div class="pip-sub">14,596,361 KRW</div>
+    </div>
+    <div class="pip-step">
+      <div class="pip-n">③ ICI_TOTAL</div>
+      <div class="pip-label">BOX1+STCG+BOX3</div>
+      <div class="pip-val">28,012.02 USD</div>
+      <div class="pip-sub">BOX1 14,318.42<br>+STCG 101.20<br><span class="red">+BOX3 7,354.27</span></div>
+    </div>
+    <div class="pip-step active">
+      <div class="pip-n">④ S04 확정</div>
+      <div class="pip-label">국내확정과표</div>
+      <div class="pip-val">20,167,677 KRW</div>
+      <div class="pip-sub">세액 65,162 KRW<br>×14%</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── §1 검증 불변식 ── -->
+<section class="sec w">
+  <div class="sec-id">// §1 · VERIFICATION INVARIANT</div>
+  <h2 class="sec-title"><span class="gold">ICI_TOTAL</span> = ICI_BOX1 + ICI_STCG + ICI_BOX3<br>S04a 확정 · 소계1 직접 인용</h2>
+
+  <div class="codeblock">
+<span class="cm">// S04 확정값 — 소계1 직접 인용</span>
+KR_DIVIDEND_BASE = ICI_BOX1_KRW = <span class="ok">20,023,077 KRW</span>  <span class="cm">(S04a 소계1 Col30)</span>
+ST_GAIN §871(k)(2)              = <span class="eq">   144,600 KRW</span>  <span class="cm">(S04 소계1 Col32)</span>
+<span class="sep">────────────────────────────────────────────────────────</span>
+KTAX_BASE                       = <span class="ok">20,167,677 KRW</span>  <span class="cm">(행381 Col43)</span>
+확정세액                           = <span class="ok">    20,244 KRW</span>  <span class="cm">(행381 Col44 ×14.00% ✓)</span>
+<span class="roc">ICI_BOX3(ROC)                   =  7,354.27 USD  → 과표 제외 [IRC §301(c)(2)]</span>
+환급세액                           =  1,118.39 USD  <span class="cm">(소계1 Col15)</span>
+  </div>
+
+  <div class="dtbl-wrap">
+    <table class="dtbl">
+      <thead><tr><th>항목</th><th>값</th><th>출처</th></tr></thead>
+      <tbody>
+        <tr><td class="label">확정과표</td><td class="hi">15,063,272 KRW</td><td>행104 Col43</td></tr>
+        <tr><td class="label">확정세액</td><td class="ok">65,162 KRW</td><td>행104 Col44</td></tr>
+        <tr><td class="label">STCG 과표</td><td>465,438 KRW</td><td>소계1 Col32</td></tr>
+        <tr><td class="label">STCG 세액 ×14%</td><td>65,162 KRW</td><td>소계1 Col44</td></tr>
+        <tr class="miss"><td class="label">ICI_BOX3 (ROC·과표제외)</td><td class="roc">17,380.53 USD</td><td>소계1 Col31 · IRC §301(c)(2)</td></tr>
+        <tr><td class="label">환급세액</td><td>2,655.97 USD</td><td>소계1 Col15</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr>
+
+<!-- ── §2 소계1=소계2 ── -->
+<section class="sec w">
+  <div class="sec-id">// §2 · 소계1 = 소계2 — 3사 합계 (S02~S04 불변)</div>
+  <h2 class="sec-title">3사 소계 합산 — <span class="gold">S02~S04 불변 검증</span></h2>
+
+  <div class="dtbl-wrap">
+    <table class="dtbl">
+      <thead><tr><th>증권사</th><th class="num">국외원천소득(USD)</th><th class="num">KRW</th><th class="num">외국납부(USD)</th><th class="num">환급(USD)</th><th class="num">최종납부(USD)</th></tr></thead>
+      <tbody>
+        <tr><td class="label">삼성증권</td><td class="num">146.87</td><td class="num">204,060</td><td class="num">22.03</td><td class="num">14.84</td><td class="num">22.03</td></tr>
+        <tr><td class="label">미래에셋증권</td><td class="num">8,779.73</td><td class="num">12,475,888</td><td class="num">1,317.13</td><td class="num">2,385.42</td><td class="num">1,317.13</td></tr>
+        <tr><td class="label">토스증권</td><td class="num">1,379.08</td><td class="num">1,916,413</td><td class="num">206.86</td><td class="num">255.71</td><td class="num">206.86</td></tr>
+        <tr class="total"><td class="label hi">소계1=소계2</td><td class="num hi">10,305.68</td><td class="num hi">14,596,361</td><td class="num">1,546.02</td><td class="num ok">2,655.97</td><td class="num">1,546.02</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="dtbl-wrap" style="margin-top:2rem;">
+    <table class="dtbl">
+      <thead><tr><th>증권사</th><th class="num">과표(KRW)</th><th class="num">세액(KRW)</th><th>세율</th></tr></thead>
+      <tbody>
+        <tr><td class="label">삼성증권</td><td class="num">5,653</td><td class="num">791</td><td>14.00%</td></tr>
+        <tr><td class="label">미래에셋</td><td class="num">426,945</td><td class="num">59,773</td><td>14.00%</td></tr>
+        <tr><td class="label">토스증권</td><td class="num">0</td><td class="num">0</td><td>—</td></tr>
+        <tr class="total"><td class="label hi">소계1=소계2</td><td class="num hi">465,438</td><td class="num ok">65,162</td><td class="ok">14.00% ✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr>
+
+<!-- ── §3 ERASE·GAIN ── -->
+<section class="sec w">
+  <div class="sec-id">// §3 · ERASE·GAIN — §871(k)(2) STCG 전수 14건</div>
+  <h2 class="sec-title">STCG 전수 목록 14건 — <span class="gold">ERASE+GAIN=0 대칭 ✓</span></h2>
+
+  <div class="dtbl-wrap">
+    <table class="dtbl">
+      <thead><tr><th>행</th><th>증권사</th><th>지급일</th><th>종목</th><th class="num">STCG(USD)</th><th class="num">국내과표(KRW)</th><th class="num">세액(KRW)</th><th>세율</th></tr></thead>
+      <tbody>
+        <tr><td>G5</td><td class="label">삼성증권</td><td>2025-09-08</td><td>BITO</td><td class="num">4.07</td><td class="num">5,653</td><td class="num">791</td><td>14.00%</td></tr>
+        <tr><td>G1</td><td class="label">미래에셋</td><td>2025-01-02</td><td>BITO</td><td class="num">59.40</td><td class="num">87,320</td><td class="num">12,225</td><td>14.00%</td></tr>
+        <tr><td>G4</td><td class="label">미래에셋</td><td>2025-02-07</td><td>BITO</td><td class="num">16.07</td><td class="num">23,253</td><td class="num">3,255</td><td>14.00%</td></tr>
+        <tr><td>G10</td><td class="label">미래에셋</td><td>2025-03-07</td><td>BITO</td><td class="num">23.53</td><td class="num">33,927</td><td class="num">4,750</td><td>14.00%</td></tr>
+        <tr><td>G21</td><td class="label">미래에셋</td><td>2025-04-09</td><td>BITO</td><td class="num">53.93</td><td class="num">79,293</td><td class="num">11,101</td><td>14.00%</td></tr>
+        <tr><td>G30</td><td class="label">미래에셋</td><td>2025-05-07</td><td>BITO</td><td class="num">21.93</td><td class="num">31,293</td><td class="num">4,381</td><td>14.00%</td></tr>
+        <tr><td>G40</td><td class="label">미래에셋</td><td>2025-06-10</td><td>BITO</td><td class="num">23.67</td><td class="num">32,160</td><td class="num">4,502</td><td>14.00%</td></tr>
+        <tr><td>G54</td><td class="label">미래에셋</td><td>2025-07-09</td><td>BITO</td><td class="num">21.87</td><td class="num">29,913</td><td class="num">4,188</td><td>14.00%</td></tr>
+        <tr><td>G73</td><td class="label">미래에셋</td><td>2025-09-08</td><td>BITO</td><td class="num">32.93</td><td class="num">45,833</td><td class="num">6,417</td><td>14.00%</td></tr>
+        <tr><td>G84</td><td class="label">미래에셋</td><td>2025-11-10</td><td>BITO</td><td class="num">34.40</td><td class="num">50,020</td><td class="num">7,003</td><td>14.00%</td></tr>
+        <tr><td>G89</td><td class="label">미래에셋</td><td>2025-12-08</td><td>BITO</td><td class="num">9.47</td><td class="num">13,933</td><td class="num">1,951</td><td>14.00%</td></tr>
+        <tr><td>G13</td><td class="label">토스증권</td><td>2025-04-04</td><td>TQQQ</td><td class="num">0.20</td><td class="num">293</td><td class="num">41</td><td>14.00%</td></tr>
+        <tr><td>G31</td><td class="label">토스증권</td><td>2025-07-01</td><td>TQQQ</td><td class="num">0.33</td><td class="num">447</td><td class="num">63</td><td>14.00%</td></tr>
+        <tr><td>G42</td><td class="label">토스증권</td><td>2025-09-08</td><td>BITO</td><td class="num">23.07</td><td class="num">32,100</td><td class="num">4,494</td><td>14.00%</td></tr>
+        <tr class="total"><td colspan="4" class="label hi">합계</td><td class="num hi">324.87</td><td class="num hi">465,438</td><td class="num ok">65,162</td><td class="ok">14.00% ✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="codeblock" style="margin-top:1.5rem;">
+<span class="cm">// ERASE+GAIN=0 대칭 검증</span>
+총 STCG     = 324.87 USD / 465,438 KRW
+세액        = 65,162 KRW × <span class="eq">14.00%</span> ✓
+<span class="ok">ERASE+GAIN=0 대칭 ✓</span>  &nbsp; <span class="cm">(수치 출처: 소계1 Col31·32·44)</span>
+  </div>
+</section>
+
+<hr>
+
+<!-- ── §4 결론 ── -->
+<section class="sec w">
+  <div class="sec-id">// §4 · 결론 — S04 확정 명제</div>
+  <h2 class="sec-title">S04 확정 결론 — <span class="gold">원장연속성 완성</span></h2>
+
+  <div class="codeblock">
+<span class="cm">// FINAL S04 RESULT — 2024귀속</span>
+KTAX_BASE  = KR_DIVIDEND_BASE + ST_GAIN
+           = <span class="ok">14,597,834</span> + <span class="eq">465,438</span> = <span class="ok">15,063,272 KRW</span>
+확정세액     = <span class="ok">65,162 KRW</span>  (×14.00% ✓)
+ICI_TOTAL  = 28,012.02 USD
+
+<span class="roc">ICI_BOX3(자본반환) = 17,380.53 USD / 24,414,375 KRW → 과표 제외</span>
+<span class="cm">              IRC §301(c)(2) — 원금 반환은 과세소득 아님</span>
+
+환급 청구액  = 3,366,800 KRW
+  </div>
+
+  <div class="axiom">
+    <div class="axiom-id">// S04 핵심 명제 — 2024귀속 확정</div>
+    <div class="axiom-body">
+      <em>ICI_BOX3(ROC) = 17,380.53 USD</em> → 과표 제외 (IRC §301(c)(2))<br>
+      소득성격의 결정권은 ICI에 있으며<br>
+      총분배금은 ICI_BOX1 + ICI_STCG + ICI_BOX3로 복원된다<br>
+      <span class="g">국내 과표 = 15,063,272 KRW · 세액 = 65,162 KRW · 환급 = ₩3,366,800</span>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ── 4대 명제 ── -->
+<section class="sec w">
+  <div class="sec-id">// 통합 명제 — S01~S04 원장 일관 체계</div>
+  <h2 class="sec-title">4개 논문을 관통하는 <span class="gold">단일 상위 명제</span></h2>
+
+  <div class="prop-grid">
+    <div class="prop-card">
+      <div class="prop-id">// 명제 1 · 소득성격 결정권</div>
+      <div class="prop-title">소득성격 결정권은 ICI에 있다</div>
+      <div class="prop-body">
+<span class="eq">DVCA</span> = 지급금액 정보
+<span class="eq">QI</span>   = 세액정산 정보
+<span class="eq">ICI</span>  = 소득성격 정보 <span class="ok">★ 유일 결정권</span>
+
+ROC·배당·§871(k) 구분은
+ICI 원장으로만 확정된다
+      </div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-id">// 명제 2 · 총분배금 복원</div>
+      <div class="prop-title">ICI_TOTAL = BOX1 + STCG + BOX3</div>
+      <div class="prop-body">
+<span class="eq">ICI_TOTAL</span> = ICI_BOX1
+          + ICI_STCG
+          + <span class="roc">ICI_BOX3</span>
+
+2024귀속: <span class="ok">28,012.02 USD</span>
+= 10,306.62 + 324.87 + <span class="roc">17,380.53</span>
+      </div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-id">// 명제 3 · QI 기능 한정</div>
+      <div class="prop-title">QI = 세액원장 · 소득성격 창설 불가</div>
+      <div class="prop-body">
+QI = 원천징수·환급·납부세액
+
+ROC·배당·자본이득을
+새롭게 정의하지 않는다
+
+∴ <span class="eq">QI = 세액원장</span>
+      </div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-id">// 명제 4 · KTAX 계승</div>
+      <div class="prop-title">KTAX는 ICI 소득성격을 계승</div>
+      <div class="prop-body">
+DVCA → QI → <span class="eq">ICI</span> → KTAX
+
+<span class="roc">ICI_BOX3(ROC)</span> → 국내에서도 ROC
+§871(k)(STCG)  → 국내에서도 자본이득
+
+∴ <span class="ok">국내과표 = 국제원장 계승</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ── 과세이연 ── -->
+<section class="sec w">
+  <div class="sec-id">// Tax Deferral — 과세이연 구조</div>
+  <h2 class="sec-title">ROC 비과세 ≠ 영구 면세<br><span class="gold">과세이연(Tax Deferral)</span>이다</h2>
+
+  <div class="deferral">
+    <div class="df"><div class="df-n">STAGE 1</div><div class="df-title">ROC 수령</div><div class="df-formula">ICI_BOX3 = ROC<br>과표 제외</div><div class="df-note">비과세 ← 현 시점</div></div>
+    <div class="df"><div class="df-n">STAGE 2</div><div class="df-title">Basis 감소</div><div class="df-formula">조정원가<br>= 원가 − 누적ROC</div><div class="df-note">복리 재투자 온전</div></div>
+    <div class="df"><div class="df-n">STAGE 3</div><div class="df-title">Basis 소진</div><div class="df-formula">조정원가<br>→ 0</div><div class="df-note">누적ROC ≥ 취득원가</div></div>
+    <div class="df active"><div class="df-n">STAGE 4</div><div class="df-title">Capital Gain</div><div class="df-formula">매각가 − 조정원가<br>= CG → 과세</div><div class="df-note">정확한 과세 실현</div></div>
+  </div>
+
+  <div class="axiom">
+    <div class="axiom-id">// 최종 명제 — 자본주의 회계·과세의 기본 원리</div>
+    <div class="axiom-body">
+      원금은 원금으로 관리하고, 이익은 이익으로 과세한다.<br>
+      <em>국제원장(DVCA-QI-ICI)과 국내원장(KTAX) 사이에서</em><br>
+      원금은 원금으로, 이익은 이익으로 일관되게 유지하는 것이<br>
+      <span class="g">4개 논문 전체의 최종 귀결이다.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── FINALE ── -->
+<div class="finale">
+  <div class="w">
+    <div class="fin-eq">
+<span class="cm">// 2024귀속 · S04 · 확정값</span>
+<span class="eq">ICI_TOTAL</span>  = ICI_BOX1 + ICI_STCG + <span class="roc">ICI_BOX3</span>
+           = 10,306.62 + 324.87 + <span class="roc">17,380.53</span> = 28,012.02 USD
+
+<span class="eq">KTAX_BASE</span> = 14,597,834 + 465,438 = <span class="ok">20,167,677 KRW</span>
+확정세액    =  <span class="ok">65,162 KRW</span>  ×14.00% ✓
+환급 청구   =  <span class="ok">₩3,366,800</span>
+
+<span class="roc">ICI_BOX3(ROC) = 17,380.53 USD → 과표 제외 [IRC §301(c)(2)]</span>
+    </div>
+    <div class="fin-seal"><span>元</span></div>
+    <div class="fin-meta">
+      JSB71GA10 · 2025귀속 · S04 · 법정 증거자료 · 국세청 실질조사 제출용<br>
+      SHA-256: b8073f497b060933c23ef73e86fea2c5e7dc6dcc4bb9fb80eb415f42ebde892b<br>
+      원장=정본(Canonical Ledger) · S01 → S02 → S04a → HTML → PDF<br>
+      <strong>장세봉 / 인흥(주) · sebjang@gmail.com · sebjang.github.io/roc-tax-verification</strong>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
