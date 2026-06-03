@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과표 검증 가이드 — 오늘 무엇을 해야 하는가 · L2T-02</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Cormorant+Garamond:wght@400;600;700&display=swap');
+
+:root{--white:#ffffff;--paper:#f5f0e8;--deep:#ede6d4;--code:#f0f4f8;--ink:#0a0806;--body:#1a1410;--sub:#2e2620;--muted:#4a3e34;--rule:#c8b89a;--faint:#e8e0cc;--gold:#5c3e06;--gold2:#7a5410;--red:#7a100a;--green:#0e3e1a;--mono:#1a1a2e;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--white);color:var(--body);font-family:'Noto Sans KR',sans-serif;font-weight:300;line-height:1.9;overflow-x:hidden;}
+@media screen{body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:repeating-linear-gradient(180deg,transparent 0,transparent 47px,rgba(200,184,154,.12) 47px,rgba(200,184,154,.12) 48px);}}
+.w{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:0 2.5rem;}
+.nav{background:rgba(245,240,232,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:.75rem 2.5rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:10;}
+.nav a{font-family:'Noto Serif KR',serif;font-size:.88rem;font-weight:700;color:var(--ink);text-decoration:none;}
+.nav-id{font-size:.62rem;letter-spacing:.25em;color:var(--muted);}
+
+.hero{padding:4.5rem 2.5rem 3.5rem;border-bottom:2px solid var(--ink);position:relative;overflow:hidden;}
+.hero-bg{font-family:'Cormorant Garamond',serif;font-size:clamp(12rem,28vw,20rem);font-weight:700;color:rgba(10,8,6,.04);position:absolute;right:-2rem;top:50%;transform:translateY(-50%);line-height:1;pointer-events:none;user-select:none;}
+.hero-tag{font-family:'Cormorant Garamond',serif;font-size:.72rem;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;opacity:0;animation:up .6s .1s forwards;}
+.hero-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.8rem,5.5vw,3.5rem);font-weight:900;color:var(--ink);line-height:1.15;margin-bottom:.6rem;opacity:0;animation:up .8s .3s forwards;}
+.hero-title .gold{color:var(--gold);}
+.hero-rule{width:44px;height:3px;background:var(--ink);margin-bottom:1.6rem;opacity:0;animation:up .6s .4s forwards;}
+.hero-desc{max-width:560px;font-size:.92rem;color:var(--sub);line-height:1.9;opacity:0;animation:up .7s .5s forwards;}
+.hero-desc strong{color:var(--ink);}
+.hero-desc .red{color:var(--red);}
+
+/* URGENCY */
+.urgency{background:var(--deep);border-left:4px solid var(--red);padding:1.2rem 1.8rem;margin:2rem 0;display:flex;align-items:center;gap:1rem;opacity:0;animation:up .7s .7s forwards;}
+.urg-text{font-family:'Noto Serif KR',serif;font-size:.9rem;font-weight:700;color:var(--ink);}
+.urg-text .red{color:var(--red);}
+
+/* PHASE */
+.phase{padding:3.5rem 0;border-top:1px solid var(--rule);}
+.phase-tag{font-family:'Cormorant Garamond',serif;font-size:.68rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.phase-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.3rem,3.2vw,1.9rem);font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:1.8rem;}
+.phase-title .red{color:var(--red);}
+.phase-title .gold{color:var(--gold);}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:1.5px;background:var(--rule);margin:1.5rem 0;}
+.step{background:var(--white);padding:1.8rem 1.8rem 1.8rem 1.4rem;display:grid;grid-template-columns:3rem 1fr;gap:1.2rem;}
+.step.urgent{border-left:3px solid var(--red);}
+.step.normal{border-left:3px solid var(--gold);}
+.step-n{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--gold);line-height:1;padding-top:.2rem;}
+.step-n.red{color:var(--red);}
+.step-when{display:inline-block;font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;margin-bottom:.3rem;}
+.when-today{color:var(--red);}
+.when-week{color:var(--gold2);}
+.when-month{color:var(--muted);}
+.step-title{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--ink);margin-bottom:.3rem;}
+.step-desc{font-size:.83rem;color:var(--sub);line-height:1.8;}
+.step-desc strong{color:var(--ink);font-weight:700;}
+.step-desc .red{color:var(--red);}
+.step-desc .gold{color:var(--gold2);}
+
+/* TEMPLATE */
+.tmpl-tag{font-family:'Cormorant Garamond',serif;font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;color:var(--green);margin-bottom:.3rem;margin-top:1rem;}
+.template{font-family:'JetBrains Mono',monospace;font-size:.79rem;color:var(--mono);background:var(--code);border:1px solid var(--rule);border-left:3px solid var(--gold);padding:1.3rem 1.5rem;margin:.5rem 0 1rem;line-height:1.85;overflow-x:auto;white-space:pre-wrap;}
+.template .lbl{color:var(--gold2);font-weight:700;}
+.template .fill{color:var(--red);}
+
+/* INFO / WARN */
+.infobox{background:var(--deep);border:1px solid var(--rule);padding:1.4rem 1.8rem;margin:1.5rem 0;}
+.info-tag{font-family:'Cormorant Garamond',serif;font-size:.62rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
+.info-body{font-size:.84rem;color:var(--sub);line-height:1.85;}
+.info-body strong{color:var(--ink);font-weight:700;}
+.warnbox{background:rgba(122,16,10,.04);border:1px solid rgba(122,16,10,.2);padding:1.4rem 1.8rem;margin:1.5rem 0;}
+.warn-tag{font-family:'Cormorant Garamond',serif;font-size:.62rem;letter-spacing:.38em;text-transform:uppercase;color:var(--red);margin-bottom:.4rem;}
+.warn-body{font-size:.84rem;color:var(--sub);line-height:1.85;}
+.warn-body strong{color:var(--red);font-weight:700;}
+
+/* CLOSING */
+.closing{background:var(--ink);color:#f5f0e8;padding:5rem 2.5rem;text-align:center;position:relative;overflow:hidden;}
+.closing::before{content:'族';font-family:'Noto Serif KR',serif;font-size:18rem;font-weight:900;color:rgba(255,255,255,.04);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;line-height:1;}
+.cl-main{font-family:'Noto Serif KR',serif;font-size:clamp(1rem,2.5vw,1.5rem);font-weight:400;line-height:2;color:rgba(245,240,232,.7);margin-bottom:1.5rem;position:relative;}
+.cl-main strong{color:#f5f0e8;}
+.cl-main .gold{color:#d4aa40;}
+.cl-meta{font-size:.68rem;color:rgba(245,240,232,.3);letter-spacing:.1em;line-height:2.4;position:relative;}
+.cl-meta strong{color:rgba(245,240,232,.6);}
+
+hr{border:none;border-top:1px solid var(--rule);}
+hr.heavy{border-top:2px solid var(--ink);}
+@keyframes up{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@media(max-width:580px){.step{grid-template-columns:2.2rem 1fr;}}
+@media print{
+  body{background:white!important;color:#0a0806!important;}
+  body::before{display:none!important;}
+  .nav{background:white!important;border-bottom:1px solid #c8b89a;}
+  body{font-size:9.5pt;}body::before{display:none;}.nav{display:none;}
+  .hero-bg{display:none;}.hero-tag,.hero-title,.hero-rule,.hero-desc,.urgency{opacity:1!important;animation:none!important;}
+  .phase{page-break-inside:avoid;padding:1cm 0;}
+  .steps,.template,.infobox,.warnbox{page-break-inside:avoid;}
+  .closing{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .w{max-width:100%;padding:0;}@page{margin:2cm 2.2cm;}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html">← 원장(元帳) feat. 원금(元金)</a>
+  <span class="nav-id">L2T-02 · 과표 검증 가이드 · 2026</span>
+</nav>
+
+<div class="hero w">
+  <div class="hero-bg">族</div>
+  <div class="hero-tag">L2T-02 · 과표 검증 가이드 · Taxpayer Action Guide · 단계별</div>
+  <div class="hero-title">오늘 무엇을<br><span class="gold">해야 하는가</span></div>
+  <div class="hero-rule"></div>
+  <div class="hero-desc">
+    <strong>경정청구 기한이 흐르고 있습니다.</strong><br>
+    2021귀속 기한: 2026.12.31 — <span class="red">지금 시작해야 합니다.</span><br>
+    이 가이드는 오늘부터 단계별로 실행할 수 있는 절차입니다.
+  </div>
+  <div class="urgency">
+    <div>⚠</div>
+    <div class="urg-text">
+      <span class="red">경정청구 소멸시효 5년</span> — 귀속 연도별 기한을 확인하십시오.
+      2021귀속: 2026.12.31 · 2022귀속: 2027.12.31 · 2023귀속: 2028.12.31
+    </div>
+  </div>
+</div>
+
+<hr class="heavy">
+
+<!-- 1단계 -->
+<section class="phase w">
+  <div class="phase-tag">1단계 · 오늘</div>
+  <h2 class="phase-title"><span class="red">오늘 해야 할 것</span> — 증거 원장 구축</h2>
+
+  <div class="steps">
+    <div class="step urgent">
+      <div class="step-n red">①</div>
+      <div>
+        <div class="step-when when-today">오늘 · 최우선</div>
+        <div class="step-title">증권사 3사 거래내역 · 배당내역 전수 확보</div>
+        <div class="step-desc">
+          삼성·미래에셋·토스·키움 등 거래한 모든 증권사<br>
+          <strong>연도별 해외 ETF 분배금 내역 전수 출력</strong><br>
+          지급일 · 종목명 · 지급금액 · 원천징수액 · 과표 기재 여부<br>
+          PDF + 원본 파일 보관
+        </div>
+      </div>
+    </div>
+    <div class="step urgent">
+      <div class="step-n red">②</div>
+      <div>
+        <div class="step-when when-today">오늘</div>
+        <div class="step-title">ICI Primary Layout 다운로드</div>
+        <div class="step-desc">
+          <strong>ici.org → Statistics and Research → Mutual Fund Data → Distributions</strong><br>
+          연도별 P/L (Percentage of Total) 파일 다운로드<br>
+          보유 종목 확인: MSTY · CONY · NVDY · BITO 등<br>
+          <span class="gold">BOX3(Nondividend Distributions) 비율이 ROC 비율입니다.</span>
+        </div>
+      </div>
+    </div>
+    <div class="step normal">
+      <div class="step-n">③</div>
+      <div>
+        <div class="step-when when-today">오늘</div>
+        <div class="step-title">귀속 연도별 경정청구 기한 확인</div>
+        <div class="step-desc">
+          국세기본법 §45의2: 법정신고 기한 다음 날부터 <strong>5년</strong><br>
+          2021귀속(5월 신고): <span class="red">2026.12.31</span><br>
+          2022귀속: 2027.12.31 · 2023귀속: 2028.12.31 · 2024귀속: 2029.12.31
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- 2단계 -->
+<section class="phase w">
+  <div class="phase-tag">2단계 · 이번 주</div>
+  <h2 class="phase-title"><span class="gold">이번 주 해야 할 것</span> — 사실관계 확인</h2>
+
+  <div class="steps">
+    <div class="step normal">
+      <div class="step-n">①</div>
+      <div>
+        <div class="step-when when-week">이번 주</div>
+        <div class="step-title">증권사에 사실관계 파악 요청</div>
+        <div class="step-desc">
+          서면 또는 이메일로 요청합니다:
+        </div>
+        <div class="tmpl-tag">증권사 요청 문구 템플릿</div>
+        <div class="template"><span class="lbl">제목:</span> 해외 ETF 분배금 소득성격 확인 요청
+
+<span class="lbl">내용:</span>
+2024년(또는 귀속 연도)에 수령한 해외 ETF 분배금 관련
+다음 사항을 서면으로 회신하여 주시기 바랍니다.
+
+1. ICI Primary Layout 기준 BOX3(ROC) 적용 여부
+2. 국내 과세표준 산정 시 ICI 소득성격 반영 여부
+3. 미반영 시 적용 기준이 무엇인지
+4. QI 원천징수 환급 처리 시 사용한 원장 근거
+
+<span class="fill">[성명]</span> 드림</div>
+      </div>
+    </div>
+    <div class="step normal">
+      <div class="step-n">②</div>
+      <div>
+        <div class="step-when when-week">이번 주</div>
+        <div class="step-title">세무서 수리증명 · 납부영수증 확보</div>
+        <div class="step-desc">
+          홈택스 → 신고/납부 → 신고내역 → 종합소득세 확인<br>
+          <strong>신고서 원본 + 납부영수증 PDF 보관</strong><br>
+          경정청구 시 원본 신고서와 수정 신고서를 비교 제출합니다.
+        </div>
+      </div>
+    </div>
+    <div class="step normal">
+      <div class="step-n">③</div>
+      <div>
+        <div class="step-when when-week">이번 주</div>
+        <div class="step-title">S04 과표 검증 엑셀 다운로드</div>
+        <div class="step-desc">
+          <strong>sebjang.github.io/tax-truth-ledger</strong> →<br>
+          JSB71GA10-2024-KRTAX-S04b.xlsx (2024귀속)<br>
+          JSB71GA10-2025-KRTAX-S04b.xlsx (2025귀속)<br>
+          <span class="gold">소계1 직접 인용 · SHA-256 검증값 포함 · κ=100%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- 3단계 -->
+<section class="phase w">
+  <div class="phase-tag">3단계 · 한 달 이내</div>
+  <h2 class="phase-title"><span class="gold">한 달 안에 해야 할 것</span> — 공식 채널 활용</h2>
+
+  <div class="steps">
+    <div class="step normal">
+      <div class="step-n">①</div>
+      <div>
+        <div class="step-when when-month">한 달 이내</div>
+        <div class="step-title">유권해석 요청 — 국세청</div>
+        <div class="step-desc">
+          홈택스 → 세금신고 → 세무상담 → 서면질의<br>
+          또는 국세청 126 전화 상담<br>
+        </div>
+        <div class="tmpl-tag">유권해석 요청 핵심 질의 문구</div>
+        <div class="template"><span class="lbl">질의 요지:</span>
+
+해외 ETF 분배금 중 ICI Primary Layout에서
+BOX3(Nondividend Distributions·자본반환)으로 확정된 금액이
+국내 소득세법상 배당소득에 해당하는지 여부
+
+<span class="lbl">관련 근거:</span>
+- ICI Primary Layout: 소득성격 결정권은 발행사(ICI)에 있음
+  (KSD 정보공개 16516499에서 공식 확인)
+- IRC §301(c)(2): ROC는 과세소득 아닌 취득원가 감액
+- 소득세법 §14 실질과세 원칙
+
+<span class="lbl">질의 사항:</span>
+귀 청은 ICI Primary Layout을 소득성격 실질조사의
+기준 자료로 인정하는지 여부와
+그 근거를 회신하여 주시기 바랍니다.</div>
+      </div>
+    </div>
+    <div class="step normal">
+      <div class="step-n">②</div>
+      <div>
+        <div class="step-when when-month">한 달 이내</div>
+        <div class="step-title">정보공개청구 — 국세청·기재부·KSD</div>
+        <div class="step-desc">
+          <strong>정보공개포털 open.go.kr</strong><br>
+          ROC 소득성격 관련 유권해석 작성 시 ICI 검토 여부 · 내부 검토 자료 공개 요청<br>
+          <span class="gold">있다 → 공개 요구. 없다 → 인프라 부재 자인.</span><br>
+          어느 쪽 답변이든 — 원장이 됩니다.
+        </div>
+      </div>
+    </div>
+    <div class="step normal">
+      <div class="step-n">③</div>
+      <div>
+        <div class="step-when when-month">한 달 이내</div>
+        <div class="step-title">경정청구 제출</div>
+        <div class="step-desc">
+          홈택스 → 세금신고 → 경정청구<br>
+          첨부: ICI Primary Layout · S04b.xlsx · 증권사 배당내역<br>
+          <strong>경정청구 사유:</strong>
+          "ICI Primary Layout 기준 BOX3(ROC) 금액은
+          IRC §301(c)(2) 및 소득세법 §14 실질과세 원칙에 따라
+          배당소득에서 제외되어야 하므로
+          과다 납부한 세액의 환급을 청구합니다."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="infobox">
+    <div class="info-tag">경정청구 대상 금액 추정 — 2024·2025귀속</div>
+    <div class="info-body">
+      2024귀속 환급 대상: <strong>약 ₩1,375,010</strong> (ICI_BOX3=7,354.27 USD)<br>
+      2025귀속 환급 대상: <strong>약 ₩3,366,800</strong> (ICI_BOX3=17,380.53 USD)<br>
+      합계: <strong>₩4,741,810</strong> · κ=100% · 106건 교차검증<br>
+      정확한 금액은 개인 보유 종목·수량에 따라 다릅니다.
+    </div>
+  </div>
+
+  <div class="warnbox">
+    <div class="warn-tag">⚠ 주의</div>
+    <div class="warn-body">
+      <strong>국세청이 기각해도 포기하지 마십시오.</strong><br>
+      기각 통지서 = 불복청구(이의신청·심판청구·행정소송) 의 시작점입니다.<br>
+      기각 사유에 ICI Primary Layout 검토 여부가 기재되지 않았다면 — 절차적 하자입니다.
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<div class="closing">
+  <div class="w">
+    <div class="cl-main">
+      세금의 족보를 추적합니다<br>
+      <strong><span class="gold">과표를 만들었다면 그 근거도 보여줄 수 있어야 합니다</span></strong><br><br>
+      오늘 — ICI 데이터를 확인하십시오<br>
+      이번 주 — 증권사에 서면 요청하십시오<br>
+      한 달 내 — 경정청구를 제출하십시오
+    </div>
+    <div class="cl-meta">
+      L2T-02 · 과표 검증 가이드 · Ledger to Tax · 2026<br>
+      2021귀속 경정청구 기한: 2026.12.31 · 국세기본법 §45의2<br>
+      ICI Primary Layout · S04b.xlsx · KSD 정보공개 16516499<br><br>
+      <strong>sebjang.github.io/tax-truth-ledger</strong>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>납세자 선언 — 과표를 검증할 권리가 있습니다 · L2T-01</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --white:  #ffffff;
+  --paper:  #f5f0e8;
+  --deep:   #ede6d4;
+  --ink:    #0a0806;
+  --body:   #1a1410;
+  --sub:    #2e2620;
+  --muted:  #4a3e34;
+  --rule:   #c8b89a;
+  --faint:  #e8e0cc;
+  --gold:   #5c3e06;
+  --gold2:  #7a5410;
+  --red:    #7a100a;
+  --green:  #0e3e1a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--white);color:var(--body);font-family:'Noto Sans KR',sans-serif;font-weight:300;line-height:1.9;overflow-x:hidden;}
+@media screen{body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:repeating-linear-gradient(180deg,transparent 0,transparent 47px,rgba(200,184,154,.12) 47px,rgba(200,184,154,.12) 48px);}}
+.w{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:0 2.5rem;}
+
+/* NAV */
+.nav{background:rgba(245,240,232,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:.75rem 2.5rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:10;}
+.nav a{font-family:'Noto Serif KR',serif;font-size:.88rem;font-weight:700;color:var(--ink);text-decoration:none;}
+.nav-id{font-size:.62rem;letter-spacing:.25em;color:var(--muted);}
+
+/* COVER */
+.cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:5rem 2.5rem 4rem;border-bottom:2px solid var(--ink);position:relative;overflow:hidden;}
+.cover-bg{font-family:'Cormorant Garamond',serif;font-size:clamp(14rem,30vw,22rem);font-weight:700;color:rgba(10,8,6,.04);position:absolute;right:-2rem;top:50%;transform:translateY(-50%);line-height:1;pointer-events:none;user-select:none;}
+.cover-tag{font-family:'Cormorant Garamond',serif;font-size:.72rem;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;opacity:0;animation:up .7s .1s forwards;}
+.cover-main{font-family:'Noto Serif KR',serif;font-size:clamp(2rem,7vw,5rem);font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:.5rem;opacity:0;animation:up .8s .3s forwards;}
+.cover-main .red{color:var(--red);}
+.cover-sub{font-family:'Noto Serif KR',serif;font-size:clamp(1rem,2.5vw,1.4rem);font-weight:300;color:var(--sub);line-height:1.5;margin-bottom:2rem;opacity:0;animation:up .7s .45s forwards;}
+.cover-rule{width:52px;height:3px;background:var(--ink);margin-bottom:2.2rem;opacity:0;animation:up .6s .5s forwards;}
+.cover-thesis{max-width:600px;font-family:'Noto Serif KR',serif;font-size:clamp(.95rem,2.2vw,1.15rem);color:var(--body);line-height:1.9;opacity:0;animation:up .8s .6s forwards;}
+.cover-thesis em{font-style:normal;color:var(--gold2);}
+.cover-thesis .red{color:var(--red);}
+
+/* 핵심 명제 */
+.cover-identity{margin-top:2.5rem;border-left:4px solid var(--gold);padding:1.5rem 2rem;background:var(--deep);max-width:620px;opacity:0;animation:up .8s .8s forwards;}
+.ci-label{font-family:'Cormorant Garamond',serif;font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.ci-stmt{font-family:'Noto Serif KR',serif;font-size:clamp(.98rem,2.3vw,1.2rem);font-weight:700;color:var(--ink);line-height:1.7;}
+.ci-stmt .gold{color:var(--gold2);}
+.ci-en{margin-top:.4rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:var(--muted);}
+
+/* SECTION */
+.sec{padding:4.5rem 0;border-top:1px solid var(--rule);}
+.sec-tag{font-family:'Cormorant Garamond',serif;font-size:.68rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.sec-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.3rem,3.2vw,1.9rem);font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:1.8rem;}
+.sec-title .gold{color:var(--gold);}
+.sec-title .red{color:var(--red);}
+.prose{font-size:.92rem;color:var(--body);line-height:1.95;margin-bottom:1rem;max-width:720px;}
+.prose strong{color:var(--ink);font-weight:700;}
+.prose .red{color:var(--red);}
+.prose .gold{color:var(--gold2);}
+
+/* VOICE */
+.voice{border-left:3px solid var(--red);padding:1.5rem 2rem;margin:2rem 0;background:rgba(122,16,10,.03);}
+.voice-text{font-family:'Noto Serif KR',serif;font-size:clamp(.95rem,2.2vw,1.1rem);font-style:italic;color:var(--body);line-height:1.85;margin-bottom:.4rem;}
+.voice-who{font-size:.72rem;color:var(--muted);letter-spacing:.1em;}
+
+/* ACCUSATION */
+.accuse{background:var(--deep);border:1px solid var(--rule);border-left:4px solid var(--red);padding:2rem;margin:2rem 0;position:relative;overflow:hidden;}
+.accuse::before{content:'§';font-family:'Cormorant Garamond',serif;font-size:6rem;font-weight:700;color:rgba(10,8,6,.05);position:absolute;right:1rem;bottom:-.5rem;line-height:1;pointer-events:none;}
+.acc-tag{font-family:'Cormorant Garamond',serif;font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--red);margin-bottom:.6rem;}
+.acc-body{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--ink);line-height:1.75;position:relative;}
+.acc-body .gold{color:var(--gold2);}
+.acc-body .red{color:var(--red);}
+.acc-body .green{color:var(--green);}
+
+/* ARTICLES */
+.articles{margin:2rem 0;}
+.article{display:grid;grid-template-columns:3.5rem 1fr;gap:1.5rem;padding:1.8rem 0;border-bottom:1px solid var(--rule);}
+.article:first-child{border-top:1px solid var(--rule);}
+.art-n{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--gold);line-height:1;padding-top:.2rem;}
+.art-title{font-family:'Noto Serif KR',serif;font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;}
+.art-desc{font-size:.84rem;color:var(--sub);line-height:1.8;}
+.art-desc strong{color:var(--ink);font-weight:700;}
+
+/* DEMANDS */
+.demands{margin:2rem 0;}
+.demand{display:grid;grid-template-columns:2.5rem 1fr;gap:1.2rem;padding:1.5rem 0;border-bottom:1px solid var(--rule);}
+.demand:first-child{border-top:1px solid var(--rule);}
+.dm-n{width:2.5rem;height:2.5rem;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--ink);flex-shrink:0;}
+.dm-title{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--ink);margin-bottom:.3rem;}
+.dm-desc{font-size:.82rem;color:var(--sub);line-height:1.75;}
+
+/* CLOSING */
+.closing{background:var(--ink);color:#f5f0e8;padding:6rem 2.5rem;text-align:center;position:relative;overflow:hidden;}
+.closing::before{content:'元帳';font-family:'Noto Serif KR',serif;font-size:16rem;font-weight:900;color:rgba(255,255,255,.04);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;line-height:1;}
+.cl-main{font-family:'Noto Serif KR',serif;font-size:clamp(1.1rem,3vw,1.7rem);font-weight:400;line-height:2.3;color:rgba(245,240,232,.7);margin-bottom:2.5rem;position:relative;}
+.cl-main strong{color:#f5f0e8;font-weight:700;}
+.cl-main .gold{color:#d4aa40;}
+.cl-main .red{color:#e88070;}
+.cl-seal{width:76px;height:76px;border:2px solid #d4aa40;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;position:relative;}
+.cl-seal span{font-family:'Noto Serif KR',serif;font-size:1.6rem;font-weight:900;color:#d4aa40;}
+.cl-meta{font-size:.68rem;color:rgba(245,240,232,.3);letter-spacing:.1em;line-height:2.4;position:relative;}
+.cl-meta strong{color:rgba(245,240,232,.62);}
+
+hr{border:none;border-top:1px solid var(--rule);}
+hr.heavy{border-top:2px solid var(--ink);}
+
+@media print{
+  body{background:white!important;color:#0a0806!important;}
+  body::before{display:none!important;}
+  .nav{background:white!important;border-bottom:1px solid #c8b89a;}
+  body{font-size:9.5pt;}body::before{display:none;}
+  .nav{display:none;}
+  .cover{min-height:unset;page-break-after:always;}
+  .cover-bg{display:none;}
+  .cover-tag,.cover-main,.cover-sub,.cover-rule,.cover-thesis,.cover-identity{opacity:1!important;animation:none!important;}
+  .sec{page-break-inside:avoid;padding:1.2cm 0;}
+  .articles,.demands,.accuse,.voice{page-break-inside:avoid;}
+  .closing{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .w{max-width:100%;padding:0;}
+  @page{margin:2cm 2.2cm;}
+}
+@keyframes up{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@media(max-width:580px){.article{grid-template-columns:2.5rem 1fr;}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html">← 원장(元帳) feat. 원금(元金)</a>
+  <span class="nav-id">L2T-01 · 납세자 선언 · 2026</span>
+</nav>
+
+<!-- COVER -->
+<div class="cover w">
+  <div class="cover-bg">宣</div>
+  <div class="cover-tag">L2T-01 · 납세자 선언 · Taxpayer Declaration · 2026</div>
+  <div class="cover-main">당신 잘못이<br><span class="red">아닙니다</span></div>
+  <div class="cover-sub">해외 ETF 납세자는 국제조세 전문가가 아닙니다</div>
+  <div class="cover-rule"></div>
+  <div class="cover-thesis">
+    ICI Primary Layout은 매년 1월 무료로 공시됩니다.<br>
+    IRC §301(c)(2)는 1954년부터 원금 반환은 과세소득이 아님을 확립했습니다.<br>
+    국세청은 이것을 알고 있었습니다.<br>
+    그러나 <span class="red">소득성격을 확인하는 원장 인프라를 만들지 않았습니다.</span><br><br>
+    과표를 만들었다면 — <em>그 족보도 보여줄 수 있어야 합니다.</em>
+  </div>
+  <div class="cover-identity">
+    <div class="ci-label">L2T 핵심 명제 · Ledger to Tax</div>
+    <div class="ci-stmt">
+      <span class="gold">세금의 족보를 추적하다</span><br>
+      과세된 돈은 검증될 수 있어야 합니다<br>
+      기록 없는 과표는 과세의 근거가 될 수 없습니다
+    </div>
+    <div class="ci-en">
+      No Tax Without Ledger · Verify the Identity of the Tax Base<br>
+      Tracing the Lineage of Taxation
+    </div>
+  </div>
+</div>
+
+<hr class="heavy">
+
+<!-- §1 납세자에게 -->
+<section class="sec w">
+  <div class="sec-tag">제 1 선언</div>
+  <h2 class="sec-title">당신은 <span class="red">틀리지 않았습니다</span><br>원장이 없었을 뿐입니다</h2>
+  <p class="prose">
+    해외 ETF 분배금에 포함된 ROC(Return of Capital·자본반환)는 원금이 돌아온 것입니다.
+    소득이 아닙니다. IRC §301(c)(2)는 1954년부터 이것을 명확히 했습니다.
+    ICI Primary Layout은 매년 1월 어떤 분배금이 배당인지, 원금 반환인지를 무료로 공시합니다.
+  </p>
+  <p class="prose">
+    그러나 납세자는 국제조세 전문가가 아닙니다.
+    증권사도 알려주지 않았습니다. 국세청도 안내하지 않았습니다.
+    <strong>원장이 연결되지 않았기 때문입니다.</strong>
+  </p>
+  <div class="voice">
+    <div class="voice-text">
+      "확정신고를 제대로 하고 싶었습니다. 그런데 소득성격을 어디서 확인해야 하는지
+      아무도 알려주지 않았습니다. 증권사도, 국세청도, 세무사도."
+    </div>
+    <div class="voice-who">납세자 · 2024귀속 확정신고 과정</div>
+  </div>
+  <p class="prose">
+    <strong>당신 잘못이 아닙니다.</strong>
+    국가가 만들었어야 할 원장 인프라가 72년간 없었던 것입니다.
+  </p>
+</section>
+
+<hr>
+
+<!-- §2 국가에게 -->
+<section class="sec w">
+  <div class="sec-tag">제 2 선언</div>
+  <h2 class="sec-title">국세청은 알고 있었습니다<br><span class="red">그리고 만들지 않았습니다</span></h2>
+  <p class="prose">
+    KSD 정보공개 16516499. 국가 기관이 공식 문서로 인정했습니다:
+    <span class="red">"소득성격의 결정권은 현지 발행사(ICI)에 있다."</span>
+  </p>
+  <p class="prose">
+    그렇다면 ICI가 결정한 소득성격 데이터를 납세자에게 전달하는 체계를 구축했어야 합니다.
+    <strong>3년이 지났습니다. 여전히 없습니다.</strong>
+  </p>
+  <div class="accuse">
+    <div class="acc-tag">고발 · 72년 정책 공백</div>
+    <div class="acc-body">
+      IRC §301(c)(2) — 1954년 확립. <span class="gold">72년 전입니다.</span><br>
+      ICI Primary Layout — 1993년부터 무료 공시. <span class="gold">33년 전입니다.</span><br>
+      KSD — ICI 결정권 공식 인정. 그리고 전달 체계 미구축.<br><br>
+      무지(無知)가 아닙니다.<br>
+      <span class="red">의지(意志)의 부재입니다.</span>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- §3 7개 조항 -->
+<section class="sec w">
+  <div class="sec-tag">납세자 연대 선언 — 7개 조항</div>
+  <h2 class="sec-title">우리는 이것을 <span class="gold">요구합니다</span></h2>
+
+  <div class="articles">
+    <div class="article">
+      <div class="art-n">一</div>
+      <div>
+        <div class="art-title">납세자는 과표의 족보를 열람할 권리가 있습니다</div>
+        <div class="art-desc">소득성격이 어떤 원장에 의해 결정됐는지 — 납세자가 확인할 수 있어야 합니다. <strong>과표에는 족보가 있어야 합니다.</strong></div>
+      </div>
+    </div>
+    <div class="article">
+      <div class="art-n">二</div>
+      <div>
+        <div class="art-title">ROC는 원금입니다 — 소득이 아닙니다</div>
+        <div class="art-desc">ICI Primary Layout이 BOX3(ROC)으로 확정한 분배금은 원금 반환입니다. IRC §301(c)(2) 1954년 확립. <strong>72년간 변하지 않은 원칙입니다.</strong></div>
+      </div>
+    </div>
+    <div class="article">
+      <div class="art-n">三</div>
+      <div>
+        <div class="art-title">소득성격 결정권은 ICI에 있습니다</div>
+        <div class="art-desc">KSD가 공식 인정했습니다. ICI가 결정한 소득성격 데이터를 납세자에게 전달하지 않은 것 — <strong>투자자 권리보호 의무 위반입니다.</strong></div>
+      </div>
+    </div>
+    <div class="article">
+      <div class="art-n">四</div>
+      <div>
+        <div class="art-title">납세자는 경정청구할 권리가 있습니다</div>
+        <div class="art-desc">국세기본법 §45의2. ICI Primary Layout으로 ROC를 증명하면 — 과다 납부한 세금을 돌려받을 수 있습니다. <strong>2021귀속 기한: 2026.12.31</strong></div>
+      </div>
+    </div>
+    <div class="article">
+      <div class="art-n">五</div>
+      <div>
+        <div class="art-title">증권사는 소득성격 정보를 전달할 의무가 있습니다</div>
+        <div class="art-desc">QI 환급 처리 때 ICI 데이터를 사용하면서 — 납세자에게는 전달하지 않는 것. <strong>이중 기준입니다.</strong></div>
+      </div>
+    </div>
+    <div class="article">
+      <div class="art-n">六</div>
+      <div>
+        <div class="art-title">유권해석에는 근거 원장이 있어야 합니다</div>
+        <div class="art-desc">서면-2024-소득-4836. 이 유권해석 작성 시 ICI·IRC를 검토했는지 공개하십시오. <strong>"검토했다" → 공개하라. "안 했다" → 근거 없는 유권해석이다.</strong></div>
+      </div>
+    </div>
+    <div class="article">
+      <div class="art-n">七</div>
+      <div>
+        <div class="art-title">기록하는 납세자가 제도를 바꿉니다</div>
+        <div class="art-desc">κ=100% · 106건 · 특허 3건 · GitHub 공개. <strong>수치로 만들어진 원장은 무시할 수 없습니다.</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- §4 5대 요구 -->
+<section class="sec w">
+  <div class="sec-tag">국세청·기재부·KSD에 대한 5대 요구</div>
+  <h2 class="sec-title">지금 당장 <span class="gold">이것을 하십시오</span></h2>
+
+  <div class="demands">
+    <div class="demand">
+      <div class="dm-n">①</div>
+      <div>
+        <div class="dm-title">소득세법 §17 ROC 예외조항 신설 — 즉시</div>
+        <div class="dm-desc">기재부. "IRC §301(c)(2)에 따라 자본반환으로 확정된 분배금은 배당소득에서 제외한다." 문장 하나면 됩니다.</div>
+      </div>
+    </div>
+    <div class="demand">
+      <div class="dm-n">②</div>
+      <div>
+        <div class="dm-title">ICI Primary Layout ↔ 국세청 자동 연결 — 즉시</div>
+        <div class="dm-desc">KSD·국세청 IT기획과. 기술 장벽 없음. KSD 허브 이미 존재. ICI 무료 공시 데이터 연결만 하면 됩니다.</div>
+      </div>
+    </div>
+    <div class="demand">
+      <div class="dm-n">③</div>
+      <div>
+        <div class="dm-title">외국납부세액영수증 BOX 3분할 — 6개월</div>
+        <div class="dm-desc">금융위. BOX1(배당) / BOX3(ROC) / STCG(단기양도) 3분할 표기 의무화. 원장의 경계를 영수증에 새깁니다.</div>
+      </div>
+    </div>
+    <div class="demand">
+      <div class="dm-n">④</div>
+      <div>
+        <div class="dm-title">BT(Basis Tracking) 의무화 — 2년</div>
+        <div class="dm-desc">금융위·금투협. 취득원가 자동 추적. 미국 2012년 의무화. 한국은 10년 늦었습니다.</div>
+      </div>
+    </div>
+    <div class="demand">
+      <div class="dm-n">⑤</div>
+      <div>
+        <div class="dm-title">납세자 과표 검증권 법제화 — 1년</div>
+        <div class="dm-desc">국회. 납세자가 자신의 과표 형성 근거를 열람·검증할 권리. 국세기본법 §81의2 납세자 보호 조항 강화.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<div class="closing">
+  <div class="w">
+    <div class="cl-main">
+      과표를 만들었다면<br>
+      <strong><span class="gold">그 족보도 보여줄 수 있어야 합니다</span></strong><br><br>
+      원장(元帳)이 없으면 원금(元金)도 없습니다<br>
+      기록 없는 과표는 검증될 수 없습니다<br><br>
+      <strong>No Tax Without Ledger</strong>
+    </div>
+    <div class="cl-seal"><span>元</span></div>
+    <div class="cl-meta">
+      L2T-01 · 납세자 선언 · Ledger to Tax · 2026<br>
+      ICI Primary Layout · κ=100% · 106건 · KSD 정보공개 16516499<br>
+      IRC §301(c)(2) 1954 · 소득세법 §14·§17 · 국세기본법 §45의2<br>
+      특허출원 10-2026-0079638 · 0084940 · 0084983<br><br>
+      <strong>장세봉 / 인흥(주) · sebjang@gmail.com</strong><br>
+      <strong>sebjang.github.io/tax-truth-ledger</strong>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
