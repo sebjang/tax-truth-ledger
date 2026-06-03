@@ -16,7 +16,7 @@
 | [WJ-06-proposition.html](WJ-06-proposition.html) | 원장 삼분론 명제 정리 |
 | [WJ-07-2024-s04-paper.html](WJ-07-2024-s04-paper.html) | **포렌식 논문 2024귀속 — 법정 증거자료** |
 | [WJ-08-2025-s04-paper.html](WJ-08-2025-s04-paper.html) | **포렌식 논문 2025귀속 — 법정 증거자료** |
-
+| [WJ-10-policy-whitepaper.html](WJ-10-policy-whitepaper.html) | **★ 통합 정책 백서 + 징비록** |
 
 ## 핵심 수치
 

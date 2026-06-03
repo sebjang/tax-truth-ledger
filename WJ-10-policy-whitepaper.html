@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원장(元帳) 政策白書 — 72년 정책 실패의 기록과 개혁 제언 · WJ-10</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --white:  #ffffff;
+  --paper:  #f5f0e8;
+  --deep:   #ede6d4;
+  --mid:    #e0d8c4;
+  --ink:    #0a0806;
+  --body:   #1a1410;
+  --sub:    #2e2620;
+  --muted:  #4a3e34;
+  --rule:   #c8b89a;
+  --faint:  #e8e0cc;
+  --gold:   #5c3e06;
+  --gold2:  #7a5410;
+  --red:    #7a100a;
+  --red2:   #5a0c08;
+  --green:  #0e3e1a;
+  --blue:   #0a2e50;
+  --w:      880px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--body);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  line-height: 1.9;
+  overflow-x: hidden;
+}
+
+@media screen {
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: repeating-linear-gradient(
+      180deg, transparent 0, transparent 47px,
+      rgba(200,184,154,.11) 47px, rgba(200,184,154,.11) 48px);
+  }
+}
+
+.w { position: relative; z-index: 1; max-width: var(--w); margin: 0 auto; padding: 0 2.5rem; }
+
+/* ── NAV ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(245,240,232,.96); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+  padding: .7rem 2rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.nav-logo {
+  font-family: 'Noto Serif KR', serif;
+  font-size: .88rem; font-weight: 700; color: var(--ink); text-decoration: none;
+}
+.nav-id { font-size: .62rem; letter-spacing: .25em; color: var(--muted); }
+
+/* ── COVER ── */
+.cover {
+  min-height: 100vh;
+  display: grid; grid-template-rows: auto 1fr auto;
+  padding-top: 48px;
+  border-bottom: 2px solid var(--ink);
+}
+.cover-header {
+  padding: 1.5rem 2.5rem;
+  border-bottom: 1px solid var(--rule);
+  display: flex; justify-content: space-between; align-items: center;
+  position: relative; z-index: 1;
+}
+.cover-header-l {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .72rem; color: var(--muted); letter-spacing: .2em;
+}
+.cover-header-r { font-size: .7rem; color: var(--muted); }
+
+.cover-body {
+  padding: 4rem 2.5rem 3rem;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.cover-bg {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(14rem, 30vw, 22rem); font-weight: 900;
+  color: rgba(10,8,6,.04);
+  position: absolute; right: -2rem; top: 50%;
+  transform: translateY(-50%);
+  line-height: 1; pointer-events: none; user-select: none;
+}
+.cover-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .72rem; letter-spacing: .5em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.2rem;
+  opacity: 0; animation: up .7s .1s forwards;
+}
+.cover-hanja {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(3rem, 9vw, 6rem); font-weight: 900; color: var(--ink);
+  line-height: 1; letter-spacing: .08em; margin-bottom: .4rem;
+  opacity: 0; animation: up .8s .3s forwards;
+}
+.cover-hanja .red { color: var(--red); }
+.cover-subtitle-cn {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.2rem, 3vw, 2rem); font-style: italic; color: var(--muted);
+  margin-bottom: 1rem;
+  opacity: 0; animation: up .8s .4s forwards;
+}
+.cover-rule { width: 52px; height: 3px; background: var(--ink); margin: 1.8rem 0;
+  opacity: 0; animation: up .7s .5s forwards; }
+.cover-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.1rem, 2.8vw, 1.6rem); font-weight: 700; color: var(--ink);
+  line-height: 1.45; margin-bottom: 1rem;
+  opacity: 0; animation: up .8s .6s forwards;
+}
+.cover-subtitle {
+  font-size: clamp(.9rem, 2vw, 1.1rem); color: var(--sub); line-height: 1.7;
+  max-width: 600px;
+  opacity: 0; animation: up .8s .7s forwards;
+}
+
+/* 징비 선언 박스 */
+.jingbi-box {
+  margin-top: 2.5rem; max-width: 680px;
+  border-left: 4px solid var(--red); padding: 1.8rem 2rem;
+  background: rgba(122,16,10,.04);
+  opacity: 0; animation: up .8s .9s forwards;
+}
+.jingbi-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .45em; text-transform: uppercase;
+  color: var(--red); margin-bottom: .6rem;
+}
+.jingbi-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem; font-weight: 700; color: var(--ink); line-height: 1.75;
+}
+.jingbi-text em { font-style: normal; color: var(--gold); }
+
+/* 핵심 수치 */
+.cover-stats {
+  display: grid; grid-template-columns: repeat(5,1fr);
+  gap: 0; border: 1px solid var(--rule); margin-top: 2.5rem;
+  opacity: 0; animation: up .8s 1.1s forwards;
+}
+.cs-cell {
+  padding: 1.2rem 1rem; text-align: center;
+  border-right: 1px solid var(--rule);
+}
+.cs-cell:last-child { border-right: none; }
+.cs-val {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.4rem,3vw,2rem); font-weight: 900; color: var(--ink);
+  line-height: 1; margin-bottom: .2rem;
+}
+.cs-val .red { color: var(--red); }
+.cs-key { font-size: .65rem; color: var(--muted); line-height: 1.4; }
+
+.cover-footer {
+  padding: 1.5rem 2.5rem 2rem;
+  border-top: 1px solid var(--rule);
+  display: flex; justify-content: space-between; align-items: flex-end;
+  flex-wrap: wrap; gap: 1rem;
+  position: relative; z-index: 1;
+}
+.cf-meta { font-size: .72rem; color: var(--muted); line-height: 1.85; }
+.cf-meta strong { color: var(--body); }
+.cf-badges { display: flex; gap: .6rem; flex-wrap: wrap; }
+.badge {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .6rem; letter-spacing: .22em; text-transform: uppercase;
+  border: 1px solid var(--rule); color: var(--muted); padding: .18rem .55rem;
+}
+.badge.gold { border-color: var(--gold); color: var(--gold); }
+.badge.red  { border-color: var(--red2); color: var(--red); }
+
+/* ── CHAPTER HEADER ── */
+.ch-head {
+  background: var(--ink); color: #f5f0e8;
+  padding: 3rem 2.5rem;
+  position: relative; overflow: hidden;
+}
+.ch-head::before {
+  content: attr(data-n); font-family: 'Cormorant Garamond', serif;
+  font-size: 14rem; font-weight: 700; color: rgba(255,255,255,.04);
+  position: absolute; right: -1rem; bottom: -2rem;
+  line-height: 1; pointer-events: none;
+}
+.ch-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .5em; text-transform: uppercase;
+  color: rgba(245,240,232,.35); margin-bottom: .6rem;
+}
+.ch-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.3rem,3.5vw,2rem); font-weight: 700; color: #f5f0e8;
+  line-height: 1.35; position: relative;
+}
+.ch-title .gold { color: #d4aa40; }
+.ch-title .red  { color: #e88878; }
+.ch-sub {
+  margin-top: .6rem; font-size: .82rem;
+  color: rgba(245,240,232,.45); position: relative;
+}
+
+/* ── SECTION ── */
+.sec { padding: 4rem 0; border-top: 1px solid var(--rule); }
+.sec-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .68rem; letter-spacing: .48em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .5rem;
+}
+.sec-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.3rem,3.2vw,1.9rem); font-weight: 700; color: var(--ink);
+  line-height: 1.3; margin-bottom: 1.8rem;
+}
+.sec-title .gold { color: var(--gold); }
+.sec-title .red  { color: var(--red);  }
+.prose { font-size: .91rem; color: var(--body); line-height: 1.95; margin-bottom: 1rem; }
+.prose strong { color: var(--ink); font-weight: 700; }
+
+/* ── PAPER PANEL ── */
+.pp {
+  background: var(--paper); border: 1px solid var(--rule);
+  border-left: 4px solid var(--gold);
+  padding: 2rem 2rem; margin: 2rem 0; position: relative; overflow: hidden;
+}
+.pp::after {
+  content: attr(data-bg); font-family: 'Cormorant Garamond', serif;
+  font-size: 9rem; font-weight: 700; color: rgba(10,8,6,.05);
+  position: absolute; right: -.5rem; bottom: -1.5rem; line-height: 1; pointer-events: none;
+}
+.pp-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .45em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .7rem;
+}
+.pp-stmt {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(.98rem,2.3vw,1.25rem); font-weight: 700; color: var(--ink);
+  line-height: 1.7; position: relative;
+}
+.pp-stmt em { font-style: normal; color: var(--gold2); }
+.pp-stmt .red { color: var(--red); }
+.pp-body { margin-top: .9rem; font-size: .86rem; color: var(--sub); line-height: 1.85; position: relative; }
+.pp-body strong { color: var(--ink); font-weight: 700; }
+
+/* ── RED PANEL ── */
+.rp {
+  background: #fff8f6; border: 2px solid var(--red2);
+  padding: 2rem 1.8rem; margin: 2rem 0;
+}
+.rp-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--red); margin-bottom: .5rem;
+}
+.rp-title { font-family: 'Noto Serif KR', serif; font-size: 1rem; font-weight: 700; color: var(--red2); margin-bottom: .5rem; }
+.rp-body { font-size: .85rem; color: var(--sub); line-height: 1.85; }
+.rp-body strong { color: var(--red2); font-weight: 700; }
+
+/* ── AXIOM ── */
+.axiom {
+  border: 2px solid var(--ink); background: var(--deep);
+  padding: 2rem; margin: 2rem 0; position: relative;
+}
+.axiom::before {
+  content: '§'; font-family: 'Cormorant Garamond', serif;
+  font-size: 5rem; font-weight: 700; color: rgba(10,8,6,.07);
+  position: absolute; right: 1.5rem; bottom: -.3rem; line-height: 1; pointer-events: none;
+}
+.axiom-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem; letter-spacing: .45em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .5rem;
+}
+.axiom-body {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.05rem; font-weight: 700; color: var(--ink); line-height: 1.75; position: relative;
+}
+.axiom-body em { font-style: normal; color: var(--gold2); }
+.axiom-body .r { color: var(--red); }
+.axiom-body .g { color: var(--green); }
+
+/* ── TIMELINE ── */
+.tl { margin: 2rem 0; }
+.tl-row {
+  display: grid; grid-template-columns: 70px 1fr 1fr;
+  gap: 1rem; border-bottom: 1px solid var(--faint); padding: .85rem 0;
+}
+.tl-row:first-child { border-top: 2px solid var(--ink); }
+.tl-yr { font-family: 'Cormorant Garamond', serif; font-size: .88rem; color: var(--gold); }
+.tl-us { font-size: .8rem; color: var(--sub); line-height: 1.6; }
+.tl-kr { font-size: .8rem; color: var(--sub); line-height: 1.6; }
+.tl-us strong { color: var(--green); font-weight: 700; }
+.tl-kr strong { color: var(--red); font-weight: 700; }
+.tl-head .tl-yr, .tl-head .tl-us, .tl-head .tl-kr {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--muted);
+}
+
+/* ── TRIBOX ── */
+.tribox {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px; background: var(--rule); margin: 2rem 0;
+}
+.tb { background: var(--white); padding: 1.8rem 1.5rem; }
+.tb.star { background: var(--deep); border-top: 3px solid var(--gold); }
+.tb-id {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .6rem; letter-spacing: .32em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: .4rem;
+}
+.tb-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.4rem; font-weight: 900; color: var(--gold);
+  line-height: 1; margin-bottom: .3rem;
+}
+.tb.star .tb-name { font-size: 1.7rem; }
+.tb-role { font-family: 'Noto Serif KR', serif; font-size: .88rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
+.tb-can  { font-size: .76rem; color: var(--green); line-height: 1.65; margin-bottom: .3rem; }
+.tb-cant { font-size: .76rem; color: var(--red);   line-height: 1.65; }
+
+/* ── HARM CHAIN ── */
+.harm { margin: 2rem 0; }
+.hm-row {
+  display: grid; grid-template-columns: 3rem 1fr;
+  gap: 1.2rem; position: relative;
+}
+.hm-row + .hm-row .hm-n::before {
+  content: ''; position: absolute; top: -1.1rem; left: 50%;
+  transform: translateX(-50%); width: 1px; height: 1.1rem; background: var(--rule);
+}
+.hm-n {
+  width: 3rem; height: 3rem;
+  border: 2px solid var(--ink); background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; font-weight: 700; color: var(--ink);
+  flex-shrink: 0; z-index: 1; position: relative;
+}
+.hm-b { padding: .2rem 0 1.6rem; }
+.hm-tag { font-family: 'Cormorant Garamond', serif; font-size: .6rem; letter-spacing: .35em; text-transform: uppercase; color: var(--gold); margin-bottom: .2rem; }
+.hm-title { font-family: 'Noto Serif KR', serif; font-size: .95rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem; }
+.hm-desc { font-size: .83rem; color: var(--sub); line-height: 1.8; }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; margin: 2rem 0; }
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl thead tr { border-bottom: 2px solid var(--ink); }
+.tbl th {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .63rem; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600; text-align: left; padding: .6rem .7rem;
+}
+.tbl td { padding: .7rem .7rem; border-bottom: 1px solid var(--faint); font-size: .83rem; color: var(--sub); vertical-align: top; line-height: 1.65; }
+.tbl td:first-child { font-family: 'Noto Serif KR', serif; font-weight: 700; color: var(--ink); }
+.tbl tr.miss { background: #fff8f6; }
+.tbl tr.miss td:first-child { color: var(--red); }
+.tbl tr.hl td { background: var(--paper); }
+.tbl tr.hl td:first-child { color: var(--gold); }
+.rhi { color: var(--red); font-weight: 700; }
+
+/* ── POLICY STEPS ── */
+.policy-steps { margin: 2rem 0; }
+.ps-item {
+  display: grid; grid-template-columns: 52px 1fr;
+  gap: 0; border-bottom: 1px solid var(--rule);
+}
+.ps-item:first-child { border-top: 1px solid var(--rule); }
+.ps-n {
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.2rem .5rem; background: var(--deep);
+  border-right: 1px solid var(--rule);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-weight: 700; color: var(--gold);
+}
+.ps-body { padding: 1.2rem 1.5rem; }
+.ps-tag { font-family: 'Cormorant Garamond', serif; font-size: .6rem; letter-spacing: .35em; text-transform: uppercase; color: var(--gold); margin-bottom: .3rem; }
+.ps-title { font-family: 'Noto Serif KR', serif; font-size: .95rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem; }
+.ps-desc { font-size: .82rem; color: var(--sub); line-height: 1.7; }
+.ps-desc strong { color: var(--ink); font-weight: 700; }
+
+/* ── Q ITEMS ── */
+.q-list { margin: 2rem 0; }
+.q-item { border-bottom: 1px solid var(--rule); padding: 1.5rem 0; display: grid; grid-template-columns: 110px 1fr; gap: 1.5rem; }
+.q-item:first-child { border-top: 1px solid var(--rule); }
+.q-org { font-family: 'Noto Serif KR', serif; font-size: .85rem; font-weight: 700; color: var(--ink); }
+.q-org-sub { font-size: .58rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-top: .2rem; }
+.q-text { font-family: 'Noto Serif KR', serif; font-size: .92rem; font-weight: 700; color: var(--ink); line-height: 1.6; margin-bottom: .35rem; }
+.q-text::before { content: 'Q. '; color: var(--gold2); }
+.q-why { font-size: .78rem; color: var(--muted); line-height: 1.65; border-top: 1px solid var(--rule); padding-top: .6rem; margin-top: .6rem; }
+
+/* ── ROADMAP ── */
+.roadmap { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; background: var(--rule); margin: 2rem 0; }
+.rm { background: var(--white); padding: 1.7rem 1.3rem; }
+.rm-step { font-family: 'Cormorant Garamond', serif; font-size: .6rem; letter-spacing: .35em; text-transform: uppercase; color: var(--gold); margin-bottom: .4rem; }
+.rm-title { font-family: 'Noto Serif KR', serif; font-size: .9rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
+.rm-items { font-size: .78rem; color: var(--muted); line-height: 1.75; }
+
+/* ── EVIDENCE TABLE ── */
+.ev-band { background: var(--paper); border: 1px solid var(--rule); padding: 2rem 2rem; margin: 2rem 0; }
+.ev-title { font-family: 'Cormorant Garamond', serif; font-size: .65rem; letter-spacing: .38em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+
+/* ── CLOSING ── */
+.closing {
+  background: var(--ink); color: #f5f0e8;
+  padding: 7rem 2.5rem; text-align: center;
+  position: relative; overflow: hidden;
+}
+.closing::before {
+  content: '懲毖'; font-family: 'Noto Serif KR', serif;
+  font-size: 20rem; font-weight: 900; color: rgba(255,255,255,.035);
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%); white-space: nowrap; pointer-events: none; line-height: 1;
+}
+.cl-label { font-family: 'Cormorant Garamond', serif; font-size: .7rem; letter-spacing: .5em; text-transform: uppercase; color: rgba(245,240,232,.35); margin-bottom: 2rem; position: relative; }
+.cl-main { font-family: 'Noto Serif KR', serif; font-size: clamp(1.1rem,3vw,1.7rem); font-weight: 400; line-height: 2.3; color: rgba(245,240,232,.7); margin-bottom: 3rem; position: relative; }
+.cl-main strong { color: #f5f0e8; font-weight: 700; }
+.cl-main .gold { color: #d4aa40; }
+.cl-main .red  { color: #e88070; }
+.cl-seal { width: 84px; height: 84px; border: 2px solid #d4aa40; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2.5rem; position: relative; }
+.cl-seal span { font-family: 'Noto Serif KR', serif; font-size: 1.9rem; font-weight: 900; color: #d4aa40; }
+.cl-meta { font-size: .68rem; color: rgba(245,240,232,.28); letter-spacing: .1em; line-height: 2.4; position: relative; }
+.cl-meta strong { color: rgba(245,240,232,.62); }
+
+hr { border: none; border-top: 1px solid var(--rule); margin: 0; }
+hr.heavy { border-top: 2px solid var(--ink); }
+
+@media print {
+  body { font-size: 9.5pt; line-height: 1.6; }
+  body::before { display: none; }
+  .nav { display: none; }
+  .cover { min-height: unset; page-break-after: always; padding-top: 0; }
+  .cover-bg { display: none; }
+  .cover-label,.cover-hanja,.cover-subtitle-cn,.cover-rule,
+  .cover-title,.cover-subtitle,.jingbi-box,.cover-stats { opacity:1!important; animation:none!important; }
+  .ch-head { page-break-before: always; page-break-after: avoid; }
+  .sec { padding: 1cm 0; page-break-inside: avoid; }
+  .pp,.axiom,.rp,.tribox,.harm,.policy-steps,.roadmap { page-break-inside: avoid; }
+  .tbl { page-break-inside: avoid; font-size: 8pt; }
+  .closing, .ch-head, .pp, .rp, .tbl tr.miss, .tbl tr.hl {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .w { max-width: 100%; padding: 0; }
+  @page { margin: 2cm 2.2cm; }
+}
+
+@keyframes up { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@media(max-width:620px) {
+  .cover-stats { grid-template-columns: 1fr 1fr 1fr; }
+  .tribox { grid-template-columns: 1fr; }
+  .tl-row { grid-template-columns: 50px 1fr; }
+  .tl-kr { display: none; }
+  .roadmap { grid-template-columns: 1fr 1fr; }
+  .q-item { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">← 원장(元帳) feat. 원금(元金)</a>
+  <span class="nav-id">WJ-10 · 政策白書 · 2026.05.30</span>
+</nav>
+
+<!-- ══ COVER ══ -->
+<div class="cover">
+  <div class="cover-header w" style="max-width:100%;padding-left:2.5rem;padding-right:2.5rem;">
+    <span class="cover-header-l">政策白書 · Policy White Paper · JSB71GA10-WJ-10</span>
+    <span class="cover-header-r">2026.05.30 · sebjang.github.io/tax-truth-ledger</span>
+  </div>
+
+  <div class="cover-body w">
+    <div class="cover-bg">徵</div>
+    <div class="cover-label">통합 정책 백서 + 정책실패 징비록 · Integrated Policy White Paper</div>
+    <div class="cover-hanja"><span class="red">元</span>帳 政策白書</div>
+    <div class="cover-subtitle-cn">懲毖錄 — 지난 일을 징계하여 뒷일을 삼간다</div>
+    <div class="cover-rule"></div>
+    <div class="cover-title">
+      해외 ETF 소득성격 원장 부재<br>
+      72년 정책 실패의 기록과 개혁 제언
+    </div>
+    <div class="cover-subtitle">
+      원장(元帳)이 없으면 원금(元金)도 없다.<br>
+      소득성격을 결정하는 원장과 데이터 인프라가 없다면,<br>
+      국가는 어떤 자료를 근거로 최종 소득 과세표준을 형성하는지 설명해야 한다.
+    </div>
+
+    <div class="jingbi-box">
+      <div class="jingbi-label">징비 선언 · 懲毖宣言</div>
+      <div class="jingbi-text">
+        비극은 반성 없이는 반드시 반복된다.<br>
+        1954년 미국이 원장에 새긴 것을 우리는 72년간 무시했다.<br>
+        이를 기록하여 뒷일을 삼가고, <em>후대는 같은 실수를 반복하지 않도록 한다.</em>
+      </div>
+    </div>
+
+    <div class="cover-stats">
+      <div class="cs-cell">
+        <div class="cs-val"><span class="red">72</span>년</div>
+        <div class="cs-key">정책 공백<br>IRC §301(c)(2)<br>1954→2026</div>
+      </div>
+      <div class="cs-cell">
+        <div class="cs-val">300<span style="font-size:.6em;">만+</span></div>
+        <div class="cs-key">피해 추정<br>해외 ETF<br>투자자</div>
+      </div>
+      <div class="cs-cell">
+        <div class="cs-val"><span class="red">κ=100%</span></div>
+        <div class="cs-key">원장 정합률<br>106건<br>교차검증</div>
+      </div>
+      <div class="cs-cell">
+        <div class="cs-val" style="font-size:1.2rem;">₩4,741,810</div>
+        <div class="cs-key">환급 대상<br>2024+2025<br>귀속</div>
+      </div>
+      <div class="cs-cell">
+        <div class="cs-val"><span class="red">5</span>개</div>
+        <div class="cs-key">기관<br>반복 부작위<br>공식 확인</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-footer w" style="max-width:100%;padding-left:2.5rem;padding-right:2.5rem;">
+    <div class="cf-meta">
+      <strong>장세봉 / 인흥(주)</strong> · 경상북도 구미시 · sebjang@gmail.com<br>
+      특허출원 10-2026-0079638 · 10-2026-0084940 · 10-2026-0084983<br>
+      KSD 정보공개 16516499 · ICI Primary Layout · 소득세법 §14·§17 · IRC §301(c)(2)
+    </div>
+    <div class="cf-badges">
+      <span class="badge gold">정책 백서</span>
+      <span class="badge red">징비록</span>
+      <span class="badge gold">κ=100%</span>
+      <span class="badge">5대 개혁</span>
+      <span class="badge">6개 기관 질의</span>
+    </div>
+  </div>
+</div>
+
+<hr class="heavy">
+
+<!-- ══ 제1장: 원장 철학 ══ -->
+<div class="ch-head w" style="max-width:100%;" data-n="I">
+  <div class="ch-label">제 1 장 · Chapter I</div>
+  <div class="ch-title">원장(元帳)의 뜻 — <span class="gold">으뜸 元, 휘장 帳</span></div>
+  <div class="ch-sub">원금의 元 = 원장의 元 · 帳이 없으면 元도 없다</div>
+</div>
+
+<section class="sec w">
+  <div class="sec-tag">원장 철학의 기초</div>
+  <h2 class="sec-title">두 글자 안에 <span class="gold">이 정책 실패의 전부가 있다</span></h2>
+
+  <p class="prose">
+    원장(元帳). 한자를 풀면 이 보고서의 핵심이 나온다.
+    帳(장)은 <strong>경계를 만드는 휘장</strong> — 무엇을 안쪽에 두고 바깥에 두는가를 구분하는 기록이다.
+    元(원)은 <strong>으뜸, 처음, 근본</strong>이다.
+  </p>
+
+  <div class="axiom">
+    <div class="axiom-tag">원장 철학의 핵심 명제</div>
+    <div class="axiom-body">
+      원금(元金)의 元과 원장(元帳)의 元은 같은 으뜸이다.<br>
+      원장은 "으뜸이 되는 것의 경계를 긋는 기록"이다.<br>
+      <em>원장이 없으면 경계가 없다. 경계가 없으면 원금도 없다.</em><br>
+      <span class="r">帳이 없으면 元도 없다 — 이것이 72년 정책 실패의 뿌리다.</span>
+    </div>
+  </div>
+
+  <p class="prose">
+    조선왕조실록은 왕도 볼 수 없는 기록이었다. 사관이 붓을 놓지 않았기 때문이다.
+    훈민정음은 백성이 말하고 싶은 것을 표현하지 못하는 것을 안타까워하여 만들었다.
+    <strong>기록이 곧 문명이었다.</strong>
+  </p>
+  <p class="prose">
+    그런데 2026년 대한민국 세제 공무원은 기록을 남기지 않는다.
+    공청회를 열지 않는다. ICI 무료 공개 데이터를 72년간 연결하지 않는다.
+    <strong>조선 사관보다 낮은 기록 투명성이다.</strong>
+  </p>
+</section>
+
+<hr>
+
+<!-- ══ 제2장: 징비록 ══ -->
+<div class="ch-head w" style="max-width:100%;" data-n="II">
+  <div class="ch-label">제 2 장 · Chapter II · 懲毖錄</div>
+  <div class="ch-title">72년 정책 실패 연대기 — <span class="red">징비록</span></div>
+  <div class="ch-sub">비극은 준비 없는 평화에서 태어난다 · 태평성대가 조선을 무너뜨렸다</div>
+</div>
+
+<section class="sec w">
+  <div class="sec-tag">정책 실패 연대기</div>
+  <h2 class="sec-title">경부고속도로는 놓았다<br><span class="red">금융 원장 인프라는 72년간 방치했다</span></h2>
+
+  <div class="tl">
+    <div class="tl-row tl-head">
+      <div class="tl-yr">연도</div>
+      <div class="tl-us">🇺🇸 미국 — 원장 인프라 구축</div>
+      <div class="tl-kr">🇰🇷 한국 — 원장 부재</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">1954</div>
+      <div class="tl-us"><strong>IRC §301(c)(2) 법제화</strong> — 원금 반환은 소득 아님. 자본주의 세제의 첫 원칙.</div>
+      <div class="tl-kr">한국전쟁 복구 중 — <strong>양해 가능한 시기</strong></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">1970</div>
+      <div class="tl-us">IRS 소득성격 공시 체계 정비</div>
+      <div class="tl-kr">경부고속도로 개통 — <strong>제조업 인프라 완성. 금융 원장 인프라 미착수.</strong></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">1993</div>
+      <div class="tl-us"><strong>ICI Primary Layout 표준화</strong> — BOX1/BOX3 소득성격 공시 인프라 가동.</div>
+      <div class="tl-kr">금융실명제 도입 — <strong>명의는 실명화, 원장 인프라 미추진.</strong></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">2002</div>
+      <div class="tl-us">IRS BOX3 "Nondividend Distributions" 명칭 확정</div>
+      <div class="tl-kr"><strong>관련 제도 없음</strong></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">2012</div>
+      <div class="tl-us"><strong>BT(Basis Tracking) 의무화</strong> — 증권사 전사 취득원가 자동 추적.</div>
+      <div class="tl-kr">IT 강국 선언 — <strong>스마트폰 보급 세계 1위. 금융 원장 인프라 0.</strong></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">2024</div>
+      <div class="tl-us">ICI P/L 2024 자동 공시 — 소득성격 자동 확정</div>
+      <div class="tl-kr"><strong>유권해석 서면-2024-소득-4836 한 줄 — 공청회 없음. ICI 검토 없음.</strong></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-yr">2026</div>
+      <div class="tl-us"><strong>완전 자동화 세제 원장 인프라</strong></div>
+      <div class="tl-kr"><strong>KSD 공문 16516499 — "당국 관여 없음" 공식 확인. 72년 격차 지속.</strong></div>
+    </div>
+  </div>
+
+  <div class="rp">
+    <div class="rp-tag">징비록 핵심 기록 · 류성룡의 언어로</div>
+    <div class="rp-title">온 나라가 편안함에 익숙해져 위기감이 없었다</div>
+    <div class="rp-body">
+      200년의 태평성대가 조선을 무너뜨렸다.<br>
+      72년의 원장 부재가 300만 투자자의 노후를 무너뜨리고 있다.<br>
+      <strong>평화가 곧 위기의 씨앗이었다.</strong><br>
+      ICI가 1993년부터 무료로 공시한 데이터를 — 33년간 연결하지 않았다.
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ══ 제3장: 원장 삼분론 ══ -->
+<div class="ch-head w" style="max-width:100%;" data-n="III">
+  <div class="ch-label">제 3 장 · Chapter III</div>
+  <div class="ch-title">원장 삼분론 — <span class="gold">소득성격 결정권의 수학적 증명</span></div>
+  <div class="ch-sub">DVCA · QI · ICI — 세 원장의 역할 구분과 위계</div>
+</div>
+
+<section class="sec w">
+  <div class="tribox">
+    <div class="tb">
+      <div class="tb-id">원장 Ⅰ / DVCA</div>
+      <div class="tb-name">DVCA</div>
+      <div class="tb-role">지급금액 원장</div>
+      <div class="tb-can">✓ 지급금액 · 지급일</div>
+      <div class="tb-cant">✗ 소득성격 결정 불가</div>
+    </div>
+    <div class="tb">
+      <div class="tb-id">원장 Ⅱ / QI</div>
+      <div class="tb-name">QI</div>
+      <div class="tb-role">세액정산 원장</div>
+      <div class="tb-can">✓ 원천세 · 환급액</div>
+      <div class="tb-cant">✗ 소득성격 창설 불가</div>
+    </div>
+    <div class="tb star">
+      <div class="tb-id">원장 Ⅲ ★ / ICI</div>
+      <div class="tb-name">ICI</div>
+      <div class="tb-role">소득성격 원장 — 유일 결정권자</div>
+      <div class="tb-can">✓ BOX1(배당) · BOX3(ROC) · ICI_TOTAL<br>✓ 매년 1월 무료 공시</div>
+    </div>
+  </div>
+
+  <div class="axiom">
+    <div class="axiom-tag">최상위 항등식 — 원장의 수학</div>
+    <div class="axiom-body">
+      ICI_TOTAL = <em>ICI_BOX1(배당)</em> + ICI_STCG(단기양도차익) + <span class="r">ICI_BOX3(ROC·원금반환)</span><br>
+      2024귀속: $14,318 + $101 + <span class="r">$7,354</span> = $21,774 · 수렴 99.99%<br>
+      2025귀속: $10,307 + $325 + <span class="r">$17,381</span> = $28,012 · 수렴 99.99%<br>
+      κ = 106/106 = <span class="g">1.000 (100%) · 오차 없음</span>
+    </div>
+  </div>
+
+  <p class="prose">
+    <strong>KSD 공문 16516499의 진정한 의미:</strong>
+    "미국 원천소득의 성격 구분은 현지 발행사에서 결정되는 것으로…"
+    이것은 부작위 선언이 아니다.
+    <strong>ICI의 소득성격 결정권을 KSD 스스로 인정한 공식 문서다.</strong>
+    그 결정(ICI BOX3)을 투자자에게 전달하지 않은 것 — 투자자 권리보호 의무 위반이다.
+  </p>
+</section>
+
+<hr>
+
+<!-- ══ 제4장: 5대 불일치 ══ -->
+<div class="ch-head w" style="max-width:100%;" data-n="IV">
+  <div class="ch-label">제 4 장 · Chapter IV</div>
+  <div class="ch-title">5개 기관 5대 불일치 — <span class="red">반복 부작위의 증거</span></div>
+  <div class="ch-sub">그들은 알고 있다 · 개입하지 않기로 선택했다</div>
+</div>
+
+<section class="sec w">
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>기관</th><th>불일치</th><th>회신 내용</th><th>원장 위계 위반</th></tr></thead>
+      <tbody>
+        <tr class="miss"><td>증권사<br>(M/S/T)</td><td>QI 이중 기준</td><td>"QI 환급은 처리. 과세표준 정정은 불가."</td><td>동일 원장 선택적 적용 — 명제 1·3 위반</td></tr>
+        <tr class="miss"><td>KSD</td><td>전달 의무 방기</td><td>"소득성격은 현지 발행사 결정. 당국 관여 없음." — 16516499</td><td>ICI 결정권 인정 + 전달 의무 불이행</td></tr>
+        <tr class="miss"><td>국세청</td><td>IRC 72년 배제</td><td>"서면-2024-소득-4836 — 명칭 무관 배당소득 과세"</td><td>ICI_TOTAL 항등식 무시 · §14 실질과세 위반</td></tr>
+        <tr class="miss"><td>기재부</td><td>인프라 미구축</td><td>ICI ↔ 국세청 연결 체계 없음</td><td>소득세법 §14 실질과세 원칙 공동화</td></tr>
+        <tr class="miss"><td>금융위</td><td>감독 공백</td><td>소득성격 데이터 보호 체계 없음</td><td>투자자 권리보호 의무 위반</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pp" data-bg="5">
+    <div class="pp-tag">징비록 관점 — 류성룡의 통찰</div>
+    <div class="pp-stmt">
+      위기가 닥친 후의 인재 등용은 이미 늦다.<br>
+      위기가 닥친 후의 원장 구축도 이미 늦다.<br>
+      <em>5개 기관이 모두 알고 있었다.</em>
+    </div>
+    <div class="pp-body">
+      증권사는 QI 환급 처리 때 ICI 데이터를 사용하고 있다.<br>
+      KSD는 소득성격 결정권이 ICI에 있음을 공식 문서로 인정했다.<br>
+      국세청은 유권해석 작성 시 ICI·IRC를 검토하지 않을 수 없었다.<br>
+      <strong>무지(無知)가 아니라 반복적 부작위(不作爲)다.</strong>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ══ 제5장: 피해 구조 ══ -->
+<div class="ch-head w" style="max-width:100%;" data-n="V">
+  <div class="ch-label">제 5 장 · Chapter V</div>
+  <div class="ch-title">피해 구조 — <span class="red">경제적 소득 ₩0에 최대 57.63%</span></div>
+  <div class="ch-sub">8단계 누적 부담 · 4중 연쇄 · 노후 안전망 붕괴</div>
+</div>
+
+<section class="sec w">
+  <div class="harm">
+    <div class="hm-row">
+      <div class="hm-n">①</div>
+      <div class="hm-b">
+        <div class="hm-tag">출발점 · ΔWealth = 0</div>
+        <div class="hm-title">ROC 분배 수령 — 경제적 소득 없음</div>
+        <div class="hm-desc">MSTY(BOX3=100%)·CONY(97%)·NVDY(52.6%) 분배. ICI Primary Layout 확정 원금 반환. 으뜸(元)이 돌아왔을 뿐이다.</div>
+      </div>
+    </div>
+    <div class="hm-row">
+      <div class="hm-n">②</div>
+      <div class="hm-b">
+        <div class="hm-tag">IRS 원천징수</div>
+        <div class="hm-title">15% 즉시 원천징수 → 재투자 씨드 소멸</div>
+        <div class="hm-desc">원장이 있으면 BOX3 확정 즉시 면제 가능. 없으면 4~20개월 자본 고착.</div>
+      </div>
+    </div>
+    <div class="hm-row">
+      <div class="hm-n">③④</div>
+      <div class="hm-b">
+        <div class="hm-tag">국내 소득세</div>
+        <div class="hm-title">소득세 14% + 지방세 1.4% 재징수</div>
+        <div class="hm-desc">2024귀속 ₩20,244 / 2025귀속 ₩65,162 — ROC 원금에 부과.</div>
+      </div>
+    </div>
+    <div class="hm-row">
+      <div class="hm-n">⑤⑥</div>
+      <div class="hm-b">
+        <div class="hm-tag">종합소득세 누진</div>
+        <div class="hm-title">금융소득 종합과세 강제 편입 — 최대 49.5%</div>
+        <div class="hm-desc">경제적 소득 ₩0에 한계세율 최대 45%. 원장 없는 과표 왜곡의 결과.</div>
+      </div>
+    </div>
+    <div class="hm-row">
+      <div class="hm-n">⑦</div>
+      <div class="hm-b">
+        <div class="hm-tag">건강보험료</div>
+        <div class="hm-title">지역가입자 전환 시 8.13% + 피부양자 탈락</div>
+        <div class="hm-desc">ROC ≠ 금융소득이나 건보 과표 포함. 가족 전체에 영향.</div>
+      </div>
+    </div>
+    <div class="hm-row">
+      <div class="hm-n">⑧</div>
+      <div class="hm-b">
+        <div class="hm-tag">노후 안전망 붕괴</div>
+        <div class="hm-title">기초연금 위협 → 체납 시 강제 압류</div>
+        <div class="hm-desc"><strong>경제적 소득 ₩0 · ROC 100% 기준 최대 57.63% 부과. 원장 부재의 최종 청구서.</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>ROC 비중</th><th>최대 누적 부담률</th><th>대상 종목 (2025)</th><th>영향</th></tr></thead>
+      <tbody>
+        <tr><td>30%</td><td>15.80%</td><td>NVDY 52.6% 초과분</td><td>일반 투자자</td></tr>
+        <tr><td>52.6%</td><td>27.7%</td><td>NVDY 2025</td><td class="rhi">28만 투자자 추정</td></tr>
+        <tr><td>97%</td><td>51.1%</td><td>CONY 2025</td><td class="rhi">고령 은퇴자 직격</td></tr>
+        <tr class="miss"><td>100%</td><td class="rhi">57.63%</td><td>MSTY 2025 · AIYY 2025</td><td class="rhi">경제적 소득 ₩0 — 최악</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr>
+
+<!-- ══ 제6장: 공개 질의 ══ -->
+<div class="ch-head w" style="max-width:100%;" data-n="VI">
+  <div class="ch-label">제 6 장 · Chapter VI</div>
+  <div class="ch-title">6대 공개 질의 — <span class="gold">세금의 족보를 공개하라</span></div>
+  <div class="ch-sub">존재한다면 공개하라 · 존재하지 않는다면 설명하라</div>
+</div>
+
+<section class="sec w">
+  <div class="pp" data-bg="?">
+    <div class="pp-tag">공론화 핵심 질문 — 모든 국민이 이해하는 한 문장</div>
+    <div class="pp-stmt">
+      주식에는 족보가 있습니다. 채권에는 족보가 있습니다.<br>
+      <span class="red">그렇다면 해외 ETF 최종 소득 과세표준의 족보는 어디에 있습니까?</span>
+    </div>
+    <div class="pp-body">
+      이 질문은 세무사·회계사·국회의원·기자·감사원·일반 투자자 모두 이해할 수 있습니다.<br>
+      <strong>세금의 족보를 공개하라는 요구 — 이것은 세금을 거부하는 것이 아닙니다.</strong>
+    </div>
+  </div>
+
+  <div class="q-list">
+    <div class="q-item">
+      <div><div class="q-org">기획재정부</div><div class="q-org-sub">정책 책임</div></div>
+      <div>
+        <div class="q-text">해외 ETF 최종 소득 과세표준의 소득성격을 확인하기 위한 실질조사 대상 자료를 무엇으로 정의합니까? ICI Primary Layout을 검토 대상으로 규정한 지침이 존재합니까?</div>
+        <div class="q-why">답변 방향: "있다"→공개 요구. "없다"→실질과세 원칙 적용 사실적 기초 부재 자인. 어느 쪽도 현행 체계의 취약점을 드러낸다.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div><div class="q-org">국세청</div><div class="q-org-sub">집행 책임</div></div>
+      <div>
+        <div class="q-text">해외 ETF 분배금의 최종 소득성격을 확정하기 위한 실질조사 절차는 무엇입니까? 납세자가 ICI Primary Layout을 제출했을 때 어떤 기준으로 검토합니까?</div>
+        <div class="q-why">서면-2024-소득-4836 작성 시 ICI·IRC §301(c)(2)·QI 체계를 검토했는지 여부가 드러난다.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div><div class="q-org">금융위원회</div><div class="q-org-sub">감독 책임</div></div>
+      <div>
+        <div class="q-text">해외 금융상품의 소득성격 정보(ROC·STCG·LTCG)는 어떻게 투자자에게 보호됩니까? ETF 규제 글로벌 정합성 추진 시 소득성격 데이터 인프라는 포함됩니까?</div>
+        <div class="q-why">상품 확대와 투자자 보호 사이의 불균형을 공식 의제화한다.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div><div class="q-org">한국예탁결제원</div><div class="q-org-sub">데이터 책임</div></div>
+      <div>
+        <div class="q-text">KSD 정보공개 16516499에서 ICI의 소득성격 결정권을 공식 인정했습니다. 그 결정 데이터를 투자자에게 전달하는 체계를 왜 구축하지 않았습니까?</div>
+        <div class="q-why">ICI 결정권 인정 + 전달 체계 미구축 = 투자자 권리보호 의무 위반.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div><div class="q-org">감사원</div><div class="q-org-sub">감사 책임</div></div>
+      <div>
+        <div class="q-text">실질과세 원칙을 표방하면서 소득성격을 확인하는 원장과 실질조사 체계는 구축되어 있습니까? 이 체계는 감사 가능합니까?</div>
+        <div class="q-why">"있다"→공개. "없다"→행정 부작위·감사 대상. 어느 방향도 현행 체계 취약점 드러남.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div><div class="q-org">국회</div><div class="q-org-sub">입법 책임</div></div>
+      <div>
+        <div class="q-text">국민은 자신의 과세표준 형성과정을 열람·검증할 권리가 있습니까? 소득세법 §17 ROC 예외조항 신설과 납세자 검증권 법제화를 추진할 의지가 있습니까?</div>
+        <div class="q-why">국정감사 의제화. 국회 국민동의청원 10만 서명과 연계.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ══ 제7장: 5대 개혁 ══ -->
+<div class="ch-head w" style="max-width:100%;" data-n="VII">
+  <div class="ch-label">제 7 장 · Chapter VII</div>
+  <div class="ch-title">5대 개혁 의제 — <span class="gold">금융 원장 인프라를 놓아라</span></div>
+  <div class="ch-sub">과세 포기가 아니라 — 더 건전한 세원 확보 전략이다</div>
+</div>
+
+<section class="sec w">
+  <p class="prose">
+    포항제철 건설비: 약 2조원(1970년대). ICI↔국세청 자동 연결 구축 비용: <strong>수십억원 이내 추정.</strong>
+    연간 잠재 피해 최대 4.5조원을 막을 수 있는 — 역대 최고 효율의 국가 인프라 투자다.
+    ROC 정합 처리는 과세 포기가 아니다. <strong>Tax Deferral — 과세이연이다.</strong>
+  </p>
+
+  <div class="policy-steps">
+    <div class="ps-item">
+      <div class="ps-n">①</div>
+      <div class="ps-body">
+        <div class="ps-tag">즉시 · 기재부 금융세제과 · 소득세법 §17</div>
+        <div class="ps-title">ROC 예외조항 신설 — 문장 하나면 된다</div>
+        <div class="ps-desc">"IRC §301(c)(2)에 따라 자본반환으로 확정된 분배금은 배당소득에서 제외하며 취득가액 감소로 처리한다." 근거: 소득세법 §14·§17 · 헌재 2001헌바63</div>
+      </div>
+    </div>
+    <div class="ps-item">
+      <div class="ps-n">②</div>
+      <div class="ps-body">
+        <div class="ps-tag">즉시 · KSD · 국세청 IT기획과</div>
+        <div class="ps-title">ICI Primary Layout ↔ 국세청 자동 연결</div>
+        <div class="ps-desc">BOX3 확정 즉시 원천징수 자동 면제. 18개월 → 2개월. <strong>기술 장벽 없음 — KSD 허브 이미 존재.</strong> 경정·환급 자동화.</div>
+      </div>
+    </div>
+    <div class="ps-item">
+      <div class="ps-n">③</div>
+      <div class="ps-body">
+        <div class="ps-tag">6개월 · 금융위 · 자본시장법 §174</div>
+        <div class="ps-title">외국납부세액영수증 BOX 3분할 개편</div>
+        <div class="ps-desc">BOX1(배당) / BOX3(원금반환) / STCG(단기양도) 3분할 표기 의무화. 원장의 경계를 영수증에 새긴다.</div>
+      </div>
+    </div>
+    <div class="ps-item">
+      <div class="ps-n">④</div>
+      <div class="ps-body">
+        <div class="ps-tag">2년 · 금융위 · 금투협 · 소득세법 §97</div>
+        <div class="ps-title">BT(Basis Tracking) 의무화 — 미국 2012 준용</div>
+        <div class="ps-desc">LOT 단위 취득원가 추적 시스템 의무 구축. ROC 수령 시 조정취득원가 자동 감액.</div>
+      </div>
+    </div>
+    <div class="ps-item">
+      <div class="ps-n">⑤</div>
+      <div class="ps-body">
+        <div class="ps-tag">3년 · 기재부 · 한미조세조약 §27</div>
+        <div class="ps-title">한미 QI 협정 개정 — 국제 데이터 자동 공유</div>
+        <div class="ps-desc">IRS QI 협정 개정: BOX3 재분류 데이터 국세청 직접 전송 파이프라인. 잠정 원천징수 즉시 면제 조항 신설.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="roadmap">
+    <div class="rm"><div class="rm-step">1단계 · 1년</div><div class="rm-title">원장 표준 제정</div><div class="rm-items">소득세법 개정안<br>ICI 연동 설계<br>BOX 3분할 표준화</div></div>
+    <div class="rm"><div class="rm-step">2단계 · 2~3년</div><div class="rm-title">시스템 통합</div><div class="rm-items">전 증권사 BT 구축<br>조정원가 자동화<br>경정·환급 자동화</div></div>
+    <div class="rm"><div class="rm-step">3단계 · 3~5년</div><div class="rm-title">국세청 연계</div><div class="rm-items">종합소득세 자동<br>건보료 자동 제외<br>QI 협정 개정</div></div>
+    <div class="rm"><div class="rm-step">4단계 · 5년+</div><div class="rm-title">아시아 원장 허브</div><div class="rm-items">금융세제 데이터<br>국제 표준<br>설명가능한 과세</div></div>
+  </div>
+</section>
+
+<hr class="heavy">
+
+<!-- ══ 결론: 징비 선언 ══ -->
+<div class="ch-head w" style="max-width:100%;" data-n="懲">
+  <div class="ch-label">결론 · Conclusion · 懲毖宣言</div>
+  <div class="ch-title">반복하지 않기 위하여 — <span class="gold">원장이 징비록이다</span></div>
+  <div class="ch-sub">이순신의 열두 척 · 세종의 훈민정음 · 다리오의 스프레드시트 · 머스크의 제1원칙 · 류성룡의 기록</div>
+</div>
+
+<section class="sec w">
+  <p class="prose">
+    이순신은 열두 척으로 133척을 막았다. 전력이 아니었다. 조류를 알았다.
+    <strong>명량의 조류가 ICI Primary Layout이다.</strong>
+  </p>
+  <p class="prose">
+    세종은 훈민정음을 만들었다. 백성이 말하고 싶은 것을 표현하지 못하는 것을 안타까워했기 때문이다.
+    <strong>투자자가 자신의 소득성격을 알 수 없는 것 — 원장 검증 체계가 2026년의 훈민정음이다.</strong>
+  </p>
+  <p class="prose">
+    류성룡은 징비록을 썼다. 자신의 실패도 숨기지 않고 기록했다.
+    <strong>이 백서가 72년 정책 실패의 징비록이다.</strong>
+  </p>
+
+  <div class="axiom">
+    <div class="axiom-tag">통합 정책 백서 · 최종 명제</div>
+    <div class="axiom-body">
+      원금은 원금으로 관리하고 이익은 이익으로 과세하라.<br>
+      <em>이것이 1954년 IRC §301(c)(2)가, 그리고 원장(元帳)이 말하는 바다.</em><br>
+      소득성격을 결정하는 원장과 데이터 인프라가 없다면,<br>
+      국가는 <span class="r">어떤 자료를 근거로 최종 소득 과세표준을 형성하는지 설명해야 한다.</span><br>
+      <span class="g">원장이 있으면 — 투자자 보호와 세원 확보가 동시에 가능하다.</span>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ══ 부록 ══ -->
+<section class="sec w">
+  <div class="sec-tag">부록 · Appendix</div>
+  <h2 class="sec-title">증거 목록 및 <span class="gold">법령 근거 체계</span></h2>
+
+  <div class="ev-band">
+    <div class="ev-title">핵심 증거 목록</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>증거</th><th>내용</th><th>의의</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td>ICI Primary Layout<br>P/L 2024·2025</td><td>MSTY BOX3=100% · CONY 97% · NVDY 52.6%<br>κ=100% · 106건 교차검증</td><td>소득성격 유일 결정권자 공식 확정자료</td></tr>
+          <tr><td>KSD 정보공개<br>16516499</td><td>"소득성격 결정권은 현지 발행사(ICI)에 있다"<br>KSD 스스로 공식 인정</td><td>ICI 결정권 + 전달 의무 발생 근거</td></tr>
+          <tr class="hl"><td>S04b.xlsx<br>(2024·2025)</td><td>소계1 직접 인용 · SHA-256 검증<br>환급 대상 ₩4,741,810</td><td>법정 제출 가능 포렌식 원장</td></tr>
+          <tr><td>특허출원<br>3건</td><td>10-2026-0079638 · 0084940 · 0084983<br>포렌식 ROC 검증 시스템</td><td>제3자 신뢰도 확보</td></tr>
+          <tr><td>증권사 민원회신<br>2025.05.29</td><td>M/S/T 3사 — 5대 불일치 확인</td><td>반복 부작위 직접 증거</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>법령·판례</th><th>내용</th><th>역할</th></tr></thead>
+      <tbody>
+        <tr><td>소득세법 §14</td><td>실질과세 원칙</td><td>ICI 원장으로 실질 확인 의무 근거</td></tr>
+        <tr><td>소득세법 §17</td><td>배당소득 열거 요건</td><td>BOX3(ROC) 열거 요건 미충족 → 배당소득 부과 불가</td></tr>
+        <tr><td>국세기본법 §45의2</td><td>경정청구권 · 5년 소멸시효</td><td>ICI 기반 환급 청구 근거</td></tr>
+        <tr><td>국세기본법 §81의2</td><td>납세자 보호 의무</td><td>소득성격 확인 체계 미구축 → 보호의무 위반</td></tr>
+        <tr><td>헌재 2001헌바63</td><td>담세력 원칙</td><td>경제적 소득 ₩0 과세 → 위헌 소지</td></tr>
+        <tr><td>대법원 2012두22485</td><td>실질과세 원칙 적용</td><td>ROC 경제적 실질 기준 과세 근거</td></tr>
+        <tr><td>IRC §301(c)(2)</td><td>1954년 미국 세법</td><td>ROC = 취득원가 감액 · 72년 확립 원칙</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ CLOSING ══ -->
+<div class="closing">
+  <div class="w">
+    <div class="cl-label">懲毖宣言 · 징비 선언 · 2026.05.30</div>
+    <div class="cl-main">
+      지난 일을 징계하여 뒷일을 삼간다<br>
+      <strong>비극은 반성 없이는 반드시 반복된다</strong><br><br>
+      원장(元帳)이 없으면 원금(元金)도 없다<br>
+      <strong><span class="gold">세금의 족보를 공개하라</span></strong><br><br>
+      주식에는 족보가 있다 · 채권에는 족보가 있다<br>
+      <strong>해외 ETF 소득 과표의 <span class="gold">족보를 지금 만들어야 한다</span></strong><br><br>
+      우리는 세금을 거부하는 것이 아니다<br>
+      <strong>우리는 설명가능한 국가를 요구한다</strong><br>
+      <span class="red">원금은 원금이다 · 후대는 같은 실수를 반복하지 않을 것이다</span>
+    </div>
+    <div class="cl-seal"><span>懲</span></div>
+    <div class="cl-meta">
+      WJ-10 · 統合 政策白書 + 政策失敗 懲毖錄 · JSB71GA10 · 2026.05.30<br>
+      ICI Primary Layout · κ=100% · 106건 교차검증<br>
+      MSTY 2025 BOX3=100% · CONY 97% · NVDY 52.6%<br>
+      환급 대상 ₩4,741,810 · KSD 정보공개 16516499<br>
+      특허출원 10-2026-0079638 · 10-2026-0084940 · 10-2026-0084983<br>
+      소득세법 §14·§17 · 국세기본법 §45의2·§81의2 · 헌재 2001헌바63 · IRC §301(c)(2) 1954<br><br>
+      이순신의 열두 척 · 세종의 훈민정음 · 류성룡의 징비록<br>
+      다리오의 스프레드시트 · 머스크의 제1원칙<br><br>
+      <strong>장세봉 / 인흥(주) · sebjang@gmail.com</strong><br>
+      <strong>sebjang.github.io/tax-truth-ledger</strong>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
