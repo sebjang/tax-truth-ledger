@@ -7,210 +7,424 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-:root{--abyss:#080a0f;--deep:#0d1117;--navy:#111827;--mid:#1e2a3a;--paper:#f5f0e8;--ink:#f0ead8;--sub:rgba(240,234,216,.62);--muted:rgba(240,234,216,.32);--rule:rgba(240,234,216,.1);--gold:#c9a84c;--gold2:#e8c97a;--red:#c0392b;--red2:#e74c3c;--green:#27ae60;--mono:#7ec8e3;}
+/* ── 토큰 — 라이트 테마 (화면+인쇄 동일) ──────────────────────────── */
+:root{
+  --bg:     #ffffff;
+  --paper:  #f5f0e8;
+  --deep:   #ede6d4;
+  --rule:   #c8b89a;
+  --faint:  #e8dfc8;
+  --ink:    #0a0806;
+  --body:   #1a1410;
+  --sub:    #2e2620;
+  --muted:  #4a3e34;
+  --ghost:  #8c7c6a;
+  --gold:   #7a5410;
+  --gold2:  #9a6e1a;
+  --red:    #7a100a;
+  --green:  #0e3e1a;
+  --l2t:    #3b2a08;   /* 짙은 금 */
+  --ri:     #5a0a06;   /* 짙은 적 */
+}
+
+/* ── 리셋 ─────────────────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{font-size:16px;scroll-behavior:smooth;}
-body{background:var(--abyss);color:var(--ink);font-family:'Noto Sans KR',sans-serif;font-weight:300;line-height:1.9;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:linear-gradient(0deg,rgba(201,168,76,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.02) 1px,transparent 1px),radial-gradient(ellipse at 20% 30%,rgba(201,168,76,.06) 0%,transparent 55%),radial-gradient(ellipse at 80% 70%,rgba(192,57,43,.04) 0%,transparent 50%);
-  background-size:80px 80px,80px 80px,100% 100%,100% 100%;}
-.w{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 2.5rem;}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:'Noto Sans KR',sans-serif;
+  font-weight:300;
+  line-height:1.85;
+  overflow-x:hidden;
+}
 
-.header-bar{padding:.9rem 2.5rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--rule);position:relative;z-index:10;background:rgba(8,10,15,.8);backdrop-filter:blur(8px);}
-.hb-brand{font-family:'Cormorant Garamond',serif;font-size:.78rem;color:var(--muted);letter-spacing:.35em;text-transform:uppercase;}
-.hb-brand span{color:var(--gold);}
-.hb-date{font-size:.65rem;color:var(--muted);letter-spacing:.12em;}
+/* ── 레이아웃 ─────────────────────────────────────────────────────── */
+.w{max-width:860px;margin:0 auto;padding:0 2.5rem;}
 
-/* COVER */
-.cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:6rem 2.5rem 5rem;position:relative;overflow:hidden;border-bottom:1px solid rgba(201,168,76,.2);}
-.cover-bg{font-family:'Noto Serif KR',serif;font-size:clamp(14rem,35vw,26rem);font-weight:900;color:rgba(201,168,76,.04);position:absolute;right:-3rem;top:50%;transform:translateY(-50%);line-height:1;pointer-events:none;user-select:none;}
-.cover-super{font-family:'Cormorant Garamond',serif;font-size:.72rem;letter-spacing:.65em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:0;animation:rise .6s .1s forwards;}
-.cover-h1{font-family:'Noto Serif KR',serif;font-size:clamp(2.2rem,7vw,5.5rem);font-weight:900;color:var(--paper);line-height:1.08;letter-spacing:-.02em;margin-bottom:.6rem;opacity:0;animation:rise .9s .3s forwards;}
-.cover-h1 .gold{color:var(--gold2);}
-.cover-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.1rem,3vw,2rem);font-style:italic;color:var(--muted);margin-bottom:2.5rem;opacity:0;animation:rise .7s .5s forwards;}
-.cover-divider{display:flex;align-items:center;gap:1rem;margin-bottom:2.5rem;opacity:0;animation:rise .6s .6s forwards;}
-.div-line{flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent);}
-.div-mark{font-family:'Cormorant Garamond',serif;font-size:.7rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;white-space:nowrap;}
-.cover-thesis{max-width:680px;font-family:'Noto Serif KR',serif;font-size:clamp(.95rem,2.2vw,1.15rem);color:var(--sub);line-height:1.95;opacity:0;animation:rise .8s .7s forwards;}
-.cover-thesis em{font-style:normal;color:var(--gold2);}
-.cover-thesis .red{color:var(--red2);}
-.cover-axes{display:grid;grid-template-columns:1fr 1fr;gap:1.5px;background:rgba(201,168,76,.15);margin-top:3rem;max-width:680px;opacity:0;animation:rise .7s .9s forwards;}
-.axis{background:var(--deep);padding:1.6rem 1.5rem;}
-.axis.l2t{border-top:3px solid var(--gold);}
-.axis.ri{border-top:3px solid var(--red2);}
-.axis-tag{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.3em;color:var(--muted);margin-bottom:.4rem;}
-.axis.l2t .axis-tag{color:var(--gold);}
-.axis.ri .axis-tag{color:var(--red2);}
-.axis-title{font-family:'Noto Serif KR',serif;font-size:.95rem;font-weight:700;color:var(--paper);margin-bottom:.3rem;}
-.axis-flow{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);line-height:1.7;}
-.axis.l2t .axis-flow .hi{color:var(--gold2);font-weight:700;}
-.axis.ri .axis-flow .hi{color:var(--red2);font-weight:700;}
-.axis-right{font-family:'Noto Serif KR',serif;font-size:.82rem;color:var(--sub);margin-top:.5rem;}
+/* ── 상단바 ────────────────────────────────────────────────────────── */
+.topbar{
+  border-bottom:2px solid var(--ink);
+  padding:.6rem 2.5rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.tb-title{font-family:'Cormorant Garamond',serif;font-size:.68rem;letter-spacing:.45em;text-transform:uppercase;color:var(--muted);}
+.tb-title span{color:var(--gold);}
+.tb-date{font-size:.62rem;color:var(--ghost);letter-spacing:.12em;}
 
-/* CHAPTER */
-.chapter{background:rgba(13,17,23,.8);border-top:1px solid rgba(201,168,76,.2);padding:2rem 2.5rem;}
-.ch-n{font-family:'Cormorant Garamond',serif;font-size:.68rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
-.ch-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.3rem,3.2vw,2rem);font-weight:700;color:var(--paper);line-height:1.3;}
-.ch-title .gold{color:var(--gold2);}
-.ch-title .red{color:var(--red2);}
+/* ── 표지 ──────────────────────────────────────────────────────────── */
+.cover{
+  padding:4.5rem 2.5rem 3.5rem;
+  border-bottom:2px solid var(--ink);
+  position:relative;overflow:hidden;
+  /* 배경: 격자 */
+  background-image:
+    linear-gradient(var(--faint) 1px,transparent 1px),
+    linear-gradient(90deg,var(--faint) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.cover-eyebrow{
+  font-family:'Cormorant Garamond',serif;
+  font-size:.72rem;letter-spacing:.55em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.5rem;
+  opacity:0;animation:rise .6s .1s forwards;
+}
+.cover-h1{
+  font-family:'Noto Serif KR',serif;
+  font-size:clamp(2.5rem,7vw,5rem);font-weight:900;
+  color:var(--ink);line-height:1.05;margin-bottom:.4rem;
+  opacity:0;animation:rise .8s .3s forwards;
+}
+.cover-h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1rem,2.5vw,1.6rem);font-style:italic;
+  color:var(--muted);margin-bottom:2rem;
+  opacity:0;animation:rise .7s .45s forwards;
+}
+.cover-rule{width:52px;height:3px;background:var(--ink);margin-bottom:2rem;opacity:0;animation:rise .5s .5s forwards;}
+.cover-thesis{
+  max-width:620px;
+  font-family:'Noto Serif KR',serif;
+  font-size:clamp(.92rem,2vw,1.08rem);
+  color:var(--sub);line-height:1.9;
+  opacity:0;animation:rise .8s .6s forwards;
+}
+.cover-thesis em{font-style:normal;color:var(--gold2);font-weight:600;}
+.cover-thesis .red{color:var(--red);}
 
-.sec{padding:4rem 0;border-top:1px solid var(--rule);}
-.sec-tag{font-family:'Cormorant Garamond',serif;font-size:.68rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
-.sec-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.2rem,3vw,1.7rem);font-weight:700;color:var(--paper);line-height:1.3;margin-bottom:1.8rem;}
-.sec-title .gold{color:var(--gold2);}
-.sec-title .red{color:var(--red2);}
-.prose{font-size:.9rem;color:var(--sub);line-height:2;margin-bottom:1rem;max-width:720px;}
+/* 두 축 패널 */
+.axes{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;background:var(--rule);
+  border:2px solid var(--ink);
+  margin-top:2.5rem;
+  opacity:0;animation:rise .7s .8s forwards;
+}
+.axis{background:var(--paper);padding:1.6rem 1.5rem;}
+.axis.l2t{border-top:4px solid var(--l2t);}
+.axis.ri{border-top:4px solid var(--ri);}
+.ax-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;margin-bottom:.4rem;}
+.axis.l2t .ax-tag{color:var(--l2t);}
+.axis.ri  .ax-tag{color:var(--ri);}
+.ax-title{font-family:'Noto Serif KR',serif;font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:.3rem;}
+.ax-flow{font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.7;color:var(--muted);}
+.axis.l2t .ax-flow .hi{color:var(--l2t);font-weight:700;}
+.axis.ri  .ax-flow .hi{color:var(--ri); font-weight:700;}
+.ax-right{font-family:'Noto Serif KR',serif;font-size:.82rem;color:var(--sub);margin-top:.4rem;}
+
+/* ── 챕터 헤더 ──────────────────────────────────────────────────────── */
+.chapter{
+  background:var(--ink);color:var(--paper);
+  padding:1.2rem 2.5rem;
+}
+.ch-n{font-family:'Cormorant Garamond',serif;font-size:.68rem;letter-spacing:.5em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-bottom:.3rem;}
+.ch-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.2rem,3vw,1.8rem);font-weight:700;line-height:1.3;}
+.ch-title .gold{color:#d4aa40;}
+.ch-title .red{color:#e88070;}
+
+/* ── 섹션 ───────────────────────────────────────────────────────────── */
+.sec{padding:3.5rem 0;border-top:1px solid var(--rule);}
+.prose{font-size:.9rem;color:var(--sub);line-height:1.95;margin-bottom:.9rem;max-width:720px;}
 .prose strong{color:var(--ink);font-weight:700;}
-.prose .red{color:var(--red2);}
+.prose .red{color:var(--red);}
 .prose .gold{color:var(--gold2);}
 
-/* DAMAGE GRID */
-.damage-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5px;background:var(--rule);margin:2rem 0;}
-.dmg{background:var(--navy);padding:2rem 1.8rem;}
-.dmg.l2t{border-top:4px solid var(--gold);}
-.dmg.ri{border-top:4px solid var(--red2);}
-.dmg-tag{font-family:'Cormorant Garamond',serif;font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;margin-bottom:.6rem;}
-.dmg.l2t .dmg-tag{color:var(--gold2);}
-.dmg.ri .dmg-tag{color:var(--red2);}
-.dmg-title{font-family:'Noto Serif KR',serif;font-size:1rem;font-weight:700;color:var(--paper);margin-bottom:.6rem;}
-.dmg-flow{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);line-height:1.9;margin-bottom:.7rem;}
-.dmg.l2t .dmg-flow .hi{color:var(--gold2);font-weight:700;}
-.dmg.ri .dmg-flow .hi{color:var(--red2);font-weight:700;}
-.dmg-causes{font-size:.8rem;color:var(--muted);line-height:1.75;}
-.dmg-right{margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--rule);font-family:'Noto Serif KR',serif;font-size:.82rem;font-weight:700;}
-.dmg.l2t .dmg-right{color:var(--gold2);}
-.dmg.ri .dmg-right{color:var(--red2);}
+/* ── 두 피해 유형 그리드 ─────────────────────────────────────────────── */
+.dmg-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--rule);margin:1.5rem 0;}
+.dmg{background:var(--paper);padding:1.8rem 1.6rem;}
+.dmg.l2t{border-top:4px solid var(--l2t);}
+.dmg.ri {border-top:4px solid var(--ri);}
+.dmg-tag{font-family:'Cormorant Garamond',serif;font-size:.62rem;letter-spacing:.38em;text-transform:uppercase;margin-bottom:.5rem;}
+.dmg.l2t .dmg-tag{color:var(--l2t);}
+.dmg.ri  .dmg-tag{color:var(--ri);}
+.dmg-title{font-family:'Noto Serif KR',serif;font-size:.98rem;font-weight:700;color:var(--ink);margin-bottom:.5rem;}
+.dmg-flow{font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--muted);line-height:1.8;margin-bottom:.6rem;}
+.dmg.l2t .dmg-flow .hi{color:var(--l2t);font-weight:700;}
+.dmg.ri  .dmg-flow .hi{color:var(--ri); font-weight:700;}
+.dmg-causes{font-size:.8rem;color:var(--sub);line-height:1.75;}
+.dmg-right{margin-top:.7rem;padding-top:.6rem;border-top:1px solid var(--rule);font-family:'Noto Serif KR',serif;font-size:.82rem;font-weight:700;}
+.dmg.l2t .dmg-right{color:var(--l2t);}
+.dmg.ri  .dmg-right{color:var(--ri);}
 
-/* CRITERIA */
-.criteria{margin:2rem 0;}
-.crit-item{display:grid;grid-template-columns:52px 1fr;gap:1.5rem;padding:1.6rem 0;border-bottom:1px solid var(--rule);}
-.crit-item:first-child{border-top:1px solid var(--rule);}
-.crit-n{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding-top:.2rem;}
+/* ── 평가기준 ────────────────────────────────────────────────────────── */
+.criteria{margin:1.5rem 0;}
+.crit{display:grid;grid-template-columns:52px 1fr;gap:1.4rem;padding:1.4rem 0;border-bottom:1px solid var(--faint);}
+.crit:first-child{border-top:2px solid var(--ink);}
+.crit-n{display:flex;flex-direction:column;align-items:center;gap:.2rem;padding-top:.1rem;}
 .crit-num{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--gold);line-height:1;}
-.crit-hanja{font-family:'Noto Serif KR',serif;font-size:.72rem;color:var(--muted);}
-.crit-title{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--paper);margin-bottom:.3rem;}
-.crit-q{font-family:'Cormorant Garamond',serif;font-size:.82rem;font-style:italic;color:var(--gold2);margin-bottom:.3rem;}
-.crit-l2t{font-size:.74rem;color:var(--gold);margin-top:.3rem;}
-.crit-ri{font-size:.74rem;color:var(--red2);}
+.crit-hanja{font-family:'Noto Serif KR',serif;font-size:.7rem;color:var(--ghost);}
+.crit-title{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--ink);margin-bottom:.25rem;}
+.crit-q{font-family:'Cormorant Garamond',serif;font-size:.82rem;font-style:italic;color:var(--gold2);margin-bottom:.25rem;}
+.crit-l2t{font-size:.74rem;color:var(--l2t);margin-top:.2rem;}
+.crit-ri {font-size:.74rem;color:var(--ri);}
 
-/* GRADES */
-.grade-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:var(--rule);margin:2rem 0;}
-.grade{background:var(--navy);padding:2rem 1.5rem;text-align:center;}
-.grade.green-g{border-top:4px solid var(--green);}
-.grade.yellow-g{border-top:4px solid var(--gold);}
-.grade.red-g{border-top:4px solid var(--red2);}
-.grade-mark{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:700;line-height:1;margin-bottom:.5rem;}
-.grade.green-g .grade-mark{color:var(--green);}
-.grade.yellow-g .grade-mark{color:var(--gold2);}
-.grade.red-g .grade-mark{color:var(--red2);}
-.grade-label{font-family:'Noto Serif KR',serif;font-size:.88rem;font-weight:700;color:var(--paper);margin-bottom:.5rem;}
-.grade-desc{font-size:.78rem;color:var(--muted);line-height:1.75;}
-.grade-penalty{margin-top:.6rem;font-size:.74rem;color:var(--red2);font-weight:700;}
+/* ── 등급 ────────────────────────────────────────────────────────────── */
+.grades{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--rule);margin:1.5rem 0;}
+.grade{background:var(--paper);padding:1.8rem 1.4rem;text-align:center;}
+.grade.g-green{border-top:4px solid var(--green);}
+.grade.g-gold {border-top:4px solid var(--gold);}
+.grade.g-red  {border-top:4px solid var(--red);}
+.grade-sym{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;line-height:1;margin-bottom:.4rem;}
+.grade.g-green .grade-sym{color:var(--green);}
+.grade.g-gold  .grade-sym{color:var(--gold2);}
+.grade.g-red   .grade-sym{color:var(--red);}
+.grade-label{font-family:'Noto Serif KR',serif;font-size:.88rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;}
+.grade-desc{font-size:.78rem;color:var(--sub);line-height:1.7;}
+.grade-penalty{margin-top:.5rem;font-size:.72rem;color:var(--red);font-weight:700;line-height:1.5;}
 
-/* ALTS */
-.alts{margin:2rem 0;}
-.alt{display:grid;grid-template-columns:3rem 1fr;gap:1.2rem;padding:1.5rem 0;border-bottom:1px solid var(--rule);}
-.alt:first-child{border-top:1px solid var(--rule);}
-.alt-n{width:3rem;height:3rem;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--gold);flex-shrink:0;}
-.alt-title{font-family:'Noto Serif KR',serif;font-size:.95rem;font-weight:700;color:var(--paper);margin-bottom:.3rem;}
-.alt-desc{font-size:.82rem;color:var(--muted);line-height:1.75;}
+/* ── 대안 목록 ──────────────────────────────────────────────────────── */
+.alts{margin:1.5rem 0;}
+.alt{display:grid;grid-template-columns:2.8rem 1fr;gap:1.2rem;padding:1.4rem 0;border-bottom:1px solid var(--faint);}
+.alt:first-child{border-top:2px solid var(--ink);}
+.alt-n{width:2.8rem;height:2.8rem;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--ink);flex-shrink:0;}
+.alt-title{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--ink);margin-bottom:.25rem;}
+.alt-desc{font-size:.82rem;color:var(--sub);line-height:1.75;}
 .alt-desc strong{color:var(--ink);font-weight:700;}
 
-/* RESOURCES */
-.resources{display:grid;grid-template-columns:1fr 1fr;gap:1.5px;background:var(--rule);margin:2rem 0;}
-.res-card{background:var(--navy);padding:2rem 1.8rem;text-decoration:none;color:inherit;display:block;transition:background .2s;}
-.res-card:hover{background:var(--mid);}
-.res-card.l2t-c{border-top:3px solid var(--gold);}
-.res-card.ri-c{border-top:3px solid var(--red2);}
-.res-tag{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;margin-bottom:.5rem;}
-.res-card.l2t-c .res-tag{color:var(--gold);}
-.res-card.ri-c .res-tag{color:var(--red2);}
-.res-title{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--paper);margin-bottom:.4rem;}
-.res-docs{font-size:.78rem;color:var(--muted);line-height:1.8;}
-.res-url{margin-top:.6rem;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);}
+/* ── 관련 연구 링크 ─────────────────────────────────────────────────── */
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--rule);margin:1.5rem 0;}
+.res{background:var(--paper);padding:1.8rem 1.6rem;}
+.res.l2t-r{border-top:4px solid var(--l2t);}
+.res.ri-r {border-top:4px solid var(--ri);}
+.res-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;margin-bottom:.4rem;}
+.res.l2t-r .res-tag{color:var(--l2t);}
+.res.ri-r  .res-tag{color:var(--ri);}
+.res-title{font-family:'Noto Serif KR',serif;font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;}
+.res-docs{font-size:.8rem;color:var(--sub);line-height:1.8;}
+.res-url{margin-top:.5rem;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);}
 
-/* FINAL */
-.final{padding:8rem 2.5rem;text-align:center;position:relative;overflow:hidden;background:linear-gradient(180deg,var(--abyss) 0%,#1a1208 100%);border-top:1px solid rgba(201,168,76,.2);}
-.final::before{content:'信';font-family:'Noto Serif KR',serif;font-size:28rem;font-weight:900;color:rgba(201,168,76,.03);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);line-height:1;pointer-events:none;}
-.triple{display:flex;flex-direction:column;gap:2.5rem;margin-bottom:4rem;position:relative;}
-.tri-ko{font-family:'Noto Serif KR',serif;font-size:clamp(1rem,2.8vw,1.5rem);font-weight:700;color:var(--paper);line-height:1.5;margin-bottom:.3rem;}
-.tri-en{font-family:'Cormorant Garamond',serif;font-size:clamp(.9rem,2.2vw,1.2rem);font-style:italic;color:var(--muted);}
-.seals{display:flex;gap:2rem;justify-content:center;margin-bottom:3rem;position:relative;}
-.seal-circle{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .5rem;}
-.seal-circle.gold-s{border:2px solid var(--gold);}
-.seal-circle.red-s{border:2px solid var(--red2);}
-.seal-circle.both-s{border:2px solid var(--paper);}
-.seal-circle span{font-family:'Noto Serif KR',serif;font-size:1.6rem;font-weight:900;}
-.seal-circle.gold-s span{color:var(--gold2);}
-.seal-circle.red-s span{color:var(--red2);}
-.seal-circle.both-s span{color:var(--paper);}
-.seal-label{font-size:.62rem;color:var(--muted);letter-spacing:.15em;}
-.final-stmts{font-family:'Noto Serif KR',serif;font-size:clamp(.88rem,2vw,1.1rem);font-weight:300;color:var(--muted);line-height:2.6;margin-bottom:2.5rem;position:relative;}
-.final-stmts strong{color:var(--ink);font-weight:700;}
-.final-stmts .gold{color:var(--gold2);font-weight:700;}
-.final-stmts .red{color:var(--red2);font-weight:700;}
-.final-meta{font-size:.68rem;color:rgba(240,234,216,.22);letter-spacing:.1em;line-height:2.4;position:relative;}
-.final-meta strong{color:rgba(240,234,216,.5);}
+/* ── 클로징 — 흰 배경 라이트 버전 ──────────────────────────────────── */
+.closing{
+  background:var(--ink);   /* 화면용 다크 */
+  padding:5rem 2.5rem;
+  text-align:center;
+  position:relative;overflow:hidden;
+  /* 인쇄 시 별도 클래스 적용 (아래 @media print 참고) */
+}
+.closing-bg-hanja{
+  font-family:'Noto Serif KR',serif;
+  font-size:20rem;font-weight:900;
+  color:rgba(255,255,255,.05);
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  white-space:nowrap;pointer-events:none;line-height:1;
+}
+/* 세 문장 */
+.triple{display:flex;flex-direction:column;gap:2rem;margin-bottom:3.5rem;position:relative;}
+.tri-ko{font-family:'Noto Serif KR',serif;font-size:clamp(1rem,2.5vw,1.4rem);font-weight:700;color:#f5f0e8;line-height:1.5;margin-bottom:.2rem;}
+.tri-en{font-family:'Cormorant Garamond',serif;font-size:clamp(.88rem,2vw,1.1rem);font-style:italic;color:rgba(245,240,232,.45);}
+/* 인장 */
+.seals{display:flex;gap:2.5rem;justify-content:center;margin-bottom:3rem;position:relative;}
+.seal{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.seal-circle{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.seal.el .seal-circle{border:2px solid #c9a84c;}
+.seal.en .seal-circle{border:2px solid #f5f0e8;}
+.seal.er .seal-circle{border:2px solid #e88070;}
+.seal-char{font-family:'Noto Serif KR',serif;font-size:1.6rem;font-weight:900;}
+.seal.el .seal-char{color:#e8c97a;}
+.seal.en .seal-char{color:#f5f0e8;}
+.seal.er .seal-char{color:#e88070;}
+.seal-label{font-size:.6rem;color:rgba(245,240,232,.4);letter-spacing:.12em;}
+/* 슬로건 */
+.closing-stmts{font-family:'Noto Serif KR',serif;font-size:clamp(.9rem,2vw,1.1rem);font-weight:400;color:rgba(245,240,232,.6);line-height:2.8;margin-bottom:2rem;position:relative;}
+.closing-stmts strong{color:#f5f0e8;font-weight:700;}
+.closing-stmts .gold{color:#e8c97a;font-weight:700;}
+.closing-stmts .red{color:#e88070;font-weight:700;}
+/* 메타 */
+.closing-meta{font-size:.66rem;color:rgba(245,240,232,.22);letter-spacing:.1em;line-height:2.4;position:relative;}
+.closing-meta strong{color:rgba(245,240,232,.52);}
 
 hr{border:none;border-top:1px solid var(--rule);}
+hr.heavy{border-top:2px solid var(--ink);}
 
-@media print{
-  body{background:white!important;color:#1a1410!important;}
-  body::before{display:none!important;}
-  .w,.sec,.phase,.chapter{color:#1a1410!important;}
-  p,.prose,.step-desc,.art-desc,.dm-desc,.rf-body,
-  .crit-q,.crit-l2t,.crit-ri,.alt-desc,.dmg-causes,
-  .fnd-sub,.info-body,.warn-body,.ins-body,
-  .rm-items,.acc-body,.voice-text,
-  .res-docs,.res-url,.final-stmts,.cl-main{color:#2e2620!important;}
-  .sec-tag,.phase-tag,.ch-n,.sec-n,.rm-phase,
-  .cover-tag,.hero-tag,.nav-id,.hb-brand,
-  .doc-badge,.dmg-tag,.res-tag,.crit-hanja,
-  .bar-key,.stat-key,.cs-key,.rm-phase{color:#5c3e06!important;}
-  .muted,.nav-url,.hb-date,.bar-yr{color:#4a3e34!important;}
-  /* 배경 패널 인쇄 시 연한 배경으로 */
-  .finding,.accuse,.accusation,.infobox,.warnbox,
-  .voice,.dmg,.rm,.grade,.axis,.alt,
-  .cs,.stat,.crit-item,.article,.demand,
-  .step,.rf,.comp-panel,.cmp,.res-card,
-  .cover-identity,.cover-axes,.cover-stats{
-    background:#f5f0e8!important;border-color:#c8b89a!important;}
-  .closing,.final,.cover{background:#0a0806!important;color:#f5f0e8!important;}
-  body{background:white;color:#1a1a1a;font-size:9.5pt;}body::before{display:none;}
-  .header-bar{display:none;}
-  .cover{min-height:unset;page-break-after:always;}.cover-bg{display:none;}
-  .cover-super,.cover-h1,.cover-h2,.cover-divider,.cover-thesis,.cover-axes{opacity:1!important;animation:none!important;}
-  .chapter,.sec,.damage-grid,.criteria,.grade-grid,.alts,.resources{page-break-inside:avoid;}
-  .damage-grid .dmg,.grade,.res-card,.axis{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .final{-webkit-print-color-adjust:exact;print-color-adjust:exact;page-break-before:always;}
-  .w{max-width:100%;padding:0;}@page{margin:2cm 2.2cm;}
+/* ── 애니메이션 ──────────────────────────────────────────────────────── */
+@keyframes rise{
+  from{opacity:0;transform:translateY(12px);}
+  to  {opacity:1;transform:translateY(0);}
 }
-@keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-@media(max-width:620px){
-  .damage-grid,.cover-axes,.resources{grid-template-columns:1fr;}
-  .grade-grid{grid-template-columns:1fr;}
-  .seals{gap:1rem;}
-  .crit-item{grid-template-columns:42px 1fr;}
+
+/* ── 반응형 ─────────────────────────────────────────────────────────── */
+@media(max-width:600px){
+  .axes,.dmg-grid,.grades,.res-grid{grid-template-columns:1fr;}
+  .seals{gap:1.2rem;}
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   @media print — 완전 인쇄 최적화
+   핵심 원칙: 모든 색상을 흰 배경 위 어두운 텍스트로 강제
+════════════════════════════════════════════════════════════════════ */
+@media print{
+  /* 기본 */
+  *{
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  html,body{
+    background:white !important;
+    color:#0a0806 !important;
+    font-size:9.5pt;
+    line-height:1.7;
+  }
+
+  /* 배경 패턴 제거 */
+  .cover{
+    background-image:none !important;
+    background-color:white !important;
+    border-bottom:2px solid #0a0806;
+    padding:2cm 0 1.5cm;
+  }
+
+  /* 표지 텍스트 */
+  .cover-eyebrow{color:#7a5410 !important;opacity:1 !important;animation:none !important;}
+  .cover-h1{color:#0a0806 !important;opacity:1 !important;animation:none !important;}
+  .cover-h2{color:#4a3e34 !important;opacity:1 !important;animation:none !important;}
+  .cover-rule{opacity:1 !important;animation:none !important;background:#0a0806;}
+  .cover-thesis{color:#2e2620 !important;opacity:1 !important;animation:none !important;}
+
+  /* 축 패널 */
+  .axes{opacity:1 !important;animation:none !important;background:#c8b89a !important;}
+  .axis{background:#f5f0e8 !important;}
+  .axis.l2t{border-top:4px solid #3b2a08 !important;}
+  .axis.ri {border-top:4px solid #5a0a06 !important;}
+  .ax-tag{color:inherit !important;}
+  .axis.l2t .ax-tag{color:#3b2a08 !important;}
+  .axis.ri  .ax-tag{color:#5a0a06 !important;}
+  .axis.l2t .ax-flow .hi{color:#3b2a08 !important;}
+  .axis.ri  .ax-flow .hi{color:#5a0a06 !important;}
+  .ax-flow{color:#4a3e34 !important;}
+  .ax-title,.ax-right{color:#0a0806 !important;}
+
+  /* 챕터 헤더 — 배경 유지 */
+  .chapter{
+    background:#0a0806 !important;
+    color:#f5f0e8 !important;
+    padding:.8rem 0;
+    page-break-after:avoid;
+  }
+  .ch-n{color:rgba(245,240,232,.5) !important;}
+  .ch-title{color:#f5f0e8 !important;}
+  .ch-title .gold{color:#d4aa40 !important;}
+  .ch-title .red {color:#e88070 !important;}
+
+  /* 섹션 */
+  .sec{padding:1cm 0;border-top:1px solid #c8b89a;}
+  .sec:first-of-type{border-top:none;}
+
+  /* 두 피해 유형 */
+  .dmg-grid{background:#c8b89a !important;}
+  .dmg{background:#f5f0e8 !important;}
+  .dmg.l2t{border-top:4px solid #3b2a08 !important;}
+  .dmg.ri {border-top:4px solid #5a0a06 !important;}
+  .dmg-tag,.dmg-title,.dmg-right,.dmg-causes,.dmg-flow{color:#0a0806 !important;}
+  .dmg.l2t .dmg-tag,.dmg.l2t .dmg-right,.dmg.l2t .dmg-flow .hi{color:#3b2a08 !important;}
+  .dmg.ri  .dmg-tag,.dmg.ri  .dmg-right,.dmg.ri  .dmg-flow .hi{color:#5a0a06 !important;}
+  .dmg-causes{color:#2e2620 !important;}
+
+  /* 평가기준 */
+  .crit{border-bottom:1px solid #c8b89a;}
+  .crit:first-child{border-top:2px solid #0a0806;}
+  .crit-num{color:#7a5410 !important;}
+  .crit-hanja{color:#8c7c6a !important;}
+  .crit-title{color:#0a0806 !important;}
+  .crit-q{color:#7a5410 !important;}
+  .crit-l2t{color:#3b2a08 !important;}
+  .crit-ri {color:#5a0a06 !important;}
+
+  /* 등급 */
+  .grades{background:#c8b89a !important;}
+  .grade{background:#f5f0e8 !important;}
+  .grade.g-green{border-top:4px solid #0e3e1a !important;}
+  .grade.g-gold {border-top:4px solid #7a5410 !important;}
+  .grade.g-red  {border-top:4px solid #7a100a !important;}
+  .grade-sym,.grade-label,.grade-desc,.grade-penalty{color:#0a0806 !important;}
+  .grade.g-green .grade-sym{color:#0e3e1a !important;}
+  .grade.g-gold  .grade-sym{color:#7a5410 !important;}
+  .grade.g-red   .grade-sym,.grade-penalty{color:#7a100a !important;}
+
+  /* 대안 */
+  .alt{border-bottom:1px solid #c8b89a;}
+  .alt:first-child{border-top:2px solid #0a0806;}
+  .alt-n{border-color:#0a0806 !important;color:#0a0806 !important;}
+  .alt-title{color:#0a0806 !important;}
+  .alt-desc{color:#2e2620 !important;}
+
+  /* 관련 연구 */
+  .res-grid{background:#c8b89a !important;}
+  .res{background:#f5f0e8 !important;}
+  .res.l2t-r{border-top:4px solid #3b2a08 !important;}
+  .res.ri-r {border-top:4px solid #5a0a06 !important;}
+  .res.l2t-r .res-tag{color:#3b2a08 !important;}
+  .res.ri-r  .res-tag{color:#5a0a06 !important;}
+  .res-title{color:#0a0806 !important;}
+  .res-docs{color:#2e2620 !important;}
+  .res-url{color:#7a5410 !important;}
+
+  /* 클로징 — 인쇄 시 흰 배경 전환 + 모든 색상 재정의 */
+  .closing{
+    background:white !important;
+    border-top:3px solid #0a0806 !important;
+    padding:1.5cm 0 !important;
+    page-break-before:always;
+  }
+  .closing-bg-hanja{display:none !important;}
+
+  /* 세 문장 — 흰 배경에 어두운 텍스트 */
+  .tri-ko{color:#0a0806 !important;}
+  .tri-en{color:#4a3e34 !important;}
+
+  /* 인장 — 흰 배경용 테두리 강화 */
+  .seal.el .seal-circle{border:2px solid #7a5410 !important;}
+  .seal.en .seal-circle{border:2px solid #0a0806 !important;}
+  .seal.er .seal-circle{border:2px solid #7a100a !important;}
+  .seal.el .seal-char{color:#7a5410 !important;}
+  .seal.en .seal-char{color:#0a0806 !important;}
+  .seal.er .seal-char{color:#7a100a !important;}
+  .seal-label{color:#4a3e34 !important;}
+
+  /* 슬로건 텍스트 */
+  .closing-stmts{color:#2e2620 !important;}
+  .closing-stmts strong{color:#0a0806 !important;}
+  .closing-stmts .gold{color:#7a5410 !important;}
+  .closing-stmts .red {color:#7a100a !important;}
+  .closing-meta{color:#4a3e34 !important;}
+  .closing-meta strong{color:#0a0806 !important;}
+
+  /* 일반 색상 강제 */
+  .prose{color:#2e2620 !important;}
+  .prose strong{color:#0a0806 !important;}
+  .prose .red  {color:#7a100a !important;}
+  .prose .gold {color:#7a5410 !important;}
+
+  /* 레이아웃 */
+  .w{max-width:100%;padding:0;}
+  @page{margin:2cm 2.5cm;size:A4;}
+
+  /* 페이지 나눔 */
+  .chapter{page-break-before:always;}
+  .chapter:first-of-type{page-break-before:avoid;}
+  .sec{page-break-inside:avoid;}
+  .dmg-grid,.criteria,.grades,.alts,.res-grid{page-break-inside:avoid;}
+  .crit,.alt{page-break-inside:avoid;}
+  .closing{page-break-inside:avoid;}
+
+  /* 애니메이션 제거 */
+  *{animation:none !important;transition:none !important;}
 }
 </style>
 </head>
 <body>
 
-<div class="header-bar">
-  <span class="hb-brand">정책 신뢰영향평가 제안서 · <span>Policy Trust Impact Assessment</span></span>
-  <span class="hb-date">2026.06 · 장세봉 / 인흥(주)</span>
+<div class="topbar">
+  <span class="tb-title">정책 신뢰영향평가 제안서 · <span>Policy Trust Impact Assessment</span></span>
+  <span class="tb-date">2026 · 장세봉 / 인흥(주)</span>
 </div>
 
+<!-- COVER -->
 <div class="cover w">
-  <div class="cover-bg">信</div>
-  <div class="cover-super">정책 신뢰영향평가 제안서 · Policy Trust Impact Assessment · 2026</div>
-  <div class="cover-h1">보이지 않으면<br><span class="gold">검증할 수 없다</span></div>
+  <div class="cover-eyebrow">정책 신뢰영향평가 제안서 · Policy Trust Impact Assessment · 2026</div>
+  <div class="cover-h1">보이지 않으면<br>검증할 수 없다</div>
   <div class="cover-h2">과세피해 · 조직범죄 송금피해를 중심으로</div>
-  <div class="cover-divider">
-    <div class="div-line"></div>
-    <div class="div-mark">환경영향평가의 금융·세제 버전</div>
-    <div class="div-line" style="background:linear-gradient(90deg,transparent,var(--gold));"></div>
-  </div>
+  <div class="cover-rule"></div>
   <div class="cover-thesis">
     환경영향평가가 자연 훼손을 사전에 평가하듯<br>
     정책 신뢰영향평가는 국민의 <em>권리·재산·과표·송금</em>이<br>
@@ -219,23 +433,23 @@ hr{border:none;border-top:1px solid var(--rule);}
     보이지 않는 제도, 설명되지 않는 데이터,<br>
     추적되지 않는 원장, 책임 없는 사업 구조가 피해를 만듭니다.
   </div>
-  <div class="cover-axes">
+  <div class="axes">
     <div class="axis l2t">
-      <div class="axis-tag">L2T · Ledger to Tax</div>
-      <div class="axis-title">과세피해 — 세금의 족보</div>
-      <div class="axis-flow">원장 → 소득성격 → 과표 → 세액<br><span class="hi">No Tax Without Ledger</span></div>
-      <div class="axis-right">핵심 권리: 과표검증권</div>
+      <div class="ax-tag">L2T · Ledger to Tax</div>
+      <div class="ax-title">과세피해 — 세금의 족보</div>
+      <div class="ax-flow">원장 → 소득성격 → 과표 → 세액<br><span class="hi">No Tax Without Ledger</span></div>
+      <div class="ax-right">핵심 권리: 과표검증권</div>
     </div>
     <div class="axis ri">
-      <div class="axis-tag">Return Infra · 반환 인프라</div>
-      <div class="axis-title">송금피해 — 반환의 족보</div>
-      <div class="axis-flow">송금 → 추적 → 동결 → 반환<br><span class="hi">No Recovery Without Trace</span></div>
-      <div class="axis-right">핵심 권리: 조직범죄 송금피해 반환권</div>
+      <div class="ax-tag">Return Infra · 반환 인프라</div>
+      <div class="ax-title">송금피해 — 반환의 족보</div>
+      <div class="ax-flow">송금 → 추적 → 동결 → 반환<br><span class="hi">No Recovery Without Trace</span></div>
+      <div class="ax-right">핵심 권리: 조직범죄 송금피해 반환권</div>
     </div>
   </div>
 </div>
 
-<hr>
+<hr class="heavy">
 
 <div class="chapter w" style="max-width:100%;padding-left:2.5rem;padding-right:2.5rem;">
   <div class="ch-n">제 1 장</div>
@@ -243,7 +457,7 @@ hr{border:none;border-top:1px solid var(--rule);}
 </div>
 
 <section class="sec w">
-  <div class="damage-grid">
+  <div class="dmg-grid">
     <div class="dmg l2t">
       <div class="dmg-tag">A · 과세피해 · L2T</div>
       <div class="dmg-title">원금에 세금이 부과됩니다</div>
@@ -269,68 +483,33 @@ hr{border:none;border-top:1px solid var(--rule);}
 
 <section class="sec w">
   <div class="criteria">
-    <div class="crit-item">
+    <div class="crit">
       <div class="crit-n"><div class="crit-num">一</div><div class="crit-hanja">원장성</div></div>
-      <div>
-        <div class="crit-title">원장성(元帳性) — 원장이 존재하는가</div>
-        <div class="crit-q">"권리·과표·송금·자금흐름의 원장이 존재하는가?"</div>
-        <div class="crit-l2t">L2T: ICI Primary Layout → 국세청 연결 원장 부재</div>
-        <div class="crit-ri">Return Infra: 이상거래 탐지 원장 · 지급정지 원장 부재</div>
-      </div>
+      <div><div class="crit-title">원장성(元帳性) — 원장이 존재하는가</div><div class="crit-q">"권리·과표·송금·자금흐름의 원장이 존재하는가?"</div><div class="crit-l2t">L2T: ICI Primary Layout → 국세청 연결 원장 부재</div><div class="crit-ri">Return Infra: 이상거래 탐지 원장 · 지급정지 원장 부재</div></div>
     </div>
-    <div class="crit-item">
+    <div class="crit">
       <div class="crit-n"><div class="crit-num">二</div><div class="crit-hanja">추적성</div></div>
-      <div>
-        <div class="crit-title">추적성(追跡性) — 결과에서 원인까지 역추적 가능한가</div>
-        <div class="crit-q">"세액에서 원장까지, 피해에서 탐지 실패까지 역추적 가능한가?"</div>
-        <div class="crit-l2t">L2T: 세액 → 과표 → 소득성격 → ICI Primary Layout</div>
-        <div class="crit-ri">Return Infra: 피해 → 이체 → 탐지 기준 → 실패 원인</div>
-      </div>
+      <div><div class="crit-title">추적성(追跡性) — 결과에서 원인까지 역추적 가능한가</div><div class="crit-q">"세액에서 원장까지, 피해에서 탐지 실패까지 역추적 가능한가?"</div><div class="crit-l2t">L2T: 세액 → 과표 → 소득성격 → ICI Primary Layout</div><div class="crit-ri">Return Infra: 피해 → 이체 → 탐지 기준 → 실패 원인</div></div>
     </div>
-    <div class="crit-item">
+    <div class="crit">
       <div class="crit-n"><div class="crit-num">三</div><div class="crit-hanja">설명성</div></div>
-      <div>
-        <div class="crit-title">설명가능성 — 국민이 이해할 수 있는 방식으로 설명 가능한가</div>
-        <div class="crit-q">"왜 이 세금이 부과됐는지, 왜 이 이체가 막히지 않았는지 설명할 수 있는가?"</div>
-        <div class="crit-l2t">L2T: 유권해석 한 줄 ≠ 설명가능한 과세</div>
-        <div class="crit-ri">Return Infra: "고객이 직접 승인했다" ≠ 탐지 의무 설명</div>
-      </div>
+      <div><div class="crit-title">설명가능성 — 국민이 이해할 수 있는 방식으로 설명 가능한가</div><div class="crit-q">"왜 이 세금이 부과됐는지, 왜 이 이체가 막히지 않았는지 설명할 수 있는가?"</div><div class="crit-l2t">L2T: 유권해석 한 줄 ≠ 설명가능한 과세</div><div class="crit-ri">Return Infra: "고객이 직접 승인했다" ≠ 탐지 의무 설명</div></div>
     </div>
-    <div class="crit-item">
+    <div class="crit">
       <div class="crit-n"><div class="crit-num">四</div><div class="crit-hanja">감사성</div></div>
-      <div>
-        <div class="crit-title">감사추적성 — 누가, 언제, 어떤 자료로 판단했는지 기록되는가</div>
-        <div class="crit-q">"유권해석 작성 시 ICI를 검토했는가? 탐지 로그가 보존되는가?"</div>
-        <div class="crit-l2t">L2T: 서면-2024-소득-4836 작성 근거 원장 부재</div>
-        <div class="crit-ri">Return Infra: 은행 탐지 시스템 작동 로그 비공개</div>
-      </div>
+      <div><div class="crit-title">감사추적성 — 누가, 언제, 어떤 자료로 판단했는지 기록되는가</div><div class="crit-q">"유권해석 작성 시 ICI를 검토했는가? 탐지 로그가 보존되는가?"</div><div class="crit-l2t">L2T: 서면-2024-소득-4836 작성 근거 원장 부재</div><div class="crit-ri">Return Infra: 은행 탐지 시스템 작동 로그 비공개</div></div>
     </div>
-    <div class="crit-item">
+    <div class="crit">
       <div class="crit-n"><div class="crit-num">五</div><div class="crit-hanja">복구성</div></div>
-      <div>
-        <div class="crit-title">복구성 — 오류·피해 발생 시 정정·환급·반환이 가능한가</div>
-        <div class="crit-q">"경정청구가 실질적으로 수리되는가? 피해가 실제로 반환되는가?"</div>
-        <div class="crit-l2t">L2T: 경정청구 → 기각 → 불복 → 소송 수년</div>
-        <div class="crit-ri">Return Infra: 구제율 20% 미만 · 평균 6개월</div>
-      </div>
+      <div><div class="crit-title">복구성 — 오류·피해 발생 시 정정·환급·반환이 가능한가</div><div class="crit-q">"경정청구가 실질적으로 수리되는가? 피해가 실제로 반환되는가?"</div><div class="crit-l2t">L2T: 경정청구 → 기각 → 불복 → 소송 수년</div><div class="crit-ri">Return Infra: 구제율 20% 미만 · 평균 6개월</div></div>
     </div>
-    <div class="crit-item">
+    <div class="crit">
       <div class="crit-n"><div class="crit-num">六</div><div class="crit-hanja">책임성</div></div>
-      <div>
-        <div class="crit-title">책임성 — 실패 시 책임기관과 책임사업자를 특정할 수 있는가</div>
-        <div class="crit-q">"기재부인가, 국세청인가, KSD인가? 은행인가, 통신사인가?"</div>
-        <div class="crit-l2t">L2T: 5개 기관 책임 분산 → 모두 회피</div>
-        <div class="crit-ri">Return Infra: 4개 주체 책임 분산 → 피해자만 남음</div>
-      </div>
+      <div><div class="crit-title">책임성 — 실패 시 책임기관과 책임사업자를 특정할 수 있는가</div><div class="crit-q">"기재부인가, 국세청인가, KSD인가? 은행인가, 통신사인가?"</div><div class="crit-l2t">L2T: 5개 기관 책임 분산 → 모두 회피</div><div class="crit-ri">Return Infra: 4개 주체 책임 분산 → 피해자만 남음</div></div>
     </div>
-    <div class="crit-item">
+    <div class="crit">
       <div class="crit-n"><div class="crit-num">七</div><div class="crit-hanja">구제성</div></div>
-      <div>
-        <div class="crit-title">구제성 — 국민이 실제로 권리구제를 받을 절차가 있는가</div>
-        <div class="crit-q">"절차가 존재하는가? 실질적으로 작동하는가?"</div>
-        <div class="crit-l2t">L2T: 경정청구 절차 있으나 실질 수리율 낮음</div>
-        <div class="crit-ri">Return Infra: 신고 절차 있으나 구제율 20% 미만</div>
-      </div>
+      <div><div class="crit-title">구제성 — 국민이 실제로 권리구제를 받을 절차가 있는가</div><div class="crit-q">"절차가 존재하는가? 실질적으로 작동하는가?"</div><div class="crit-l2t">L2T: 경정청구 절차 있으나 실질 수리율 낮음</div><div class="crit-ri">Return Infra: 신고 절차 있으나 구제율 20% 미만</div></div>
     </div>
   </div>
 </section>
@@ -341,25 +520,25 @@ hr{border:none;border-top:1px solid var(--rule);}
 </div>
 
 <section class="sec w">
-  <div class="grade-grid">
-    <div class="grade green-g">
-      <div class="grade-mark">●</div>
+  <div class="grades">
+    <div class="grade g-green">
+      <div class="grade-sym">●</div>
       <div class="grade-label">녹색 등급</div>
       <div class="grade-desc">원장 존재<br>추적 가능<br>설명 가능<br>복구 가능<br>책임기관 명확</div>
     </div>
-    <div class="grade yellow-g">
-      <div class="grade-mark">◐</div>
+    <div class="grade g-gold">
+      <div class="grade-sym">◐</div>
       <div class="grade-label">황색 등급</div>
       <div class="grade-desc">원장은 있으나 국민 접근 제한<br>일부 추적 가능<br>구제 절차 불충분</div>
     </div>
-    <div class="grade red-g">
-      <div class="grade-mark">○</div>
+    <div class="grade g-red">
+      <div class="grade-sym">○</div>
       <div class="grade-label">적색 등급</div>
       <div class="grade-desc">원장 불명확<br>추적 불가<br>설명 불가<br>책임기관 불명확<br>피해구제 곤란</div>
-      <div class="grade-penalty">신규 허가·면허·제도 확대·AI 자동화 보류</div>
+      <div class="grade-penalty">신규 허가·면허·제도 확대<br>AI 자동화 보류</div>
     </div>
   </div>
-  <p class="prose">현재 한국의 해외 ETF 과세 체계와 보이스피싱 반환 체계는 <span class="red">모두 적색 등급에 해당합니다.</span> 7개 항목 모두 해당합니다.</p>
+  <p class="prose">현재 한국의 해외 ETF 과세 체계와 보이스피싱 반환 체계는 <strong>모두 적색 등급</strong>에 해당합니다. 7개 항목 모두 해당합니다.</p>
 </section>
 
 <div class="chapter w" style="max-width:100%;padding-left:2.5rem;padding-right:2.5rem;">
@@ -384,36 +563,46 @@ hr{border:none;border-top:1px solid var(--rule);}
 </div>
 
 <section class="sec w">
-  <div class="resources">
-    <a class="res-card l2t-c" href="https://sebjang.github.io/tax-truth-ledger/">
+  <div class="res-grid">
+    <div class="res l2t-r">
       <div class="res-tag">L2T · Ledger to Tax · tax-truth-ledger</div>
       <div class="res-title">원장(元帳) feat. 원금(元金)<br>세금의 족보를 추적하다</div>
-      <div class="res-docs">L2T-01 납세자 선언<br>L2T-02 과표 검증 가이드<br>L2T-03 과표 원장 분석<br>L2T-04 금융세제 데이터 인프라 백서<br>WJ-07·08 S04 포렌식 논문</div>
+      <div class="res-docs">L2T-01 납세자 선언<br>L2T-02 과표 검증 가이드<br>L2T-03 과표 원장 분석<br>L2T-04 금융세제 데이터 인프라 백서<br>L2T-05 해외 선진 과세 인프라 사례<br>WJ-07·08 S04 포렌식 논문</div>
       <div class="res-url">sebjang.github.io/tax-truth-ledger →</div>
-    </a>
-    <a class="res-card ri-c" href="https://sebjang.github.io/return-infra-kr/">
+    </div>
+    <div class="res ri-r">
       <div class="res-tag">Return Infra · return-infra-kr</div>
       <div class="res-title">잘못 이동한 돈은<br>돌려받을 수 있어야 합니다</div>
-      <div class="res-docs">VP-01 피해자 연대 선언<br>VP-02 피해자 대응 가이드<br>VP-03 경찰청 통계 2016~2025<br>VP-04 반환 인프라 정책 백서<br>2025년 피해 1조 2,578억원</div>
+      <div class="res-docs">VP-01 피해자 연대 선언<br>VP-02 피해자 대응 가이드<br>VP-03 경찰청 통계 2016~2025<br>VP-04 반환 인프라 정책 백서<br>VP-05 해외 반환 인프라 선진 사례<br>2025년 피해 1조 2,578억원</div>
       <div class="res-url">sebjang.github.io/return-infra-kr →</div>
-    </a>
+    </div>
   </div>
 </section>
 
-<!-- FINAL -->
-<div class="final">
+<!-- CLOSING -->
+<div class="closing">
+  <div class="closing-bg-hanja">信</div>
   <div class="w">
     <div class="triple">
-      <div><div class="tri-ko">국가는 빠른 금융을 자랑하기 전에,<br><strong>안전한 금융을 증명해야 합니다</strong></div><div class="tri-en">Before boasting speed — prove safety</div></div>
-      <div><div class="tri-ko">국가는 많은 데이터를 자랑하기 전에,<br><strong>검증 가능한 기록을 보존해야 합니다</strong></div><div class="tri-en">Before boasting data — preserve verifiable records</div></div>
-      <div><div class="tri-ko">국가는 AI를 도입하기 전에,<br><strong>설명 가능한 책임체계를 만들어야 합니다</strong></div><div class="tri-en">Before deploying AI — build explainable accountability</div></div>
+      <div>
+        <div class="tri-ko">국가는 빠른 금융을 자랑하기 전에,<br><strong>안전한 금융을 증명해야 합니다</strong></div>
+        <div class="tri-en">Before boasting speed — prove safety</div>
+      </div>
+      <div>
+        <div class="tri-ko">국가는 많은 데이터를 자랑하기 전에,<br><strong>검증 가능한 기록을 보존해야 합니다</strong></div>
+        <div class="tri-en">Before boasting data — preserve verifiable records</div>
+      </div>
+      <div>
+        <div class="tri-ko">국가는 AI를 도입하기 전에,<br><strong>설명 가능한 책임체계를 만들어야 합니다</strong></div>
+        <div class="tri-en">Before deploying AI — build explainable accountability</div>
+      </div>
     </div>
     <div class="seals">
-      <div style="text-align:center"><div class="seal-circle gold-s"><span>元</span></div><div class="seal-label">L2T</div></div>
-      <div style="text-align:center"><div class="seal-circle both-s"><span>信</span></div><div class="seal-label">정책 신뢰</div></div>
-      <div style="text-align:center"><div class="seal-circle red-s"><span>返</span></div><div class="seal-label">Return Infra</div></div>
+      <div class="seal el"><div class="seal-circle"><span class="seal-char">元</span></div><div class="seal-label">L2T</div></div>
+      <div class="seal en"><div class="seal-circle"><span class="seal-char">信</span></div><div class="seal-label">정책 신뢰</div></div>
+      <div class="seal er"><div class="seal-circle"><span class="seal-char">返</span></div><div class="seal-label">Return Infra</div></div>
     </div>
-    <div class="final-stmts">
+    <div class="closing-stmts">
       보이지 않으면 <span class="gold">검증할 수 없다</span><br>
       설명되지 않으면 <span class="gold">신뢰할 수 없다</span><br>
       기록되지 않으면 <span class="gold">책임질 수 없다</span><br><br>
@@ -421,13 +610,13 @@ hr{border:none;border-top:1px solid var(--rule);}
       <strong>No Recovery Without Trace</strong><br><br>
       <span class="red">국민은 속도보다 신뢰를 요구합니다</span>
     </div>
-    <div class="final-meta">
+    <div class="closing-meta">
       정책 신뢰영향평가 제안서 · Policy Trust Impact Assessment · 2026<br>
       L2T (Ledger to Tax) · Return Infra KR<br>
       κ=100% · 106건 · ₩4,741,810 · 특허 3건 · KSD 16516499<br>
       경찰청 통계 2025년 피해 1조 2,578억원<br><br>
       <strong>장세봉 / 인흥(주) · sebjang@gmail.com</strong><br>
-      sebjang.github.io/tax-truth-ledger · sebjang.github.io/return-infra-kr
+      <strong>sebjang.github.io/tax-truth-ledger · sebjang.github.io/return-infra-kr</strong>
     </div>
   </div>
 </div>
