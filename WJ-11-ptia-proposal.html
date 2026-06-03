@@ -103,7 +103,7 @@ body{
 .axis{background:var(--paper);padding:1.6rem 1.5rem;}
 .axis.l2t{border-top:4px solid var(--l2t);}
 .axis.ri{border-top:4px solid var(--ri);}
-.ax-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;margin-bottom:.4rem;}
+.ax-tag{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;margin-bottom:.4rem;}
 .axis.l2t .ax-tag{color:var(--l2t);}
 .axis.ri  .ax-tag{color:var(--ri);}
 .ax-title{font-family:'Noto Serif KR',serif;font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:.3rem;}
@@ -186,7 +186,7 @@ body{
 .res{background:var(--paper);padding:1.8rem 1.6rem;}
 .res.l2t-r{border-top:4px solid var(--l2t);}
 .res.ri-r {border-top:4px solid var(--ri);}
-.res-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;margin-bottom:.4rem;}
+.res-tag{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;margin-bottom:.4rem;}
 .res.l2t-r .res-tag{color:var(--l2t);}
 .res.ri-r  .res-tag{color:var(--ri);}
 .res-title{font-family:'Noto Serif KR',serif;font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;}
@@ -199,47 +199,173 @@ body{
   padding:5rem 2.5rem;
   text-align:center;
   position:relative;overflow:hidden;
-  /* 인쇄 시 별도 클래스 적용 (아래 @media print 참고) */
-}
-.closing-bg-hanja{
-  font-family:'Noto Serif KR',serif;
-  font-size:20rem;font-weight:900;
-  color:rgba(255,255,255,.05);
-  position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  white-space:nowrap;pointer-events:none;line-height:1;
-}
-/* 세 문장 */
-.triple{display:flex;flex-direction:column;gap:2rem;margin-bottom:3.5rem;position:relative;}
-.tri-ko{font-family:'Noto Serif KR',serif;font-size:clamp(1rem,2.5vw,1.4rem);font-weight:700;color:#f5f0e8;line-height:1.5;margin-bottom:.2rem;}
-.tri-en{font-family:'Cormorant Garamond',serif;font-size:clamp(.88rem,2vw,1.1rem);font-style:italic;color:rgba(245,240,232,.45);}
-/* 인장 */
-.seals{display:flex;gap:2.5rem;justify-content:center;margin-bottom:3rem;position:relative;}
-.seal{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
-.seal-circle{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
-.seal.el .seal-circle{border:2px solid #c9a84c;}
-.seal.en .seal-circle{border:2px solid #f5f0e8;}
-.seal.er .seal-circle{border:2px solid #e88070;}
-.seal-char{font-family:'Noto Serif KR',serif;font-size:1.6rem;font-weight:900;}
-.seal.el .seal-char{color:#e8c97a;}
-.seal.en .seal-char{color:#f5f0e8;}
-.seal.er .seal-char{color:#e88070;}
-.seal-label{font-size:.6rem;color:rgba(245,240,232,.4);letter-spacing:.12em;}
-/* 슬로건 */
-.closing-stmts{font-family:'Noto Serif KR',serif;font-size:clamp(.9rem,2vw,1.1rem);font-weight:400;color:rgba(245,240,232,.6);line-height:2.8;margin-bottom:2rem;position:relative;}
-.closing-stmts strong{color:#f5f0e8;font-weight:700;}
-.closing-stmts .gold{color:#e8c97a;font-weight:700;}
-.closing-stmts .red{color:#e88070;font-weight:700;}
-/* 메타 */
-.closing-meta{font-size:.66rem;color:rgba(245,240,232,.22);letter-spacing:.1em;line-height:2.4;position:relative;}
-.closing-meta strong{color:rgba(245,240,232,.52);}
+  /* 인쇄 시 별도 클래스 적용 (아래 @media print{
+  /* 흑백 인쇄 강제 */
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  html,body{background:white!important;color:#0a0806!important;font-size:9.5pt;}
+  body::before{display:none!important;}
+  .cover{background-image:none!important;background-color:white!important;border-bottom:2px solid #0a0806;}
+  .axes{background:#c8b89a!important;}
+  .axis{background:#f5f0e8!important;}
+  .dmg-grid{background:#c8b89a!important;}
+  .dmg{background:#f5f0e8!important;}
+  .grades{background:#c8b89a!important;}
+  .grade{background:#f5f0e8!important;}
+  .res-grid{background:#c8b89a!important;}
+  .res{background:#f5f0e8!important;}
+  .alts .alt:first-child{border-top:2px solid #0a0806;}
+  .closing{background:white!important;border-top:3px solid #0a0806!important;padding:1.5cm 0!important;}
+  .closing-bg-hanja{display:none!important;}
+  .tri-ko{color:#0a0806!important;}
+  .tri-en{color:#4a3e34!important;}
+  .closing-stmts{color:#2e2620!important;}
+  .closing-stmts strong{color:#0a0806!important;}
+  .closing-stmts .gold{color:#7a5410!important;}
+  .closing-stmts .red{color:#7a100a!important;}
+  .closing-meta{color:#4a3e34!important;}
+  .closing-meta strong{color:#0a0806!important;}
+  .seal.el .seal-circle{border:2px solid #7a5410!important;}
+  .seal.en .seal-circle{border:2px solid #0a0806!important;}
+  .seal.er .seal-circle{border:2px solid #7a100a!important;}
+  .seal.el .seal-char{color:#7a5410!important;}
+  .seal.en .seal-char{color:#0a0806!important;}
+  .seal.er .seal-char{color:#7a100a!important;}
+  .seal-label{color:#4a3e34!important;}
+  .chapter{background:#0a0806!important;color:#f5f0e8!important;padding:.8rem 0;}
+  .ch-n{color:rgba(245,240,232,.5)!important;}
+  .ch-title{color:#f5f0e8!important;}
+  .ch-title .gold{color:#d4aa40!important;}
+  .ch-title .red{color:#e88070!important;}
+  .cover-eyebrow{color:#7a5410!important;opacity:1!important;animation:none!important;}
+  .cover-h1{color:#0a0806!important;opacity:1!important;animation:none!important;}
+  .cover-h2{color:#4a3e34!important;opacity:1!important;animation:none!important;}
+  .cover-rule{background:#0a0806!important;opacity:1!important;animation:none!important;}
+  .cover-thesis{color:#2e2620!important;opacity:1!important;animation:none!important;}
+  .axes{opacity:1!important;animation:none!important;}
+  .prose{color:#2e2620!important;}
+  .prose strong{color:#0a0806!important;}
+  .w{max-width:100%;padding:0;}
+  @page{margin:2cm 2.5cm;size:A4;}
+  .chapter{page-break-before:always;}
+  .chapter:first-of-type{page-break-before:avoid;}
+  .sec{page-break-inside:avoid;}
+  .dmg-grid,.criteria,.grades,.alts,.res-grid{page-break-inside:avoid;}
+  .crit,.alt{page-break-inside:avoid;}
+  .closing{page-break-inside:avoid;}
+  *{animation:none!important;transition:none!important;}
 
-hr{border:none;border-top:1px solid var(--rule);}
-hr.heavy{border-top:2px solid var(--ink);}
+  /* ── 16:1 흑백 대조비 강제 ──────────────────────────── */
+  body,p,.prose,.sec,.w,
+  .step-desc,.art-desc,.dm-desc,.rf-body,.crit-q,
+  .crit-l2t,.crit-ri,.alt-desc,.dmg-causes,
+  .fnd-sub,.info-body,.warn-body,.ins-body,
+  .rm-items,.acc-body,.voice-text,.cd-body,
+  .tl-desc,.comp-body,.cmp-body,.res-docs,
+  .bar-key,.stat-key,.cs-key,.grade-desc,
+  .sum-item,.ax-flow,.dmg-flow{
+    color:#000000!important;
+  }
+  /* 강조 제목류 */
+  strong,.step-title,.art-title,.dm-title,.rf-title,
+  .sec-title,.phase-title,.cover-main,.hero-title,
+  .cover-h1,.cd-title,.tl-title,.lsn-body,
+  .alt-title,.res-title,.dmg-title,.ax-title,
+  .grade-label,.crit-title,.ch-title{
+    color:#000000!important;
+  }
+  /* 태그·레이블류 (중간 어두운 색 → 검정) */
+  .sec-tag,.phase-tag,.sec-n,.ch-n,.rm-phase,
+  .cover-tag,.hero-tag,.nav-id,.hb-brand,
+  .doc-badge,.dmg-tag,.res-tag,.crit-hanja,
+  .ax-tag,.tb-title,.tb-date,.cover-eyebrow,
+  .cd-year,.lsn-tag,.info-tag,.warn-tag,
+  .tmpl-tag,.acc-tag,.voice-who,.seal-label,
+  .cover-h2,.hero-desc,.cover-thesis,
+  .prose,.sub,.muted,.ghost{
+    color:#000000!important;
+  }
+  /* 색상 강조 (gold/red/green) → 모두 검정 */
+  .prose .red,.prose .gold,.prose .green,
+  .step-desc .red,.step-desc .gold,.step-desc .green,
+  .art-desc .red,.art-desc .gold,
+  .dm-desc,.rf-body .green,.rf-body .gold,
+  .cd-body .green,.cd-body .red,.cd-body .gold,
+  .tl-desc .green,.tl-desc .red,
+  .lsn-body .gold,.lsn-body .red,.lsn-body .green,
+  .codeblock .ok,.codeblock .no,.codeblock .yr,
+  .template .lbl,.template .fill,
+  .dmg.l2t .dmg-flow .hi,.dmg.ri .dmg-flow .hi,
+  .axis.l2t .ax-flow .hi,.axis.ri .ax-flow .hi,
+  .rf-now,.rf-after,.dm-n,.art-n,
+  .cover-thesis .red,.cover-thesis em,
+  .cover-h1 .gold,.cover-h1 .red,
+  .sec-title .gold,.sec-title .red,.sec-title .green,
+  .ch-title .gold,.ch-title .red,
+  .cl-main .gold,.cl-main .red,
+  .closing-stmts .gold,.closing-stmts .red,
+  .tri-ko,.tri-ko strong,.tri-en{
+    color:#000000!important;
+  }
+  /* 검정 배경 챕터/closing → 강제 유지 */
+  .chapter,.chapter *{
+    background:#0a0806!important;
+    color:#ffffff!important;
+  }
+  /* 단, 챕터 내 gold/red 강조는 밝게 */
+  .chapter .ch-title .gold{color:#f2e6c7!important;}
+  .chapter .ch-title .red {color:#f9e1dd!important;}
+  /* closing — 흰 배경으로 전환 후 검정 텍스트 */
+  .closing,.final{
+    background:white!important;
+    color:#000000!important;
+  }
+  .closing *,.final *{color:#000000!important;}
+  /* 인장 원형 테두리 — 명확히 */
+  .seal.el .seal-circle,.seal-circle.gold-s{border:2px solid #000000!important;}
+  .seal.en .seal-circle,.seal-circle.both-s{border:2px solid #000000!important;}
+  .seal.er .seal-circle,.seal-circle.red-s {border:2px solid #000000!important;}
+  .seal-char,.seal .seal-char,
+  .seal.el .seal-char,.seal.en .seal-char,.seal.er .seal-char,
+  .cl-seal span{color:#000000!important;}
+  /* 패널 배경 유지 */
+  .voice,.accuse,.accusation,.finding,.infobox,.warnbox,
+  .axis,.dmg,.rm,.grade,.alt,.step,.rf,.cmp,.comp-panel,
+  .case-detail,.lesson,.cover-identity,.axes .axis,
+  .res,.res-card,.dmg-grid .dmg,.grade-grid .grade{
+    background:#f5f0e8!important;
+    border-color:#999999!important;
+  }
+  /* 등급 테두리 색상 — 검정 구분 */
+  .grade.g-green,.grade.green-g{border-top:4px solid #000000!important;}
+  .grade.g-gold,.grade.yellow-g {border-top:4px solid #555555!important;}
+  .grade.g-red,.grade.red-g     {border-top:4px solid #000000!important;}
+  /* 등급 기호 */
+  .grade-sym{color:#000000!important;}
+  /* 코드블록 */
+  .codeblock,.template{
+    background:#f0f0f0!important;
+    border-left-color:#000000!important;
+    color:#000000!important;
+  }
+  /* 바 차트 */
+  .bar-fill,.stat-val,.cs-val,.met-val{color:#000000!important;}
+  .bar-fill.peak,.bar-fill.high,.bar-fill.normal,.bar-fill.low{
+    background:#cccccc!important;
+  }
+  /* 표 */
+  .dtbl td.hi,.dtbl td.ok,.dtbl td.gold,
+  .sum-item.ok strong,.sum-item.bad strong,
+  .dmg.l2t .dmg-right,.dmg.ri .dmg-right,
+  .axis.l2t .ax-tag,.axis.ri .ax-tag,
+  .dmg.l2t .dmg-tag,.dmg.ri .dmg-tag{
+    color:#000000!important;
+  }
+  /* 링크 색상 */
+  a{color:#000000!important;text-decoration:underline;}
+  /* 배경 패턴 제거 */
+  body::before,body::after{display:none!important;}
 
-/* ── 애니메이션 ──────────────────────────────────────────────────────── */
-@keyframes rise{
-  from{opacity:0;transform:translateY(12px);}
+}
   to  {opacity:1;transform:translateY(0);}
 }
 

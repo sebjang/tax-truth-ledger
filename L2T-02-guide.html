@@ -95,6 +95,118 @@ hr.heavy{border-top:2px solid var(--ink);}
   .steps,.template,.infobox,.warnbox{page-break-inside:avoid;}
   .closing{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .w{max-width:100%;padding:0;}@page{margin:2cm 2.2cm;}
+
+  /* ── 16:1 흑백 대조비 강제 ──────────────────────────── */
+  body,p,.prose,.sec,.w,
+  .step-desc,.art-desc,.dm-desc,.rf-body,.crit-q,
+  .crit-l2t,.crit-ri,.alt-desc,.dmg-causes,
+  .fnd-sub,.info-body,.warn-body,.ins-body,
+  .rm-items,.acc-body,.voice-text,.cd-body,
+  .tl-desc,.comp-body,.cmp-body,.res-docs,
+  .bar-key,.stat-key,.cs-key,.grade-desc,
+  .sum-item,.ax-flow,.dmg-flow{
+    color:#000000!important;
+  }
+  /* 강조 제목류 */
+  strong,.step-title,.art-title,.dm-title,.rf-title,
+  .sec-title,.phase-title,.cover-main,.hero-title,
+  .cover-h1,.cd-title,.tl-title,.lsn-body,
+  .alt-title,.res-title,.dmg-title,.ax-title,
+  .grade-label,.crit-title,.ch-title{
+    color:#000000!important;
+  }
+  /* 태그·레이블류 (중간 어두운 색 → 검정) */
+  .sec-tag,.phase-tag,.sec-n,.ch-n,.rm-phase,
+  .cover-tag,.hero-tag,.nav-id,.hb-brand,
+  .doc-badge,.dmg-tag,.res-tag,.crit-hanja,
+  .ax-tag,.tb-title,.tb-date,.cover-eyebrow,
+  .cd-year,.lsn-tag,.info-tag,.warn-tag,
+  .tmpl-tag,.acc-tag,.voice-who,.seal-label,
+  .cover-h2,.hero-desc,.cover-thesis,
+  .prose,.sub,.muted,.ghost{
+    color:#000000!important;
+  }
+  /* 색상 강조 (gold/red/green) → 모두 검정 */
+  .prose .red,.prose .gold,.prose .green,
+  .step-desc .red,.step-desc .gold,.step-desc .green,
+  .art-desc .red,.art-desc .gold,
+  .dm-desc,.rf-body .green,.rf-body .gold,
+  .cd-body .green,.cd-body .red,.cd-body .gold,
+  .tl-desc .green,.tl-desc .red,
+  .lsn-body .gold,.lsn-body .red,.lsn-body .green,
+  .codeblock .ok,.codeblock .no,.codeblock .yr,
+  .template .lbl,.template .fill,
+  .dmg.l2t .dmg-flow .hi,.dmg.ri .dmg-flow .hi,
+  .axis.l2t .ax-flow .hi,.axis.ri .ax-flow .hi,
+  .rf-now,.rf-after,.dm-n,.art-n,
+  .cover-thesis .red,.cover-thesis em,
+  .cover-h1 .gold,.cover-h1 .red,
+  .sec-title .gold,.sec-title .red,.sec-title .green,
+  .ch-title .gold,.ch-title .red,
+  .cl-main .gold,.cl-main .red,
+  .closing-stmts .gold,.closing-stmts .red,
+  .tri-ko,.tri-ko strong,.tri-en{
+    color:#000000!important;
+  }
+  /* 검정 배경 챕터/closing → 강제 유지 */
+  .chapter,.chapter *{
+    background:#0a0806!important;
+    color:#ffffff!important;
+  }
+  /* 단, 챕터 내 gold/red 강조는 밝게 */
+  .chapter .ch-title .gold{color:#f2e6c7!important;}
+  .chapter .ch-title .red {color:#f9e1dd!important;}
+  /* closing — 흰 배경으로 전환 후 검정 텍스트 */
+  .closing,.final{
+    background:white!important;
+    color:#000000!important;
+  }
+  .closing *,.final *{color:#000000!important;}
+  /* 인장 원형 테두리 — 명확히 */
+  .seal.el .seal-circle,.seal-circle.gold-s{border:2px solid #000000!important;}
+  .seal.en .seal-circle,.seal-circle.both-s{border:2px solid #000000!important;}
+  .seal.er .seal-circle,.seal-circle.red-s {border:2px solid #000000!important;}
+  .seal-char,.seal .seal-char,
+  .seal.el .seal-char,.seal.en .seal-char,.seal.er .seal-char,
+  .cl-seal span{color:#000000!important;}
+  /* 패널 배경 유지 */
+  .voice,.accuse,.accusation,.finding,.infobox,.warnbox,
+  .axis,.dmg,.rm,.grade,.alt,.step,.rf,.cmp,.comp-panel,
+  .case-detail,.lesson,.cover-identity,.axes .axis,
+  .res,.res-card,.dmg-grid .dmg,.grade-grid .grade{
+    background:#f5f0e8!important;
+    border-color:#999999!important;
+  }
+  /* 등급 테두리 색상 — 검정 구분 */
+  .grade.g-green,.grade.green-g{border-top:4px solid #000000!important;}
+  .grade.g-gold,.grade.yellow-g {border-top:4px solid #555555!important;}
+  .grade.g-red,.grade.red-g     {border-top:4px solid #000000!important;}
+  /* 등급 기호 */
+  .grade-sym{color:#000000!important;}
+  /* 코드블록 */
+  .codeblock,.template{
+    background:#f0f0f0!important;
+    border-left-color:#000000!important;
+    color:#000000!important;
+  }
+  /* 바 차트 */
+  .bar-fill,.stat-val,.cs-val,.met-val{color:#000000!important;}
+  .bar-fill.peak,.bar-fill.high,.bar-fill.normal,.bar-fill.low{
+    background:#cccccc!important;
+  }
+  /* 표 */
+  .dtbl td.hi,.dtbl td.ok,.dtbl td.gold,
+  .sum-item.ok strong,.sum-item.bad strong,
+  .dmg.l2t .dmg-right,.dmg.ri .dmg-right,
+  .axis.l2t .ax-tag,.axis.ri .ax-tag,
+  .dmg.l2t .dmg-tag,.dmg.ri .dmg-tag{
+    color:#000000!important;
+  }
+  /* 링크 색상 */
+  a{color:#000000!important;text-decoration:underline;}
+  /* 배경 패턴 제거 */
+  body::before,body::after{display:none!important;}
+
 }
 </style>
 </head>
