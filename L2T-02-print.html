@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>과표 검증 가이드 — 오늘 무엇을 해야 하는가 · L2T-02</title>
+<title>과표 검증 가이드 — 오늘 무엇을 해야 하는가 · L2T-02 — 인쇄용</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Cormorant+Garamond:wght@400;600;700&display=swap');
 
@@ -321,6 +321,69 @@ hr.heavy{border-top:2px solid var(--ink);}
   .print-btn-wrap{display:none!important;}
   .w{max-width:100%;padding:0;}
   *{animation:none!important;transition:none!important;}
+}
+</style>
+
+<style>
+/* ════ 인쇄 전용 — 라이트 테마 강제 ════ */
+:root{
+  --night:#ffffff!important;--dark:#ffffff!important;
+  --mid:#ffffff!important;--abyss:#ffffff!important;
+  --ink:#000000!important;--body:#000000!important;
+  --sub:#1a1410!important;--muted:#333333!important;
+  --rule:#888888!important;
+  --red:#7a100a!important;--red2:#7a100a!important;
+  --gold:#7a5410!important;--gold2:#7a5410!important;
+  --green:#0e3e1a!important;--green2:#0e3e1a!important;
+}
+html,body{background:white!important;color:#000000!important;}
+body::before,body::after{display:none!important;}
+.nav{background:white!important;border-bottom:1px solid #888;}
+.nav a,.nav-id,.hb-brand,.hb-date{color:#000000!important;}
+.topbar{background:white!important;border-bottom:2px solid #000;}
+/* 표지 */
+.cover,.hero{background:white!important;border-bottom:2px solid #000;}
+.cover-bg,.hero-bg,.cover-bg-hanja{display:none!important;}
+/* 모든 텍스트 */
+*{color:#000000!important;background-color:transparent!important;
+  animation:none!important;transition:none!important;opacity:1!important;}
+/* 패널 배경 */
+.axis,.dmg,.grade,.alt,.res,.crit,
+.voice,.accuse,.accusation,.finding,
+.infobox,.warnbox,.case-detail,.lesson,
+.cover-identity,.step,.rf,.cmp,
+.axes .axis,.dmg-grid .dmg{
+  background:#f5f0e8!important;border-color:#888!important;
+}
+.axes,.dmg-grid,.grades,.res-grid{background:#b0a080!important;}
+/* 챕터 헤더 */
+.chapter,.chapter *{background:#000000!important;color:#ffffff!important;}
+.chapter .ch-title .gold{color:#f0e0a0!important;}
+.chapter .ch-title .red{color:#ffd0c0!important;}
+/* 클로징 */
+.closing,.final{background:white!important;}
+.closing-bg-hanja{display:none!important;}
+/* 인장 */
+.seal-circle{border:2px solid #000000!important;}
+.seal-char{color:#000000!important;}
+.seal.el .seal-circle{border-color:#7a5410!important;}
+.seal.el .seal-char{color:#7a5410!important;}
+.seal.er .seal-circle{border-color:#7a100a!important;}
+.seal.er .seal-char{color:#7a100a!important;}
+/* 코드블록 */
+.codeblock,.template{background:#eeeeee!important;color:#000!important;}
+/* 바차트 */
+.bar-fill{background:#bbbbbb!important;}
+/* 버튼 숨김 */
+.print-btn-wrap{display:none!important;}
+/* 인쇄 설정 */
+@media print{
+  @page{margin:2cm 2.5cm;size:A4;}
+  .chapter{page-break-before:always;}
+  .chapter:first-of-type{page-break-before:avoid;}
+  .sec,.phase{page-break-inside:avoid;}
+  .closing{page-break-inside:avoid;}
+  .w{max-width:100%;padding:0;}
 }
 </style>
 </head>

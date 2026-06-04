@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>정책 신뢰영향평가 — No Tax Without Ledger · No Return Without Trace</title>
+<title>[인쇄용] 정책 신뢰영향평가 — No Tax Without Ledger · No Return Without Trace</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
 
@@ -679,7 +679,30 @@ body::after{
   *{animation:none!important;transition:none!important;}
 }
 </style>
-</head>
+<style>
+:root{--void:#ffffff!important;--deep:#ffffff!important;--surface:#ffffff!important;--mid:#f5f0e8!important;--lift:#ede6d4!important;--ink:#000000!important;--sub:#1a1410!important;--dim:#2e2620!important;--ghost:#4a3e34!important;--rule:#c8b89a!important;--gold:#7a5410!important;--gold-hi:#5c3e06!important;--gold-glow:rgba(92,62,6,.08)!important;--red:#7a100a!important;--red-hi:#7a100a!important;--red-glow:rgba(122,16,10,.06)!important;--green:#0e3e1a!important;--mono:#1a1a2e!important;}
+html,body{background:white!important;color:#000000!important;}
+body::after,.hero::before,.hero-glow,.hero-kanji,.hero-accent,.cl-bg,.closing::before,.closing::after{display:none!important;}
+.nav{background:rgba(255,255,255,.95)!important;border-color:#c8b89a!important;}
+.nav-brand,.nav-links a,.nav-date{color:#2e2620!important;}
+.nav-links a:hover{color:#0a0806!important;}
+.hero{background:white!important;border-bottom:2px solid #0a0806;min-height:unset;padding:4rem 2.8rem 3rem;}
+.hero-title .line1{color:#0a0806!important;}
+.hero-title .line2{-webkit-text-stroke:1.5px #0a0806!important;}
+.chapter{background:#0a0806!important;}
+.chapter .ch-label,.chapter .ch-title{color:#f5f0e8!important;}
+.chapter .ch-title .hl-g{color:#e8c97a!important;}
+.chapter .ch-title .hl-r{color:#f0a090!important;}
+.axis,.dmg,.grade,.alt,.res{background:#f5f0e8!important;}
+.axes,.dmg-grid,.grades,.res-grid{background:#c8b89a!important;border-color:#c8b89a!important;}
+.closing{background:white!important;padding:4rem 2.8rem;}
+.cl-inner *{color:#0a0806!important;}
+.cl-seal-ring{border-color:#0a0806!important;}
+.print-btn-wrap,.scroll-hint{display:none!important;}
+.reveal{opacity:1!important;transform:none!important;transition:none!important;}
+*{animation:none!important;}
+@media print{@page{margin:2cm 2.5cm;size:A4;}body,body *{color:#000000!important;}*{animation:none!important;}}
+</style></head>
 <body>
 
 <!-- NAV -->
@@ -902,11 +925,6 @@ body::after{
   </a>
 </div>
 
-<script>
-const io = new IntersectionObserver(es=>{
-  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
-},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-</script>
+
 </body>
 </html>
