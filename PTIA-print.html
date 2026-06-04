@@ -265,7 +265,7 @@ body{
   background-size:44px 44px;
 }
 .cl-inner{position:relative;z-index:1;}
-.cl-stmts{display:flex;flex-direction:column;gap:2.5rem;margin-bottom:4rem;}
+.cl-stmts{display:flex;flex-direction:column;gap:1.8rem;margin-bottom:2.5rem;}
 .cl-stmt-ko{font-family:'Noto Serif KR',serif;font-size:clamp(.95rem,2.5vw,1.4rem);font-weight:700;color:#f5f0e8;line-height:1.5;margin-bottom:.2rem;}
 .cl-stmt-en{font-family:'Cormorant Garamond',serif;font-size:clamp(.8rem,1.8vw,1rem);font-style:italic;color:rgba(245,240,232,.38);}
 
@@ -289,7 +289,7 @@ body{
 .cl-slogans .rw{color:#f0a090;font-weight:700;}
 
 .cl-div{width:60px;height:1px;background:rgba(201,168,76,.35);margin:0 auto 2rem;}
-.cl-meta{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:rgba(245,240,232,.22);letter-spacing:.1em;line-height:2.5;}
+.cl-meta{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:rgba(245,240,232,.22);letter-spacing:.1em;line-height:2.5;word-break:break-all;}
 .cl-meta strong{color:rgba(245,240,232,.48);}
 
 /* ── 인쇄 버튼 ────────────────────────────────── */
@@ -307,66 +307,81 @@ body{
   }
   .print-btn:hover{opacity:.82;transform:translateY(-2px);}
 }
-@media print{.print-btn-wrap{display:none!important;}}
 
-/* ══════════════════════════════════════════
-   @media print — 완전 인쇄 최적화
-   화면 CSS와 동일한 색상 체계 → 별도 오버라이드 최소화
-══════════════════════════════════════════ */
 @media print{
-  *{
-    -webkit-print-color-adjust:exact!important;
-    print-color-adjust:exact!important;
-    animation:none!important;
-    transition:none!important;
-  }
+  /* 기본 */
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;animation:none!important;transition:none!important;}
   body{background:white!important;font-size:9pt;}
-  body::before{display:none!important;}
+  body::before,body::after{display:none!important;}
+
+  /* 전체 텍스트 — div:not(.outline) 으로 아웃라인 보호 */
+  body,p,h1,h2,h3,span,li,td,th,section,header,article{color:#000000!important;}
+  div:not(.outline){color:#000000!important;}
+
+  /* ★ 아웃라인 글자 이중출력 방지 */
+  .c-h1 .outline,.outline{
+    color:transparent!important;
+    -webkit-text-stroke:2px #0a0806!important;
+  }
+
+  /* 글자 간격 정상화 */
+  .tb-brand,.c-eyebrow,.c-sub,.cr-text,
+  .ch-label,.ax-tag,.dmg-tag,.res-tag,
+  .crit-hanja,.grade-label,.alt-n,.res-tag{
+    letter-spacing:normal!important;
+  }
+
+  /* 표지 */
   .topbar{background:white!important;border-bottom:2px solid #000;}
-  .cover{
-    background-color:white!important;
-    background-image:none!important;
-    border-bottom:2px solid #000;
-    padding:1.8cm 0 1.2cm;
-  }
+  .cover{background-color:white!important;background-image:none!important;border-bottom:2px solid #000;padding:1.8cm 0 1.2cm;}
   .cover::after{display:none!important;}
-  .chapter{
-    background:#000!important;color:#fff!important;
-    page-break-before:always;page-break-after:avoid;
-  }
-  .chapter:first-of-type{page-break-before:avoid;}
+
+  /* 챕터 — page-break-before:auto (빈 페이지 제거) */
+  .chapter{background:#000!important;color:#fff!important;page-break-before:auto;page-break-after:avoid;margin-top:.8cm;}
+  .chapter:first-of-type{margin-top:0;}
   .chapter::after{display:none!important;}
   .chapter .ch-title{color:#f5f0e8!important;}
   .chapter .ch-title .hl-g{color:#e8c97a!important;}
   .chapter .ch-title .hl-r{color:#f0a090!important;}
   .chapter .ch-label{color:rgba(245,240,232,.4)!important;}
-  .sec{page-break-inside:avoid;padding:1cm 0;border-top:1px solid #c8b89a;}
+
+  /* 섹션 */
+  .sec{page-break-inside:avoid;padding:.8cm 0;border-top:1px solid #c8b89a;}
   .dmg-grid,.grades,.axes,.res-grid{page-break-inside:avoid;}
   .crit,.alt{page-break-inside:avoid;}
-  .dmg-grid,.res-grid,.axes{background:#c8b89a!important;gap:1px!important;}
-  .grades{background:#c8b89a!important;gap:1px!important;}
+
+  /* 패널 */
+  .dmg-grid,.res-grid,.axes,.grades{background:#c8b89a!important;gap:1px!important;}
   .axis,.dmg,.grade,.res{background:#f5f0e8!important;border-color:#c8b89a!important;}
   .grade::before{display:block!important;}
-  .closing{
-    background:#0a0806!important;
-    padding:2cm 2.5cm;
-    page-break-before:always;
-    page-break-inside:avoid;
-  }
+
+  /* 클로징 */
+  .closing{background:#0a0806!important;padding:1.5cm 2.5cm;page-break-before:always;page-break-inside:avoid;}
   .closing::before{display:none!important;}
+  .cl-stmts{gap:1.5rem!important;margin-bottom:2rem!important;}
+  .cl-seals{margin-bottom:2rem!important;}
   .cl-stmt-ko{color:#f5f0e8!important;}
+  .cl-stmt-en{color:rgba(245,240,232,.38)!important;}
   .cl-ring{border-color:rgba(245,240,232,.6)!important;}
   .cl-seal.el .cl-ring{border-color:#c49a2e!important;}
   .cl-seal.er .cl-ring{border-color:#e88070!important;}
   .cl-char{color:#f5f0e8!important;}
   .cl-seal.el .cl-char{color:#e8c97a!important;}
   .cl-seal.er .cl-char{color:#e88070!important;}
-  .cl-slogans{color:rgba(245,240,232,.55)!important;}
+  .cl-slogans{color:rgba(245,240,232,.55)!important;line-height:2.4!important;}
   .cl-slogans .gw{color:#e8c97a!important;}
   .cl-slogans .ew{color:#f5f0e8!important;}
   .cl-slogans .rw{color:#f0a090!important;}
-  .cl-meta{color:rgba(245,240,232,.22)!important;}
+  .cl-meta{color:rgba(245,240,232,.22)!important;word-break:break-all!important;}
   .cl-meta strong{color:rgba(245,240,232,.5)!important;}
+
+  /* URL 줄바꿈 */
+  .res-url,.cl-meta{word-break:break-all!important;}
+
+  /* 버튼 숨김 */
+  .print-btn-wrap{display:none!important;}
+
+  /* 페이지 설정 */
   .w{max-width:100%;padding:0;}
   @page{margin:1.8cm 2.2cm;size:A4;}
 }
