@@ -2,569 +2,437 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>과표 검증 가이드 — 오늘 무엇을 해야 하는가 · L2T-02</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Cormorant+Garamond:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-:root{--white:#ffffff;--paper:#f5f0e8;--deep:#ede6d4;--code:#f0f4f8;--ink:#0a0806;--body:#1a1410;--sub:#2e2620;--muted:#4a3e34;--rule:#c8b89a;--faint:#e8e0cc;--gold:#5c3e06;--gold2:#7a5410;--red:#7a100a;--green:#0e3e1a;--mono:#1a1a2e;}
+:root{
+  --void:#050403;--deep:#0c0906;--surface:#141008;--mid:#1e170e;
+  --ink:#f0e8d8;--sub:rgba(240,232,216,.62);--dim:rgba(240,232,216,.35);
+  --ghost:rgba(240,232,216,.18);--rule:rgba(240,232,216,.1);
+  --gold:#c9a84c;--gold-hi:#e8c97a;--red:#c0392b;--red-hi:#e88070;--green:#27ae60;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{font-size:16px;scroll-behavior:smooth;}
-body{background:var(--white);color:var(--body);font-family:'Noto Sans KR',sans-serif;font-weight:300;line-height:1.9;overflow-x:hidden;}
-@media screen{body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:repeating-linear-gradient(180deg,transparent 0,transparent 47px,rgba(200,184,154,.12) 47px,rgba(200,184,154,.12) 48px);}}
-.w{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:0 2.5rem;}
-.nav{background:rgba(245,240,232,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:.75rem 2.5rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:10;}
-.nav a{font-family:'Noto Serif KR',serif;font-size:.88rem;font-weight:700;color:var(--ink);text-decoration:none;}
-.nav-id{font-size:.62rem;letter-spacing:.25em;color:var(--muted);}
+body{background:var(--void);color:var(--ink);font-family:'Noto Sans KR',sans-serif;font-weight:300;line-height:1.9;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.05'/%3E%3C/svg%3E");
+  opacity:1;mix-blend-mode:overlay;}
+.z{position:relative;z-index:1;}
+.w{max-width:900px;margin:0 auto;padding:0 2.8rem;}
 
-.hero{padding:4.5rem 2.5rem 3.5rem;border-bottom:2px solid var(--ink);position:relative;overflow:hidden;}
-.hero-bg{font-family:'Cormorant Garamond',serif;font-size:clamp(12rem,28vw,20rem);font-weight:700;color:rgba(10,8,6,.04);position:absolute;right:-2rem;top:50%;transform:translateY(-50%);line-height:1;pointer-events:none;user-select:none;}
-.hero-tag{font-family:'Cormorant Garamond',serif;font-size:.72rem;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;opacity:0;animation:up .6s .1s forwards;}
-.hero-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.8rem,5.5vw,3.5rem);font-weight:900;color:var(--ink);line-height:1.15;margin-bottom:.6rem;opacity:0;animation:up .8s .3s forwards;}
-.hero-title .gold{color:var(--gold);}
-.hero-rule{width:44px;height:3px;background:var(--ink);margin-bottom:1.6rem;opacity:0;animation:up .6s .4s forwards;}
-.hero-desc{max-width:560px;font-size:.92rem;color:var(--sub);line-height:1.9;opacity:0;animation:up .7s .5s forwards;}
-.hero-desc strong{color:var(--ink);}
-.hero-desc .red{color:var(--red);}
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:.9rem 2.8rem;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid var(--rule);background:rgba(5,4,3,.85);backdrop-filter:blur(20px);}
+.nav a{font-family:'Cormorant Garamond',serif;font-size:.9rem;font-weight:600;color:var(--gold);text-decoration:none;}
+.nav a:hover{color:var(--gold-hi);}
+.nav-id{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--ghost);letter-spacing:.12em;}
 
-/* URGENCY */
-.urgency{background:var(--deep);border-left:4px solid var(--red);padding:1.2rem 1.8rem;margin:2rem 0;display:flex;align-items:center;gap:1rem;opacity:0;animation:up .7s .7s forwards;}
-.urg-text{font-family:'Noto Serif KR',serif;font-size:.9rem;font-weight:700;color:var(--ink);}
-.urg-text .red{color:var(--red);}
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:8rem 0 5rem;position:relative;overflow:hidden;border-bottom:1px solid var(--rule);}
+.hero-glow{position:absolute;width:800px;height:800px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,.07) 0%,transparent 65%);
+  top:50%;left:50%;transform:translate(-50%,-60%);pointer-events:none;
+  animation:pulse 8s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:translate(-50%,-60%) scale(1);opacity:.7;}50%{transform:translate(-50%,-58%) scale(1.08);opacity:1;}}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(240,232,216,.012) 3px,rgba(240,232,216,.012) 4px);}
+.hero-kanji{position:absolute;right:-3rem;top:50%;transform:translateY(-52%);
+  font-family:'Noto Serif KR',serif;font-size:clamp(16rem,35vw,28rem);font-weight:900;
+  color:rgba(201,168,76,.04);line-height:1;pointer-events:none;user-select:none;}
+.hero-accent{position:absolute;left:2.8rem;top:8rem;bottom:5rem;width:2px;
+  background:linear-gradient(180deg,transparent,var(--gold) 15%,var(--gold) 85%,transparent);opacity:.35;}
+.hero-inner{padding-left:1.8rem;}
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.45em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.8rem;opacity:0;animation:fadeUp .7s .2s forwards;}
+.hero-title{font-family:'Noto Serif KR',serif;font-size:clamp(2.8rem,8vw,6.5rem);font-weight:900;
+  line-height:.98;letter-spacing:-.04em;margin-bottom:.8rem;opacity:0;animation:fadeUp .9s .4s forwards;}
+.hero-title .l1{display:block;color:var(--ink);}
+.hero-title .l2{display:block;color:transparent;-webkit-text-stroke:1.5px var(--gold);}
+.hero-title .l3{display:block;color:transparent;-webkit-text-stroke:1.5px var(--red-hi);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,2.5vw,1.6rem);font-style:italic;
+  color:var(--sub);margin-bottom:2.5rem;opacity:0;animation:fadeUp .7s .55s forwards;}
+.hero-rule-line{display:flex;align-items:center;gap:1.2rem;margin-bottom:2rem;opacity:0;animation:fadeUp .6s .6s forwards;}
+.hrl-line{height:1px;flex:1;background:linear-gradient(90deg,var(--gold),transparent);}
+.hrl-text{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+.hero-desc{max-width:560px;font-family:'Noto Serif KR',serif;font-size:clamp(.9rem,2vw,1.05rem);
+  color:var(--sub);line-height:2;opacity:0;animation:fadeUp .8s .75s forwards;}
+.hero-desc strong{color:var(--ink);font-weight:700;}
+.hero-desc .red{color:var(--red-hi);}
+.hero-identity{margin-top:2.5rem;border-left:3px solid var(--gold);padding:1.5rem 1.8rem;
+  background:rgba(201,168,76,.05);max-width:600px;opacity:0;animation:fadeUp .8s .9s forwards;}
+.hi-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
+.hi-stmt{font-family:'Noto Serif KR',serif;font-size:clamp(.9rem,2vw,1.1rem);font-weight:700;color:var(--ink);line-height:1.7;}
+.hi-stmt .gold{color:var(--gold-hi);}
+.hi-en{margin-top:.35rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;color:var(--dim);}
 
-/* PHASE */
-.phase{padding:3.5rem 0;border-top:1px solid var(--rule);}
-.phase-tag{font-family:'Cormorant Garamond',serif;font-size:.68rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
-.phase-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.3rem,3.2vw,1.9rem);font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:1.8rem;}
-.phase-title .red{color:var(--red);}
-.phase-title .gold{color:var(--gold);}
+/* 스크롤 힌트 */
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp .6s 1.3s forwards;}
+.sh-text{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ghost);}
+.sh-line{width:1px;height:40px;background:linear-gradient(180deg,var(--dim),transparent);animation:scrollAnim 2s ease-in-out infinite;}
+@keyframes scrollAnim{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}100%{transform:scaleY(0);transform-origin:bottom;}}
 
-/* STEPS */
-.steps{display:flex;flex-direction:column;gap:1.5px;background:var(--rule);margin:1.5rem 0;}
-.step{background:var(--white);padding:1.8rem 1.8rem 1.8rem 1.4rem;display:grid;grid-template-columns:3rem 1fr;gap:1.2rem;}
+/* 섹션 */
+.sec{padding:4.5rem 0;border-top:1px solid var(--rule);}
+.sec-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;color:var(--ghost);margin-bottom:.4rem;}
+.sec-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.3rem,3.2vw,1.9rem);font-weight:700;
+  color:var(--ink);line-height:1.3;margin-bottom:1.6rem;}
+.sec-title .gold{color:var(--gold-hi);}
+.sec-title .red{color:var(--red-hi);}
+.sec-title .green{color:var(--green);}
+.prose{font-size:.9rem;color:var(--sub);line-height:2;margin-bottom:1rem;max-width:720px;}
+.prose strong{color:var(--ink);font-weight:700;}
+.prose .red{color:var(--red-hi);}
+.prose .gold{color:var(--gold-hi);}
+
+/* 선언 조항 */
+.articles{margin:2rem 0;}
+.article{display:grid;grid-template-columns:3.5rem 1fr;gap:1.5rem;padding:1.8rem 0;border-bottom:1px solid var(--rule);}
+.article:first-child{border-top:1px solid rgba(201,168,76,.3);}
+.art-n{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--gold);line-height:1;}
+.art-title{font-family:'Noto Serif KR',serif;font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;}
+.art-desc{font-size:.84rem;color:var(--sub);line-height:1.8;}
+.art-desc strong{color:var(--ink);font-weight:700;}
+.art-desc .red{color:var(--red-hi);}
+
+/* 요구 사항 */
+.demands{margin:2rem 0;}
+.demand{display:grid;grid-template-columns:2.8rem 1fr;gap:1.3rem;padding:1.5rem 0;border-bottom:1px solid var(--rule);}
+.demand:first-child{border-top:1px solid rgba(201,168,76,.3);}
+.dm-n{width:2.8rem;height:2.8rem;border:1px solid rgba(201,168,76,.4);display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--gold);flex-shrink:0;transition:border-color .2s;}
+.demand:hover .dm-n{border-color:var(--gold);}
+.dm-title{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--ink);margin-bottom:.3rem;}
+.dm-desc{font-size:.82rem;color:var(--sub);line-height:1.75;}
+.dm-desc strong{color:var(--ink);font-weight:700;}
+.dm-desc .red{color:var(--red-hi);}
+.dm-desc .gold{color:var(--gold-hi);}
+
+/* 단계별 가이드 */
+.steps{display:flex;flex-direction:column;gap:1px;background:var(--rule);margin:1.5rem 0;}
+.step{background:var(--surface);padding:1.8rem 1.8rem 1.8rem 1.4rem;display:grid;grid-template-columns:3rem 1fr;gap:1.2rem;transition:background .2s;}
+.step:hover{background:var(--mid);}
 .step.urgent{border-left:3px solid var(--red);}
 .step.normal{border-left:3px solid var(--gold);}
-.step-n{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--gold);line-height:1;padding-top:.2rem;}
-.step-n.red{color:var(--red);}
-.step-when{display:inline-block;font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;margin-bottom:.3rem;}
-.when-today{color:var(--red);}
-.when-week{color:var(--gold2);}
-.when-month{color:var(--muted);}
+.step-n{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;line-height:1;}
+.step.urgent .step-n{color:var(--red-hi);}
+.step.normal .step-n{color:var(--gold);}
+.step-when{display:inline-block;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;margin-bottom:.25rem;}
+.when-today{color:var(--red-hi);}
+.when-week{color:var(--gold-hi);}
+.when-month{color:var(--dim);}
 .step-title{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--ink);margin-bottom:.3rem;}
 .step-desc{font-size:.83rem;color:var(--sub);line-height:1.8;}
 .step-desc strong{color:var(--ink);font-weight:700;}
-.step-desc .red{color:var(--red);}
-.step-desc .gold{color:var(--gold2);}
+.step-desc .red{color:var(--red-hi);}
+.step-desc .gold{color:var(--gold-hi);}
 
-/* TEMPLATE */
-.tmpl-tag{font-family:'Cormorant Garamond',serif;font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;color:var(--green);margin-bottom:.3rem;margin-top:1rem;}
-.template{font-family:'JetBrains Mono',monospace;font-size:.79rem;color:var(--mono);background:var(--code);border:1px solid var(--rule);border-left:3px solid var(--gold);padding:1.3rem 1.5rem;margin:.5rem 0 1rem;line-height:1.85;overflow-x:auto;white-space:pre-wrap;}
-.template .lbl{color:var(--gold2);font-weight:700;}
-.template .fill{color:var(--red);}
+/* 템플릿 */
+.tmpl-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--green);margin-bottom:.3rem;margin-top:.8rem;}
+.template{font-family:'JetBrains Mono',monospace;font-size:.79rem;color:var(--ink);
+  background:rgba(0,0,0,.35);border:1px solid var(--rule);border-left:3px solid var(--gold);
+  padding:1.2rem 1.4rem;margin:.4rem 0 .8rem;line-height:1.85;overflow-x:auto;white-space:pre-wrap;}
+.template .lbl{color:var(--gold-hi);font-weight:700;}
+.template .fill{color:var(--red-hi);}
 
-/* INFO / WARN */
-.infobox{background:var(--deep);border:1px solid var(--rule);padding:1.4rem 1.8rem;margin:1.5rem 0;}
-.info-tag{font-family:'Cormorant Garamond',serif;font-size:.62rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
+/* 인포박스 */
+.infobox{background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--gold);padding:1.4rem 1.8rem;margin:1.5rem 0;}
+.info-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
 .info-body{font-size:.84rem;color:var(--sub);line-height:1.85;}
 .info-body strong{color:var(--ink);font-weight:700;}
-.warnbox{background:rgba(122,16,10,.04);border:1px solid rgba(122,16,10,.2);padding:1.4rem 1.8rem;margin:1.5rem 0;}
-.warn-tag{font-family:'Cormorant Garamond',serif;font-size:.62rem;letter-spacing:.38em;text-transform:uppercase;color:var(--red);margin-bottom:.4rem;}
+.warnbox{background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);border-left:3px solid var(--red);padding:1.4rem 1.8rem;margin:1.5rem 0;}
+.warn-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--red-hi);margin-bottom:.4rem;}
 .warn-body{font-size:.84rem;color:var(--sub);line-height:1.85;}
-.warn-body strong{color:var(--red);font-weight:700;}
+.warn-body strong{color:var(--red-hi);font-weight:700;}
+
+/* 고발 박스 */
+.accuse{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--red);padding:2rem;margin:2rem 0;position:relative;overflow:hidden;}
+.accuse::before{content:'§';font-family:'Cormorant Garamond',serif;font-size:6rem;font-weight:700;
+  color:rgba(240,232,216,.04);position:absolute;right:1rem;bottom:-.5rem;line-height:1;pointer-events:none;}
+.acc-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.4em;text-transform:uppercase;color:var(--red-hi);margin-bottom:.5rem;}
+.acc-body{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--ink);line-height:1.75;position:relative;}
+.acc-body .gold{color:var(--gold-hi);}
+.acc-body .red{color:var(--red-hi);}
+
+/* 발언 박스 */
+.voice{border-left:3px solid var(--red);padding:1.5rem 2rem;margin:2rem 0;background:rgba(192,57,43,.04);}
+.voice-text{font-family:'Noto Serif KR',serif;font-size:clamp(.9rem,2vw,1.05rem);font-style:italic;color:var(--sub);line-height:1.85;margin-bottom:.35rem;}
+.voice-who{font-size:.72rem;color:var(--ghost);letter-spacing:.1em;}
+
+/* 코드블록 */
+.codeblock{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--ink);
+  background:rgba(0,0,0,.35);border:1px solid var(--rule);border-left:3px solid var(--gold);
+  padding:1.4rem 1.6rem;margin:1.5rem 0;overflow-x:auto;line-height:1.9;white-space:pre-wrap;}
+.codeblock .ok{color:var(--green);font-weight:700;}
+.codeblock .no{color:var(--red-hi);font-weight:700;}
+.codeblock .eq{color:var(--gold-hi);font-weight:700;}
+.codeblock .cm{color:var(--dim);font-style:italic;}
+
+/* 표 */
+.dtbl-wrap{overflow-x:auto;margin:2rem 0;}
+.dtbl{width:100%;border-collapse:collapse;}
+.dtbl thead tr{border-bottom:1px solid rgba(201,168,76,.4);}
+.dtbl th{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ghost);font-weight:400;text-align:left;padding:.6rem .7rem;}
+.dtbl td{padding:.65rem .7rem;border-bottom:1px solid rgba(240,232,216,.06);font-size:.82rem;color:var(--sub);vertical-align:top;line-height:1.65;}
+.dtbl td:first-child{font-family:'Noto Serif KR',serif;font-weight:700;color:var(--ink);}
+.dtbl td.hi{color:var(--red-hi);font-weight:700;}
+.dtbl td.ok{color:var(--green);font-weight:700;}
+.dtbl td.gold{color:var(--gold-hi);font-weight:700;}
+.dtbl tr.miss{background:rgba(192,57,43,.04);}
+
+/* 흐름도 */
+.flow{margin:2rem 0;}
+.flow-row{display:grid;grid-template-columns:100px 1fr 1fr;gap:1rem;padding:.8rem 0;border-bottom:1px solid rgba(240,232,216,.06);}
+.flow-row:first-child{border-top:1px solid rgba(201,168,76,.3);}
+.flow-org{font-family:'Noto Serif KR',serif;font-size:.82rem;font-weight:700;color:var(--ink);}
+.flow-can{font-size:.78rem;color:var(--green);line-height:1.6;}
+.flow-cant{font-size:.78rem;color:var(--red-hi);line-height:1.6;}
+.flow-head .flow-org,.flow-head .flow-can,.flow-head .flow-cant{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ghost);font-weight:400;}
+
+/* 발견 박스 */
+.finding{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--gold);padding:2rem;margin:2rem 0;position:relative;overflow:hidden;}
+.finding::after{content:'∴';font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:700;
+  color:rgba(201,168,76,.07);position:absolute;right:1rem;bottom:-.3rem;line-height:1;pointer-events:none;}
+.fnd-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.fnd-body{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--ink);line-height:1.75;position:relative;}
+.fnd-body .gold{color:var(--gold-hi);}
+.fnd-body .red{color:var(--red-hi);}
+.fnd-body .green{color:var(--green);}
+
+/* 비교 패널 */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin:2rem 0;}
+.cmp{background:var(--surface);padding:2rem;}
+.cmp.bad{border-top:3px solid var(--red);}
+.cmp.good{border-top:3px solid var(--green);}
+.cmp-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;margin-bottom:.5rem;}
+.cmp.bad .cmp-tag{color:var(--red-hi);}
+.cmp.good .cmp-tag{color:var(--green);}
+.cmp-title{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;margin-bottom:.4rem;}
+.cmp.bad .cmp-title{color:var(--red-hi);}
+.cmp.good .cmp-title{color:var(--green);}
+.cmp-body{font-size:.82rem;color:var(--sub);line-height:1.8;}
+
+/* 개혁 항목 */
+.reform{margin:2rem 0;}
+.rf{background:var(--surface);border-left:4px solid var(--gold);padding:2rem;margin-bottom:1px;transition:background .2s;}
+.rf:hover{background:var(--mid);}
+.rf-head{display:grid;grid-template-columns:3rem 1fr;gap:1rem;align-items:start;margin-bottom:.8rem;}
+.rf-n{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--gold);line-height:1;}
+.rf-when{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);margin-bottom:.2rem;}
+.rf-title{font-family:'Noto Serif KR',serif;font-size:.98rem;font-weight:700;color:var(--ink);}
+.rf-body{font-size:.84rem;color:var(--sub);line-height:1.8;margin-left:4rem;}
+.rf-body strong{color:var(--ink);font-weight:700;}
+.rf-now{color:var(--red-hi);font-size:.78rem;margin-top:.4rem;}
+.rf-after{color:var(--green);font-size:.78rem;}
+
+/* 로드맵 */
+.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin:2rem 0;}
+.rm{background:var(--surface);padding:1.7rem 1.2rem;}
+.rm-phase{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
+.rm-title{font-family:'Noto Serif KR',serif;font-size:.9rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;}
+.rm-items{font-size:.78rem;color:var(--dim);line-height:1.8;}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(22px);
+  transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* 긴급 배너 */
+.urgency{background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);border-left:3px solid var(--red);
+  padding:1.2rem 1.8rem;margin:2rem 0;display:flex;align-items:center;gap:1rem;}
+.urg-icon{font-size:1.1rem;flex-shrink:0;}
+.urg-text{font-family:'Noto Serif KR',serif;font-size:.9rem;font-weight:700;color:var(--ink);}
+.urg-text .red{color:var(--red-hi);}
 
 /* CLOSING */
-.closing{background:var(--ink);color:#f5f0e8;padding:5rem 2.5rem;text-align:center;position:relative;overflow:hidden;}
-.closing::before{content:'族';font-family:'Noto Serif KR',serif;font-size:18rem;font-weight:900;color:rgba(255,255,255,.04);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;line-height:1;}
-.cl-main{font-family:'Noto Serif KR',serif;font-size:clamp(1rem,2.5vw,1.5rem);font-weight:400;line-height:2;color:rgba(245,240,232,.7);margin-bottom:1.5rem;position:relative;}
-.cl-main strong{color:#f5f0e8;}
-.cl-main .gold{color:#d4aa40;}
-.cl-meta{font-size:.68rem;color:rgba(245,240,232,.3);letter-spacing:.1em;line-height:2.4;position:relative;}
-.cl-meta strong{color:rgba(245,240,232,.6);}
+.closing{background:var(--deep);padding:6rem 0;text-align:center;position:relative;overflow:hidden;border-top:1px solid var(--rule);}
+.closing::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(201,168,76,.06) 0%,transparent 70%);}
+.cl-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Noto Serif KR',serif;font-size:18rem;font-weight:900;
+  color:rgba(201,168,76,.03);white-space:nowrap;pointer-events:none;line-height:1;}
+.cl-inner{position:relative;z-index:1;}
+.cl-main{font-family:'Noto Serif KR',serif;font-size:clamp(1rem,2.5vw,1.5rem);
+  font-weight:400;line-height:2.1;color:var(--sub);margin-bottom:2rem;}
+.cl-main strong{color:var(--ink);}
+.cl-main .gold{color:var(--gold-hi);}
+.cl-main .red{color:var(--red-hi);}
+.cl-seal-wrap{display:flex;justify-content:center;margin-bottom:2rem;}
+.cl-seal{width:70px;height:70px;border-radius:50%;border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;}
+.cl-seal span{font-family:'Noto Serif KR',serif;font-size:1.7rem;font-weight:900;color:var(--gold-hi);}
+.cl-meta{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--ghost);letter-spacing:.1em;line-height:2.5;}
+.cl-meta strong{color:var(--dim);}
 
-hr{border:none;border-top:1px solid var(--rule);}
-hr.heavy{border-top:2px solid var(--ink);}
-@keyframes up{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
-@media(max-width:580px){.step{grid-template-columns:2.2rem 1fr;}}
+/* 인쇄 버튼 */
+.print-btn-wrap{position:fixed;bottom:2rem;right:2rem;z-index:300;}
+.print-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.3rem;
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(5,4,3,.9);color:var(--sub);border:1px solid var(--rule);text-decoration:none;
+  backdrop-filter:blur(10px);transition:color .2s,border-color .2s;}
+.print-btn:hover{color:var(--ink);border-color:var(--gold);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+@media(max-width:640px){
+  .w{padding:0 1.4rem;}.hero{padding:7rem 0 4rem;}
+  .hero-accent{left:1.4rem;}.hero-inner{padding-left:1rem;}
+  .compare{grid-template-columns:1fr;}.roadmap{grid-template-columns:1fr 1fr;}
+  .flow-row{grid-template-columns:80px 1fr;}.flow-cant{display:none;}
+}
+
+/* ══ @media print ══════════════════════════════════════════════════ */
 @media print{
-  /* opacity:0 요소 인쇄 리셋 */
-  .04);position:absolute;right:-2rem;top:50%;transform:translateY(-50%);line-height:1;pointer-events:none;user-select:none;
-  /* 안전한 opacity + 텍스트 리셋 */
-  body,p,h1,h2,h3,h4,div,span,a,li,td,th,
-  section,header,footer,nav,article,aside{
-    color:#000000!important;
-    animation:none!important;
-  }
-  /* opacity:0 → 1 (개별 명시) */
-  .hero-tag,.hero-title,.hero-rule,.hero-desc,
-  .cover-eyebrow,.cover-h1,.cover-h2,.cover-rule,.cover-thesis,.axes,
-  .cover-super,.cover-sub,.cover-divider,.cover-identity,
-  .urgency,.rm-label,.docs-label{
-    opacity:1!important;
-    animation:none!important;
-  }
-
-}
-.hero-tag,
-  .hero-title,
-  .hero-rule,
-  .hero-desc,
-  .urgency{
-    opacity:1!important;
-    animation:none!important;
-  }
-
-  /* 전체 텍스트 검정 */
-  body,body *{color:#000000!important;}
-
-  /* 챕터 헤더 유지 */
-  .chapter,.chapter *{background:#000000!important;color:#ffffff!important;}
-  .ch-title .gold{color:#f0e0a0!important;}
-  .ch-title .red{color:#ffd0c0!important;}
-
-  /* ── 최우선: opacity·animation 전체 리셋 ── */
-  /* 전체 텍스트 검정 */
-  body *{color:#000000!important;}
-  /* 예외: 검정 배경 요소 */
-  .chapter,.chapter *,.closing.dark-close,.closing.dark-close *{
-    background:#0a0806!important;color:#ffffff!important;
-  }
-
-  body{background:white!important;color:#0a0806!important;}
-  body::before{display:none!important;}
-  .nav{background:white!important;border-bottom:1px solid #c8b89a;}
-  body{font-size:9.5pt;}body::before{display:none;}.nav{display:none;}
-  .hero-bg{display:none;}.hero-tag,.hero-title,.hero-rule,.hero-desc,.urgency{opacity:1!important;animation:none!important;}
-  .phase{page-break-inside:avoid;padding:1cm 0;}
-  .steps,.template,.infobox,.warnbox{page-break-inside:avoid;}
-  .closing{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .w{max-width:100%;padding:0;}@page{margin:2cm 2.2cm;}
-
-  /* ── 16:1 흑백 대조비 강제 ──────────────────────────── */
-  body,p,.prose,.sec,.w,
-  .step-desc,.art-desc,.dm-desc,.rf-body,.crit-q,
-  .crit-l2t,.crit-ri,.alt-desc,.dmg-causes,
-  .fnd-sub,.info-body,.warn-body,.ins-body,
-  .rm-items,.acc-body,.voice-text,.cd-body,
-  .tl-desc,.comp-body,.cmp-body,.res-docs,
-  .bar-key,.stat-key,.cs-key,.grade-desc,
-  .sum-item,.ax-flow,.dmg-flow{
-    color:#000000!important;
-  }
-  /* 강조 제목류 */
-  strong,.step-title,.art-title,.dm-title,.rf-title,
-  .sec-title,.phase-title,.cover-main,.hero-title,
-  .cover-h1,.cd-title,.tl-title,.lsn-body,
-  .alt-title,.res-title,.dmg-title,.ax-title,
-  .grade-label,.crit-title,.ch-title{
-    color:#000000!important;
-  }
-  /* 태그·레이블류 (중간 어두운 색 → 검정) */
-  .sec-tag,.phase-tag,.sec-n,.ch-n,.rm-phase,
-  .cover-tag,.hero-tag,.nav-id,.hb-brand,
-  .doc-badge,.dmg-tag,.res-tag,.crit-hanja,
-  .ax-tag,.tb-title,.tb-date,.cover-eyebrow,
-  .cd-year,.lsn-tag,.info-tag,.warn-tag,
-  .tmpl-tag,.acc-tag,.voice-who,.seal-label,
-  .cover-h2,.hero-desc,.cover-thesis,
-  .prose,.sub,.muted,.ghost{
-    color:#000000!important;
-  }
-  /* 색상 강조 (gold/red/green) → 모두 검정 */
-  .prose .red,.prose .gold,.prose .green,
-  .step-desc .red,.step-desc .gold,.step-desc .green,
-  .art-desc .red,.art-desc .gold,
-  .dm-desc,.rf-body .green,.rf-body .gold,
-  .cd-body .green,.cd-body .red,.cd-body .gold,
-  .tl-desc .green,.tl-desc .red,
-  .lsn-body .gold,.lsn-body .red,.lsn-body .green,
-  .codeblock .ok,.codeblock .no,.codeblock .yr,
-  .template .lbl,.template .fill,
-  .dmg.l2t .dmg-flow .hi,.dmg.ri .dmg-flow .hi,
-  .axis.l2t .ax-flow .hi,.axis.ri .ax-flow .hi,
-  .rf-now,.rf-after,.dm-n,.art-n,
-  .cover-thesis .red,.cover-thesis em,
-  .cover-h1 .gold,.cover-h1 .red,
-  .sec-title .gold,.sec-title .red,.sec-title .green,
-  .ch-title .gold,.ch-title .red,
-  .cl-main .gold,.cl-main .red,
-  .closing-stmts .gold,.closing-stmts .red,
-  .tri-ko,.tri-ko strong,.tri-en{
-    color:#000000!important;
-  }
-  /* 검정 배경 챕터/closing → 강제 유지 */
-  .chapter,.chapter *{
-    background:#0a0806!important;
-    color:#ffffff!important;
-  }
-  /* 단, 챕터 내 gold/red 강조는 밝게 */
-  .chapter .ch-title .gold{color:#f2e6c7!important;}
-  .chapter .ch-title .red {color:#f9e1dd!important;}
-  /* closing — 흰 배경으로 전환 후 검정 텍스트 */
-  .closing,.final{
-    background:white!important;
-    color:#000000!important;
-  }
-  .closing *,.final *{color:#000000!important;}
-  /* 인장 원형 테두리 — 명확히 */
-  .seal.el .seal-circle,.seal-circle.gold-s{border:2px solid #000000!important;}
-  .seal.en .seal-circle,.seal-circle.both-s{border:2px solid #000000!important;}
-  .seal.er .seal-circle,.seal-circle.red-s {border:2px solid #000000!important;}
-  .seal-char,.seal .seal-char,
-  .seal.el .seal-char,.seal.en .seal-char,.seal.er .seal-char,
-  .cl-seal span{color:#000000!important;}
-  /* 패널 배경 유지 */
-  .voice,.accuse,.accusation,.finding,.infobox,.warnbox,
-  .axis,.dmg,.rm,.grade,.alt,.step,.rf,.cmp,.comp-panel,
-  .case-detail,.lesson,.cover-identity,.axes .axis,
-  .res,.res-card,.dmg-grid .dmg,.grade-grid .grade{
-    background:#f5f0e8!important;
-    border-color:#999999!important;
-  }
-  /* 등급 테두리 색상 — 검정 구분 */
-  .grade.g-green,.grade.green-g{border-top:4px solid #000000!important;}
-  .grade.g-gold,.grade.yellow-g {border-top:4px solid #555555!important;}
-  .grade.g-red,.grade.red-g     {border-top:4px solid #000000!important;}
-  /* 등급 기호 */
-  .grade-sym{color:#000000!important;}
-  /* 코드블록 */
-  .codeblock,.template{
-    background:#f0f0f0!important;
-    border-left-color:#000000!important;
-    color:#000000!important;
-  }
-  /* 바 차트 */
-  .bar-fill,.stat-val,.cs-val,.met-val{color:#000000!important;}
-  .bar-fill.peak,.bar-fill.high,.bar-fill.normal,.bar-fill.low{
-    background:#cccccc!important;
-  }
-  /* 표 */
-  .dtbl td.hi,.dtbl td.ok,.dtbl td.gold,
-  .sum-item.ok strong,.sum-item.bad strong,
-  .dmg.l2t .dmg-right,.dmg.ri .dmg-right,
-  .axis.l2t .ax-tag,.axis.ri .ax-tag,
-  .dmg.l2t .dmg-tag,.dmg.ri .dmg-tag{
-    color:#000000!important;
-  }
-  /* 링크 색상 */
-  a{color:#000000!important;text-decoration:underline;}
-  /* 배경 패턴 제거 */
-  body::before,body::after{display:none!important;}
-
-}
-
-/* ── 인쇄 버튼 ─────────────────────────────────────── */
-.print-btn-wrap{
-  position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;
-}
-.print-btn{
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.6rem 1.2rem;
-  font-family:'Noto Sans KR',sans-serif;
-  font-size:.72rem;font-weight:500;letter-spacing:.05em;
-  border:none;cursor:pointer;text-decoration:none;
-  transition:opacity .15s,transform .15s;
-  box-shadow:0 2px 8px rgba(0,0,0,.25);
-}
-.print-btn:hover{opacity:.82;transform:translateY(-2px);}
-.btn-dark{background:#0a0806;color:#f5f0e8;}
-.btn-dark svg{stroke:#f5f0e8;}
-.btn-light{background:#f5f0e8;color:#0a0806;border:1px solid #c8b89a;}
-.btn-light svg{stroke:#0a0806;}
-@media print{.print-btn-wrap{display:none!important;}}
-
-@media print{
-  /* opacity·animation 리셋 (개별 선택자) */
-  .hero-tag,.hero-title,.hero-rule,.hero-desc,
-  .cover-eyebrow,.cover-h1,.cover-h2,.cover-rule,
-  .cover-thesis,.axes,.cover-super,.cover-h1,
-  .cover-sub,.cover-divider,.cover-identity,
-  .urgency,.docs-label,.rm-label,
-  .stat,.cs,.metric,.bar-row{
-    opacity:1!important;animation:none!important;
-  }
-  /* 전체 */
-  body{background:white!important;font-size:9.5pt;}
-  body,p,h1,h2,h3,div,span,li,td,th,
-  section,header,article,nav,footer{color:#000000!important;}
-  body::before,body::after{display:none!important;}
-  /* 패널 */
-  .axis,.dmg,.grade,.alt,.res,.crit,
-  .voice,.accuse,.accusation,.finding,
-  .infobox,.warnbox,.case-detail,.lesson,
-  .cover-identity,.step,.rf,.comp-panel,.cmp{
-    background:#f5f0e8!important;border-color:#888!important;
-  }
-  .axes,.dmg-grid,.grades,.res-grid{background:#b0a080!important;}
-  /* 챕터헤더 */
-  .chapter,.chapter *{background:#000!important;color:#fff!important;}
-  .chapter .ch-title .gold{color:#f0e0a0!important;}
-  .chapter .ch-title .red{color:#ffd0c0!important;}
-  /* 클로징·피날레 */
-  .closing,.final{background:white!important;}
-  .closing *,.final *{color:#000!important;}
-  .closing-bg-hanja,.cover-bg,.cover-bg-hanja,
-  .hero-bg,.hero-bg-hanja{display:none!important;}
-  /* 인장 */
-  .seal-circle,.seal .seal-circle{border:2px solid #000!important;}
-  .seal-char,.seal .seal-char{color:#000!important;}
-  /* 코드블록·표 */
-  .codeblock,.template{background:#eee!important;color:#000!important;}
-  .bar-fill{background:#bbb!important;}
-  /* 링크 */
-  a{color:#000!important;text-decoration:underline;}
-  /* 페이지 */
-  @page{margin:2cm 2.5cm;size:A4;}
-  .chapter{page-break-before:always;}
-  .chapter:first-of-type{page-break-before:avoid;}
-  .sec,.phase{page-break-inside:avoid;}
-  .closing{page-break-inside:avoid;}
-  .print-btn-wrap{display:none!important;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;animation:none!important;transition:none!important;}
+  body,body *{color:#000000!important;background:transparent!important;}
+  body{background:white!important;font-size:9pt;}
+  body::after,.hero-glow,.hero::before,.hero-kanji,.hero-accent,
+  .scroll-hint,.cl-bg,.closing::before,.accuse::before,.finding::after{display:none!important;}
+  .nav,.print-btn-wrap{display:none!important;}
+  .hero{min-height:unset;padding:2cm 0 1.5cm;border-bottom:2px solid #000;}
+  .hero-eyebrow,.hero-title,.hero-sub,.hero-rule-line,.hero-desc,.hero-identity{opacity:1!important;}
+  .hero-title .l2{-webkit-text-stroke:1.5px #000;color:transparent!important;}
+  .hero-title .l3{-webkit-text-stroke:1.5px #c0392b;color:transparent!important;}
+  .hero-identity{background:#f5f0e8!important;border-left-color:#7a5410!important;}
+  .sec{page-break-inside:avoid;padding:1cm 0;border-top:1px solid #c8b89a;}
+  .articles,.demands,.steps,.reform,.roadmap{page-break-inside:avoid;}
+  .article,.demand,.step,.rf,.crit{page-break-inside:avoid;}
+  .step{background:#f5f0e8!important;border-color:#c8b89a!important;}
+  .infobox,.warnbox,.accuse,.voice,.finding{background:#f5f0e8!important;border-color:#c8b89a!important;page-break-inside:avoid;}
+  .compare{background:#c8b89a!important;}
+  .compare .cmp{background:#f5f0e8!important;}
+  .cmp.bad{border-top-color:#c0392b!important;}
+  .cmp.good{border-top-color:#27ae60!important;}
+  .reform .rf{background:#f5f0e8!important;border-left-color:#7a5410!important;page-break-inside:avoid;}
+  .roadmap{background:#c8b89a!important;}
+  .roadmap .rm{background:#f5f0e8!important;}
+  .dtbl tr.miss{background:#fff0ee!important;}
+  .flow-row{border-color:#c8b89a!important;}
+  .codeblock,.template{background:#eeeeee!important;border-left-color:#7a5410!important;}
+  .urgency{background:#fff0ee!important;border-color:#c0392b!important;}
+  .closing{background:#0a0806!important;padding:1.5cm 0;page-break-before:always;page-break-inside:avoid;}
+  .cl-main{color:#f5f0e8!important;}
+  .cl-main strong{color:white!important;}
+  .cl-main .gold{color:#e8c97a!important;}
+  .cl-seal{border-color:#c49a2e!important;}
+  .cl-seal span{color:#e8c97a!important;}
+  .cl-meta{color:rgba(245,240,232,.3)!important;word-break:break-all!important;}
+  .cl-meta strong{color:rgba(245,240,232,.55)!important;}
+  .reveal{opacity:1!important;transform:none!important;}
   .w{max-width:100%;padding:0;}
-  *{animation:none!important;transition:none!important;}
+  @page{margin:2cm 2.5cm;size:A4;}
+  .closing{page-break-inside:avoid;}
 }
 </style>
 </head>
 <body>
-
-<nav class="nav">
+<nav class="nav z">
   <a href="index.html">← 원장(元帳) feat. 원금(元金)</a>
   <span class="nav-id">L2T-02 · 과표 검증 가이드 · 2026</span>
 </nav>
 
-<div class="hero w">
-  <div class="hero-bg">族</div>
-  <div class="hero-tag">L2T-02 · 과표 검증 가이드 · Taxpayer Action Guide · 단계별</div>
-  <div class="hero-title">오늘 무엇을<br><span class="gold">해야 하는가</span></div>
-  <div class="hero-rule"></div>
-  <div class="hero-desc">
-    <strong>경정청구 기한이 흐르고 있습니다.</strong><br>
-    2021귀속 기한: 2026.12.31 — <span class="red">지금 시작해야 합니다.</span><br>
-    이 가이드는 오늘부터 단계별로 실행할 수 있는 절차입니다.
-  </div>
-  <div class="urgency">
-    <div>⚠</div>
-    <div class="urg-text">
-      <span class="red">경정청구 소멸시효 5년</span> — 귀속 연도별 기한을 확인하십시오.
-      2021귀속: 2026.12.31 · 2022귀속: 2027.12.31 · 2023귀속: 2028.12.31
+<section class="hero z">
+  <div class="hero-glow"></div>
+  <div class="hero-kanji">行</div>
+  <div class="hero-accent"></div>
+  <div class="w"><div class="hero-inner">
+    <div class="hero-eyebrow">L2T-02 · 과표 검증 가이드 · Taxpayer Action Guide · 단계별</div>
+    <h1 class="hero-title">
+      <span class="l1">오늘 무엇을</span>
+      <span class="l2">해야 하는가</span>
+    </h1>
+    <div class="hero-sub">경정청구 기한이 흐르고 있습니다</div>
+    <div class="hero-rule-line"><div class="hrl-line"></div><span class="hrl-text">2021귀속 기한: 2026.12.31</span><div class="hrl-line"></div></div>
+    <p class="hero-desc">
+      <strong><span class="red">경정청구 기한이 흐르고 있습니다.</span></strong><br>
+      2021귀속 기한: 2026.12.31 — 지금 시작해야 합니다.<br>
+      이 가이드는 오늘부터 단계별로 실행할 수 있는 절차입니다.
+    </p>
+    <div class="urgency">
+      <div class="urg-icon">⚠</div>
+      <div class="urg-text"><span class="red">경정청구 소멸시효 5년</span> — 귀속 연도별 기한을 확인하십시오.<br>2021귀속: 2026.12.31 · 2022귀속: 2027.12.31 · 2023귀속: 2028.12.31</div>
     </div>
-  </div>
-</div>
+  </div></div>
+  <div class="scroll-hint"><span class="sh-text">scroll</span><div class="sh-line"></div></div>
+</section>
 
-<hr class="heavy">
-
-<!-- 1단계 -->
-<section class="phase w">
-  <div class="phase-tag">1단계 · 오늘</div>
-  <h2 class="phase-title"><span class="red">오늘 해야 할 것</span> — 증거 원장 구축</h2>
-
+<section class="sec w z reveal">
+  <div class="sec-tag">1단계 · 오늘</div>
+  <h2 class="sec-title"><span class="red">오늘 해야 할 것</span> — 증거 원장 구축</h2>
   <div class="steps">
-    <div class="step urgent">
-      <div class="step-n red">①</div>
-      <div>
-        <div class="step-when when-today">오늘 · 최우선</div>
-        <div class="step-title">증권사 3사 거래내역 · 배당내역 전수 확보</div>
-        <div class="step-desc">
-          삼성·미래에셋·토스·키움 등 거래한 모든 증권사<br>
-          <strong>연도별 해외 ETF 분배금 내역 전수 출력</strong><br>
-          지급일 · 종목명 · 지급금액 · 원천징수액 · 과표 기재 여부<br>
-          PDF + 원본 파일 보관
-        </div>
-      </div>
-    </div>
-    <div class="step urgent">
-      <div class="step-n red">②</div>
-      <div>
-        <div class="step-when when-today">오늘</div>
-        <div class="step-title">ICI Primary Layout 다운로드</div>
-        <div class="step-desc">
-          <strong>ici.org → Statistics and Research → Mutual Fund Data → Distributions</strong><br>
-          연도별 P/L (Percentage of Total) 파일 다운로드<br>
-          보유 종목 확인: MSTY · CONY · NVDY · BITO 등<br>
-          <span class="gold">BOX3(Nondividend Distributions) 비율이 ROC 비율입니다.</span>
-        </div>
-      </div>
-    </div>
-    <div class="step normal">
-      <div class="step-n">③</div>
-      <div>
-        <div class="step-when when-today">오늘</div>
-        <div class="step-title">귀속 연도별 경정청구 기한 확인</div>
-        <div class="step-desc">
-          국세기본법 §45의2: 법정신고 기한 다음 날부터 <strong>5년</strong><br>
-          2021귀속(5월 신고): <span class="red">2026.12.31</span><br>
-          2022귀속: 2027.12.31 · 2023귀속: 2028.12.31 · 2024귀속: 2029.12.31
-        </div>
-      </div>
-    </div>
+    <div class="step urgent"><div class="step-n">①</div><div><div class="step-when when-today">오늘 · 최우선</div><div class="step-title">증권사 3사 거래내역 · 배당내역 전수 확보</div><div class="step-desc">삼성·미래에셋·토스·키움 등 거래한 모든 증권사<br><strong>연도별 해외 ETF 분배금 내역 전수 출력</strong><br>지급일 · 종목명 · 지급금액 · 원천징수액 · 과표 기재 여부 · PDF 보관</div></div></div>
+    <div class="step urgent"><div class="step-n">②</div><div><div class="step-when when-today">오늘</div><div class="step-title">ICI Primary Layout 다운로드</div><div class="step-desc"><strong>ici.org → Statistics and Research → Mutual Fund Data → Distributions</strong><br>연도별 P/L 파일 다운로드. 보유 종목 확인: MSTY · CONY · NVDY · BITO 등<br><span class="gold">BOX3(Nondividend Distributions) 비율이 ROC 비율입니다.</span></div></div></div>
+    <div class="step normal"><div class="step-n">③</div><div><div class="step-when when-today">오늘</div><div class="step-title">귀속 연도별 경정청구 기한 확인</div><div class="step-desc">국세기본법 §45의2: 법정신고 기한 다음 날부터 <strong>5년</strong><br><span class="red">2021귀속: 2026.12.31</span> · 2022귀속: 2027.12.31 · 2023귀속: 2028.12.31</div></div></div>
   </div>
 </section>
 
-<hr>
-
-<!-- 2단계 -->
-<section class="phase w">
-  <div class="phase-tag">2단계 · 이번 주</div>
-  <h2 class="phase-title"><span class="gold">이번 주 해야 할 것</span> — 사실관계 확인</h2>
-
+<section class="sec w z reveal">
+  <div class="sec-tag">2단계 · 이번 주</div>
+  <h2 class="sec-title"><span class="gold">이번 주 해야 할 것</span> — 사실관계 확인</h2>
   <div class="steps">
-    <div class="step normal">
-      <div class="step-n">①</div>
-      <div>
-        <div class="step-when when-week">이번 주</div>
-        <div class="step-title">증권사에 사실관계 파악 요청</div>
-        <div class="step-desc">
-          서면 또는 이메일로 요청합니다:
-        </div>
-        <div class="tmpl-tag">증권사 요청 문구 템플릿</div>
-        <div class="template"><span class="lbl">제목:</span> 해외 ETF 분배금 소득성격 확인 요청
+    <div class="step normal"><div class="step-n">①</div><div>
+      <div class="step-when when-week">이번 주</div>
+      <div class="step-title">증권사에 사실관계 파악 요청</div>
+      <div class="step-desc">서면 또는 이메일로 요청합니다:</div>
+      <div class="tmpl-tag">증권사 요청 문구 템플릿</div>
+      <div class="template"><span class="lbl">제목:</span> 해외 ETF 분배금 소득성격 확인 요청
 
 <span class="lbl">내용:</span>
-2024년(또는 귀속 연도)에 수령한 해외 ETF 분배금 관련
-다음 사항을 서면으로 회신하여 주시기 바랍니다.
-
 1. ICI Primary Layout 기준 BOX3(ROC) 적용 여부
 2. 국내 과세표준 산정 시 ICI 소득성격 반영 여부
 3. 미반영 시 적용 기준이 무엇인지
 4. QI 원천징수 환급 처리 시 사용한 원장 근거
 
 <span class="fill">[성명]</span> 드림</div>
-      </div>
-    </div>
-    <div class="step normal">
-      <div class="step-n">②</div>
-      <div>
-        <div class="step-when when-week">이번 주</div>
-        <div class="step-title">세무서 수리증명 · 납부영수증 확보</div>
-        <div class="step-desc">
-          홈택스 → 신고/납부 → 신고내역 → 종합소득세 확인<br>
-          <strong>신고서 원본 + 납부영수증 PDF 보관</strong><br>
-          경정청구 시 원본 신고서와 수정 신고서를 비교 제출합니다.
-        </div>
-      </div>
-    </div>
-    <div class="step normal">
-      <div class="step-n">③</div>
-      <div>
-        <div class="step-when when-week">이번 주</div>
-        <div class="step-title">S04 과표 검증 엑셀 다운로드</div>
-        <div class="step-desc">
-          <strong>sebjang.github.io/tax-truth-ledger</strong> →<br>
-          JSB71GA10-2024-KRTAX-S04b.xlsx (2024귀속)<br>
-          JSB71GA10-2025-KRTAX-S04b.xlsx (2025귀속)<br>
-          <span class="gold">소계1 직접 인용 · SHA-256 검증값 포함 · κ=100%</span>
-        </div>
-      </div>
-    </div>
+    </div></div>
+    <div class="step normal"><div class="step-n">②</div><div><div class="step-when when-week">이번 주</div><div class="step-title">세무서 수리증명 · 납부영수증 확보</div><div class="step-desc">홈택스 → 신고/납부 → 신고내역 → 종합소득세<br><strong>신고서 원본 + 납부영수증 PDF 보관</strong></div></div></div>
   </div>
 </section>
 
-<hr>
-
-<!-- 3단계 -->
-<section class="phase w">
-  <div class="phase-tag">3단계 · 한 달 이내</div>
-  <h2 class="phase-title"><span class="gold">한 달 안에 해야 할 것</span> — 공식 채널 활용</h2>
-
+<section class="sec w z reveal">
+  <div class="sec-tag">3단계 · 한 달 이내</div>
+  <h2 class="sec-title"><span class="gold">한 달 안에 해야 할 것</span> — 공식 채널</h2>
   <div class="steps">
-    <div class="step normal">
-      <div class="step-n">①</div>
-      <div>
-        <div class="step-when when-month">한 달 이내</div>
-        <div class="step-title">유권해석 요청 — 국세청</div>
-        <div class="step-desc">
-          홈택스 → 세금신고 → 세무상담 → 서면질의<br>
-          또는 국세청 126 전화 상담<br>
-        </div>
-        <div class="tmpl-tag">유권해석 요청 핵심 질의 문구</div>
-        <div class="template"><span class="lbl">질의 요지:</span>
-
+    <div class="step normal"><div class="step-n">①</div><div>
+      <div class="step-when when-month">한 달 이내</div>
+      <div class="step-title">유권해석 요청 — 국세청</div>
+      <div class="tmpl-tag">유권해석 요청 핵심 질의 문구</div>
+      <div class="template"><span class="lbl">질의 요지:</span>
 해외 ETF 분배금 중 ICI Primary Layout에서
-BOX3(Nondividend Distributions·자본반환)으로 확정된 금액이
+BOX3(ROC)으로 확정된 금액이
 국내 소득세법상 배당소득에 해당하는지 여부
 
 <span class="lbl">관련 근거:</span>
-- ICI Primary Layout: 소득성격 결정권은 발행사(ICI)에 있음
-  (KSD 정보공개 16516499에서 공식 확인)
 - IRC §301(c)(2): ROC는 과세소득 아닌 취득원가 감액
-- 소득세법 §14 실질과세 원칙
-
-<span class="lbl">질의 사항:</span>
-귀 청은 ICI Primary Layout을 소득성격 실질조사의
-기준 자료로 인정하는지 여부와
-그 근거를 회신하여 주시기 바랍니다.</div>
-      </div>
-    </div>
-    <div class="step normal">
-      <div class="step-n">②</div>
-      <div>
-        <div class="step-when when-month">한 달 이내</div>
-        <div class="step-title">정보공개청구 — 국세청·기재부·KSD</div>
-        <div class="step-desc">
-          <strong>정보공개포털 open.go.kr</strong><br>
-          ROC 소득성격 관련 유권해석 작성 시 ICI 검토 여부 · 내부 검토 자료 공개 요청<br>
-          <span class="gold">있다 → 공개 요구. 없다 → 인프라 부재 자인.</span><br>
-          어느 쪽 답변이든 — 원장이 됩니다.
-        </div>
-      </div>
-    </div>
-    <div class="step normal">
-      <div class="step-n">③</div>
-      <div>
-        <div class="step-when when-month">한 달 이내</div>
-        <div class="step-title">경정청구 제출</div>
-        <div class="step-desc">
-          홈택스 → 세금신고 → 경정청구<br>
-          첨부: ICI Primary Layout · S04b.xlsx · 증권사 배당내역<br>
-          <strong>경정청구 사유:</strong>
-          "ICI Primary Layout 기준 BOX3(ROC) 금액은
-          IRC §301(c)(2) 및 소득세법 §14 실질과세 원칙에 따라
-          배당소득에서 제외되어야 하므로
-          과다 납부한 세액의 환급을 청구합니다."
-        </div>
-      </div>
-    </div>
+- KSD 정보공개 16516499: 소득성격 결정권은 ICI에 있음
+- 소득세법 §14 실질과세 원칙</div>
+    </div></div>
+    <div class="step normal"><div class="step-n">②</div><div><div class="step-when when-month">한 달 이내</div><div class="step-title">정보공개청구 — 국세청·기재부·KSD</div><div class="step-desc"><strong>정보공개포털 open.go.kr</strong><br>ROC 유권해석 작성 시 ICI 검토 여부 · 내부 검토 자료 공개 요청<br><span class="gold">있다 → 공개 요구. 없다 → 인프라 부재 자인.</span></div></div></div>
+    <div class="step normal"><div class="step-n">③</div><div><div class="step-when when-month">한 달 이내</div><div class="step-title">경정청구 제출</div><div class="step-desc">홈택스 → 세금신고 → 경정청구<br>첨부: ICI Primary Layout · S04b.xlsx · 증권사 배당내역<br><strong>경정청구 사유:</strong> "ICI Primary Layout 기준 BOX3(ROC) 금액은 IRC §301(c)(2) 및 소득세법 §14 실질과세 원칙에 따라 배당소득에서 제외되어야 하므로 과다 납부한 세액의 환급을 청구합니다."</div></div></div>
   </div>
-
-  <div class="infobox">
-    <div class="info-tag">경정청구 대상 금액 추정 — 2024·2025귀속</div>
-    <div class="info-body">
-      2024귀속 환급 대상: <strong>약 ₩1,375,010</strong> (ICI_BOX3=7,354.27 USD)<br>
-      2025귀속 환급 대상: <strong>약 ₩3,366,800</strong> (ICI_BOX3=17,380.53 USD)<br>
-      합계: <strong>₩4,741,810</strong> · κ=100% · 106건 교차검증<br>
-      정확한 금액은 개인 보유 종목·수량에 따라 다릅니다.
-    </div>
-  </div>
-
-  <div class="warnbox">
-    <div class="warn-tag">⚠ 주의</div>
-    <div class="warn-body">
-      <strong>국세청이 기각해도 포기하지 마십시오.</strong><br>
-      기각 통지서 = 불복청구(이의신청·심판청구·행정소송) 의 시작점입니다.<br>
-      기각 사유에 ICI Primary Layout 검토 여부가 기재되지 않았다면 — 절차적 하자입니다.
-    </div>
-  </div>
+  <div class="infobox"><div class="info-tag">경정청구 대상 금액 추정</div><div class="info-body">2024귀속 환급 대상: <strong>약 ₩1,375,010</strong> (ICI_BOX3=7,354.27 USD)<br>2025귀속 환급 대상: <strong>약 ₩3,366,800</strong> (ICI_BOX3=17,380.53 USD)<br>합계: <strong>₩4,741,810</strong> · κ=100% · 106건 교차검증</div></div>
+  <div class="warnbox"><div class="warn-tag">⚠ 주의</div><div class="warn-body"><strong>국세청이 기각해도 포기하지 마십시오.</strong><br>기각 통지서 = 이의신청·심판청구·행정소송의 시작점입니다.</div></div>
 </section>
 
-<!-- CLOSING -->
-<div class="closing">
-  <div class="w">
-    <div class="cl-main">
-      세금의 족보를 추적합니다<br>
-      <strong><span class="gold">과표를 만들었다면 그 근거도 보여줄 수 있어야 합니다</span></strong><br><br>
-      오늘 — ICI 데이터를 확인하십시오<br>
-      이번 주 — 증권사에 서면 요청하십시오<br>
-      한 달 내 — 경정청구를 제출하십시오
-    </div>
-    <div class="cl-meta">
-      L2T-02 · 과표 검증 가이드 · Ledger to Tax · 2026<br>
-      2021귀속 경정청구 기한: 2026.12.31 · 국세기본법 §45의2<br>
-      ICI Primary Layout · S04b.xlsx · KSD 정보공개 16516499<br><br>
-      <strong>sebjang.github.io/tax-truth-ledger</strong>
-    </div>
+<div class="closing z">
+  <div class="cl-bg">行</div>
+  <div class="cl-inner w">
+    <div class="cl-main">세금의 족보를 추적합니다<br><strong><span class="gold">과표를 만들었다면 그 근거도 보여줄 수 있어야 합니다</span></strong><br><br>오늘 — ICI 데이터를 확인하십시오<br>이번 주 — 증권사에 서면 요청하십시오<br>한 달 내 — 경정청구를 제출하십시오</div>
+    <div class="cl-seal-wrap"><div class="cl-seal"><span>行</span></div></div>
+    <div class="cl-meta">L2T-02 · 과표 검증 가이드 · Ledger to Tax · 2026<br>2021귀속 경정청구 기한: 2026.12.31 · 국세기본법 §45의2<br><strong>sebjang.github.io/tax-truth-ledger</strong></div>
   </div>
 </div>
 
-
-<div class="print-btn-wrap"><a class="print-btn btn-light" href="L2T-02-print.html"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>&nbsp;인쇄</a></div>
+<div class="print-btn-wrap">
+  <a class="print-btn" href="L2T-02-print.html"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>&nbsp;인쇄</a>
+</div>
+<script>
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 </body>
 </html>
