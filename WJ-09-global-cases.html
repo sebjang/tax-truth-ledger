@@ -2,652 +2,416 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>해외 선진 과세 인프라 사례 — 그들은 이미 했습니다 · L2T-05</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root{
-  --white:#ffffff;--paper:#f5f0e8;--deep:#ede6d4;--code:#f0f4f8;
-  --ink:#0a0806;--body:#1a1410;--sub:#2e2620;--muted:#4a3e34;
-  --rule:#c8b89a;--faint:#e8e0cc;
-  --gold:#5c3e06;--gold2:#7a5410;--red:#7a100a;--green:#0e3e1a;
-  --usa:#003580;--can:#d52b1e;--aus:#00843d;--deu:#333;--gbr:#012169;--eu:#003399;--oecd:#005c8e;
-  --mono:#1a1a2e;
+  --void:#050403;
+  --deep:#0c0906;
+  --surface:#141008;
+  --mid:#1e170e;
+  --ink:#f0e8d8;
+  --sub:rgba(240,232,216,.62);
+  --dim:rgba(240,232,216,.35);
+  --ghost:rgba(240,232,216,.18);
+  --rule:rgba(240,232,216,.1);
+  --gold:#c9a84c;
+  --gold-hi:#e8c97a;
+  --red:#c0392b;
+  --red-hi:#e88070;
+  --green:#27ae60;
+  --green-hi:#5ddb8a;
+  --usa:#4a6fa5;
+  --can:#c0392b;
+  --aus:#27ae60;
+  --deu:#888;
+  --gbr:#2855a0;
+  --eu:#2855a0;
+  --oecd:#5a8fca;
 }
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{font-size:16px;scroll-behavior:smooth;}
-body{background:var(--white);color:var(--body);font-family:'Noto Sans KR',sans-serif;font-weight:300;line-height:1.9;overflow-x:hidden;}
-@media screen{body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:repeating-linear-gradient(180deg,transparent 0,transparent 47px,rgba(200,184,154,.12) 47px,rgba(200,184,154,.12) 48px);}}
-.w{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:0 2.5rem;}
+body{background:var(--void);color:var(--ink);font-family:'Noto Sans KR',sans-serif;font-weight:300;line-height:1.9;overflow-x:hidden;}
 
-.nav{background:rgba(245,240,232,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:.75rem 2.5rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:10;}
-.nav a{font-family:'Noto Serif KR',serif;font-size:.88rem;font-weight:700;color:var(--ink);text-decoration:none;}
-.nav-id{font-size:.62rem;letter-spacing:.25em;color:var(--muted);}
+/* 필름 그레인 */
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.05'/%3E%3C/svg%3E");
+  opacity:1;mix-blend-mode:overlay;}
+
+.z{position:relative;z-index:1;}
+.w{max-width:900px;margin:0 auto;padding:0 2.8rem;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:.9rem 2.8rem;display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid var(--rule);
+  background:rgba(5,4,3,.85);backdrop-filter:blur(20px);}
+.nav a{font-family:'Cormorant Garamond',serif;font-size:.9rem;font-weight:600;color:var(--gold);text-decoration:none;}
+.nav a:hover{color:var(--gold-hi);}
+.nav-id{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--ghost);letter-spacing:.12em;}
 
 /* HERO */
-.hero{padding:4.5rem 2.5rem 3.5rem;border-bottom:2px solid var(--ink);position:relative;overflow:hidden;}
-.hero-bg{font-family:'Cormorant Garamond',serif;font-size:clamp(10rem,24vw,18rem);font-weight:700;color:rgba(10,8,6,.04);position:absolute;right:-2rem;top:50%;transform:translateY(-50%);line-height:1;pointer-events:none;user-select:none;}
-.hero-tag{font-family:'Cormorant Garamond',serif;font-size:.72rem;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;opacity:0;animation:up .6s .1s forwards;}
-.hero-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.8rem,5vw,3.2rem);font-weight:900;color:var(--ink);line-height:1.2;margin-bottom:.6rem;opacity:0;animation:up .8s .3s forwards;}
-.hero-title .gold{color:var(--gold);}
-.hero-title .red{color:var(--red);}
-.hero-rule{width:44px;height:3px;background:var(--ink);margin-bottom:1.6rem;opacity:0;animation:up .6s .4s forwards;}
-.hero-desc{max-width:600px;font-size:.92rem;color:var(--sub);line-height:1.9;opacity:0;animation:up .7s .5s forwards;}
-.hero-desc strong{color:var(--ink);}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:8rem 0 5rem;position:relative;overflow:hidden;
+  border-bottom:1px solid var(--rule);}
 
-/* SUMMARY TABLE */
-.summary{margin:2.5rem 0;border:2px solid var(--ink);}
-.sum-head{display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:0;background:var(--ink);padding:.7rem 1rem;}
-.sum-head div{font-family:'Cormorant Garamond',serif;font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(245,240,232,.6);font-weight:400;}
-.sum-row{display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:0;padding:.7rem 1rem;border-bottom:1px solid var(--faint);}
-.sum-row:last-child{border-bottom:none;}
-.sum-flag{font-size:1.1rem;line-height:1;}
-.sum-item{font-size:.8rem;color:var(--sub);line-height:1.6;}
-.sum-item strong{color:var(--ink);display:block;font-weight:700;}
-.sum-item.ok strong{color:var(--green);}
-.sum-item.gap strong{color:var(--red);}
+/* 히어로 배경 레이어 */
+.hero-glow{position:absolute;width:800px;height:800px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,.07) 0%,transparent 65%);
+  top:50%;left:50%;transform:translate(-50%,-60%);pointer-events:none;
+  animation:pulse 8s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:translate(-50%,-60%) scale(1);opacity:.7;}50%{transform:translate(-50%,-58%) scale(1.08);opacity:1;}}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(240,232,216,.012) 3px,rgba(240,232,216,.012) 4px);}
+.hero-kanji{position:absolute;right:-3rem;top:50%;transform:translateY(-52%);
+  font-family:'Noto Serif KR',serif;font-size:clamp(16rem,35vw,28rem);font-weight:900;
+  color:rgba(201,168,76,.04);line-height:1;pointer-events:none;user-select:none;letter-spacing:-.05em;}
+.hero-accent{position:absolute;left:2.8rem;top:8rem;bottom:5rem;width:2px;
+  background:linear-gradient(180deg,transparent,var(--gold) 15%,var(--gold) 85%,transparent);opacity:.35;}
 
-/* CASE SECTION */
-.sec{padding:4rem 0;border-top:1px solid var(--rule);}
-.sec-flag{display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem;}
+/* 히어로 콘텐츠 */
+.hero-inner{padding-left:1.8rem;}
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.45em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.8rem;opacity:0;animation:fadeUp .7s .2s forwards;}
+.hero-title{font-family:'Noto Serif KR',serif;font-size:clamp(2.8rem,8vw,6.5rem);font-weight:900;
+  line-height:.98;letter-spacing:-.04em;margin-bottom:.8rem;opacity:0;animation:fadeUp .9s .4s forwards;}
+.hero-title .line1{display:block;color:var(--ink);}
+.hero-title .line2{display:block;color:transparent;-webkit-text-stroke:1.5px var(--gold);}
+.hero-title .line3{display:block;color:transparent;-webkit-text-stroke:1.5px var(--red-hi);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,2.5vw,1.6rem);font-style:italic;
+  color:var(--sub);margin-bottom:2.5rem;opacity:0;animation:fadeUp .7s .55s forwards;}
+.hero-rule{display:flex;align-items:center;gap:1.2rem;margin-bottom:2rem;opacity:0;animation:fadeUp .6s .6s forwards;}
+.hr-line{height:1px;flex:1;background:linear-gradient(90deg,var(--gold),transparent);}
+.hr-text{font-family:'Cormorant Garamond',serif;font-size:.62rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+.hero-desc{max-width:560px;font-family:'Noto Serif KR',serif;font-size:clamp(.9rem,2vw,1.05rem);
+  color:var(--sub);line-height:2;opacity:0;animation:fadeUp .8s .75s forwards;}
+.hero-desc strong{color:var(--ink);font-weight:700;}
+.hero-desc .red{color:var(--red-hi);}
+
+/* 스크롤 힌트 */
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp .6s 1.2s forwards;}
+.sh-text{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ghost);}
+.sh-line{width:1px;height:40px;background:linear-gradient(180deg,var(--dim),transparent);animation:scrollAnim 2s ease-in-out infinite;}
+@keyframes scrollAnim{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}100%{transform:scaleY(0);transform-origin:bottom;}}
+
+/* 섹션 */
+.sec{padding:4.5rem 0;border-top:1px solid var(--rule);}
+.sec-flag{display:flex;align-items:center;gap:.9rem;margin-bottom:.5rem;}
 .flag-em{font-size:1.8rem;line-height:1;}
-.sec-tag{font-family:'Cormorant Garamond',serif;font-size:.68rem;letter-spacing:.5em;text-transform:uppercase;color:var(--muted);}
-.sec-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.3rem,3.2vw,1.9rem);font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:1.2rem;}
-.sec-title .gold{color:var(--gold);}
-.sec-title .red{color:var(--red);}
-.sec-title .green{color:var(--green);}
-.prose{font-size:.9rem;color:var(--body);line-height:1.95;margin-bottom:1rem;max-width:720px;}
+.sec-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.38em;text-transform:uppercase;color:var(--ghost);}
+.sec-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.3rem,3.2vw,1.9rem);font-weight:700;
+  color:var(--ink);line-height:1.3;margin-bottom:1.6rem;}
+.sec-title .gold{color:var(--gold-hi);}
+.sec-title .red{color:var(--red-hi);}
+.sec-title .green{color:var(--green-hi);}
+.prose{font-size:.9rem;color:var(--sub);line-height:2;margin-bottom:1rem;max-width:720px;}
 .prose strong{color:var(--ink);font-weight:700;}
-.prose .red{color:var(--red);}
-.prose .gold{color:var(--gold2);}
-.prose .green{color:var(--green);}
+.prose .red{color:var(--red-hi);}
+.prose .gold{color:var(--gold-hi);}
+.prose .green{color:var(--green-hi);}
 
-/* CASE DETAIL */
-.case-detail{background:var(--paper);border-left:4px solid var(--gold);padding:2rem 2rem;margin:1.5rem 0;position:relative;overflow:hidden;}
-.case-detail.usa-c{border-left-color:var(--usa);}
-.case-detail.can-c{border-left-color:var(--can);}
-.case-detail.aus-c{border-left-color:var(--aus);}
-.case-detail.deu-c{border-left-color:var(--deu);}
-.case-detail.gbr-c{border-left-color:var(--gbr);}
-.case-detail.eu-c{border-left-color:var(--eu);}
-.case-detail.oecd-c{border-left-color:var(--oecd);}
-.cd-year{font-family:'Cormorant Garamond',serif;font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
-.cd-title{font-family:'Noto Serif KR',serif;font-size:.98rem;font-weight:700;color:var(--ink);margin-bottom:.6rem;}
-.cd-body{font-size:.84rem;color:var(--sub);line-height:1.85;}
+/* 국가별 비교표 */
+.summary{margin:2rem 0;border:1px solid var(--rule);overflow-x:auto;opacity:0;animation:fadeUp .7s .2s forwards;}
+.sum-head{display:grid;grid-template-columns:64px 1fr 1fr 1fr;background:rgba(240,232,216,.07);padding:.7rem 1rem;border-bottom:1px solid var(--rule);}
+.sum-head div{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ghost);}
+.sum-row{display:grid;grid-template-columns:64px 1fr 1fr 1fr;padding:.75rem 1rem;border-bottom:1px solid rgba(240,232,216,.06);}
+.sum-row:last-child{border-bottom:none;}
+.sum-row.kr{background:rgba(192,57,43,.06);}
+.sum-flag{font-size:1.1rem;line-height:1.5;}
+.sum-item{font-size:.78rem;color:var(--dim);line-height:1.65;}
+.sum-item strong{display:block;font-weight:700;}
+.sum-item.ok strong{color:var(--green-hi);}
+.sum-item.gap strong{color:var(--red-hi);}
+
+/* 케이스 디테일 카드 */
+.case-detail{background:var(--surface);padding:2.2rem 2rem;margin:1.5rem 0;
+  position:relative;overflow:hidden;transition:background .3s;}
+.case-detail:hover{background:var(--mid);}
+.case-detail.usa-c{border-left:3px solid var(--usa);}
+.case-detail.can-c{border-left:3px solid var(--can);}
+.case-detail.aus-c{border-left:3px solid var(--aus);}
+.case-detail.deu-c{border-left:3px solid var(--deu);}
+.case-detail.gbr-c{border-left:3px solid var(--gbr);}
+.case-detail.eu-c {border-left:3px solid var(--eu);}
+.case-detail.oecd-c{border-left:3px solid var(--oecd);}
+.cd-year{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--ghost);margin-bottom:.4rem;}
+.cd-title{font-family:'Noto Serif KR',serif;font-size:.98rem;font-weight:700;color:var(--ink);margin-bottom:.5rem;}
+.cd-body{font-size:.84rem;color:var(--sub);line-height:1.9;}
 .cd-body strong{color:var(--ink);font-weight:700;}
-.cd-body .green{color:var(--green);}
-.cd-body .red{color:var(--red);}
-.cd-effect{margin-top:.8rem;padding-top:.7rem;border-top:1px solid var(--rule);font-family:'Noto Serif KR',serif;font-size:.82rem;font-weight:700;}
-.case-detail.usa-c .cd-effect{color:var(--usa);}
-.case-detail.can-c .cd-effect{color:var(--can);}
-.case-detail.aus-c .cd-effect{color:var(--aus);}
-.case-detail.deu-c .cd-effect{color:var(--deu);}
-.case-detail.gbr-c .cd-effect{color:var(--gbr);}
-.case-detail.eu-c .cd-effect{color:var(--eu);}
+.cd-body .green{color:var(--green-hi);}
+.cd-body .red{color:var(--red-hi);}
+.cd-body .gold{color:var(--gold-hi);}
+.cd-effect{margin-top:.8rem;padding-top:.7rem;border-top:1px solid var(--rule);
+  font-family:'Noto Serif KR',serif;font-size:.82rem;font-weight:700;}
+.case-detail.usa-c .cd-effect{color:#7a9fd4;}
+.case-detail.can-c .cd-effect{color:var(--red-hi);}
+.case-detail.aus-c .cd-effect{color:var(--green-hi);}
+.case-detail.deu-c .cd-effect{color:#aaa;}
+.case-detail.gbr-c .cd-effect,.case-detail.eu-c .cd-effect{color:#7a9fd4;}
 .case-detail.oecd-c .cd-effect{color:var(--oecd);}
 
-/* CODEBLOCK */
-.codeblock{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--mono);background:var(--code);border:1px solid var(--rule);border-left:4px solid var(--gold);padding:1.3rem 1.5rem;margin:1rem 0;overflow-x:auto;line-height:1.85;white-space:pre-wrap;}
-.codeblock .ok{color:var(--green);font-weight:700;}
-.codeblock .no{color:var(--red);font-weight:700;}
-.codeblock .yr{color:var(--gold2);font-weight:700;}
+/* 코드블록 */
+.codeblock{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink);
+  background:rgba(0,0,0,.35);border:1px solid var(--rule);border-left:3px solid var(--gold);
+  padding:1.4rem 1.6rem;margin:1.5rem 0;overflow-x:auto;line-height:1.9;white-space:pre-wrap;}
+.codeblock .ok{color:var(--green-hi);font-weight:700;}
+.codeblock .no{color:var(--red-hi);font-weight:700;}
+.codeblock .yr{color:var(--gold-hi);font-weight:700;}
 
-/* LESSON BOX */
-.lesson{border:2px solid var(--ink);background:var(--deep);padding:2rem;margin:2rem 0;position:relative;overflow:hidden;}
-.lesson::before{content:'∴';font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:700;color:rgba(10,8,6,.07);position:absolute;right:1rem;bottom:-.3rem;line-height:1;pointer-events:none;}
-.lsn-tag{font-family:'Cormorant Garamond',serif;font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
-.lsn-body{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--ink);line-height:1.75;position:relative;}
-.lsn-body .gold{color:var(--gold2);}
-.lsn-body .red{color:var(--red);}
-.lsn-body .green{color:var(--green);}
+/* 레슨 박스 */
+.lesson{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--gold);
+  padding:2rem;margin:2rem 0;position:relative;overflow:hidden;}
+.lesson::after{content:'∴';font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:700;
+  color:rgba(201,168,76,.07);position:absolute;right:1rem;bottom:-.3rem;line-height:1;pointer-events:none;}
+.lsn-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.lsn-body{font-family:'Noto Serif KR',serif;font-size:.96rem;font-weight:700;color:var(--ink);line-height:1.8;position:relative;}
+.lsn-body .gold{color:var(--gold-hi);}
+.lsn-body .red{color:var(--red-hi);}
+.lsn-body .green{color:var(--green-hi);}
+
+/* reveal 애니메이션 */
+.reveal{opacity:0;transform:translateY(22px);
+  transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94);}
+.reveal.visible{opacity:1;transform:translateY(0);}
 
 /* CLOSING */
-.closing{background:var(--ink);color:#f5f0e8;padding:5rem 2.5rem;text-align:center;position:relative;overflow:hidden;}
-.closing::before{content:'先進';font-family:'Noto Serif KR',serif;font-size:14rem;font-weight:900;color:rgba(255,255,255,.04);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;line-height:1;}
-.cl-main{font-family:'Noto Serif KR',serif;font-size:clamp(1rem,2.5vw,1.5rem);font-weight:400;line-height:2;color:rgba(245,240,232,.7);margin-bottom:1.5rem;position:relative;}
-.cl-main strong{color:#f5f0e8;}
-.cl-main .gold{color:#d4aa40;}
-.cl-meta{font-size:.68rem;color:rgba(245,240,232,.3);letter-spacing:.1em;line-height:2.4;position:relative;}
-.cl-meta strong{color:rgba(245,240,232,.6);}
+.closing{background:var(--deep);padding:7rem 0;text-align:center;position:relative;overflow:hidden;border-top:1px solid var(--rule);}
+.closing::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(201,168,76,.06) 0%,transparent 70%);}
+.cl-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Noto Serif KR',serif;font-size:20rem;font-weight:900;
+  color:rgba(201,168,76,.03);white-space:nowrap;pointer-events:none;line-height:1;}
+.cl-inner{position:relative;z-index:1;}
+.cl-main{font-family:'Noto Serif KR',serif;font-size:clamp(1rem,2.5vw,1.5rem);
+  font-weight:400;line-height:2.1;color:var(--sub);margin-bottom:2rem;}
+.cl-main strong{color:var(--ink);}
+.cl-main .gold{color:var(--gold-hi);}
+.cl-main .red{color:var(--red-hi);}
+.cl-meta{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--ghost);letter-spacing:.1em;line-height:2.5;}
+.cl-meta strong{color:var(--dim);}
 
-hr{border:none;border-top:1px solid var(--rule);}
-hr.heavy{border-top:2px solid var(--ink);}
+/* 인쇄 버튼 */
+.print-btn-wrap{position:fixed;bottom:2rem;right:2rem;z-index:300;}
+.print-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.3rem;
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(5,4,3,.9);color:var(--sub);border:1px solid var(--rule);text-decoration:none;
+  backdrop-filter:blur(10px);transition:color .2s,border-color .2s;}
+.print-btn:hover{color:var(--ink);border-color:var(--gold);}
 
-@keyframes up{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
-@media(max-width:620px){.sum-head,.sum-row{grid-template-columns:50px 1fr 1fr;}.sum-head div:nth-child(4),.sum-row .sum-item:last-child{display:none;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 
+@media(max-width:640px){.w{padding:0 1.4rem;}.hero{padding:7rem 0 4rem;}.hero-accent{left:1.4rem;}.hero-inner{padding-left:1rem;}.sum-head,.sum-row{grid-template-columns:44px 1fr 1fr;}}
+
+/* ══ @media print ══════════════════════════════════ */
 @media print{
-  /* opacity:0 요소 인쇄 리셋 */
-  .04);position:absolute;right:-2rem;top:50%;transform:translateY(-50%);line-height:1;pointer-events:none;user-select:none;
-  /* 안전한 opacity + 텍스트 리셋 */
-  body,p,h1,h2,h3,h4,div,span,a,li,td,th,
-  section,header,footer,nav,article,aside{
-    color:#000000!important;
-    animation:none!important;
-  }
-  /* opacity:0 → 1 (개별 명시) */
-  .hero-tag,.hero-title,.hero-rule,.hero-desc,
-  .cover-eyebrow,.cover-h1,.cover-h2,.cover-rule,.cover-thesis,.axes,
-  .cover-super,.cover-sub,.cover-divider,.cover-identity,
-  .urgency,.rm-label,.docs-label{
-    opacity:1!important;
-    animation:none!important;
-  }
-
-}
-.hero-tag,
-  .hero-title,
-  .hero-rule,
-  .hero-desc{
-    opacity:1!important;
-    animation:none!important;
-  }
-
-  /* 전체 텍스트 검정 */
-  body,body *{color:#000000!important;}
-
-  /* 챕터 헤더 유지 */
-  .chapter,.chapter *{background:#000000!important;color:#ffffff!important;}
-  .ch-title .gold{color:#f0e0a0!important;}
-  .ch-title .red{color:#ffd0c0!important;}
-
-  /* ── 최우선: opacity·animation 전체 리셋 ── */
-  /* 전체 텍스트 검정 */
-  body *{color:#000000!important;}
-  /* 예외: 검정 배경 요소 */
-  .chapter,.chapter *,.closing.dark-close,.closing.dark-close *{
-    background:#0a0806!important;color:#ffffff!important;
-  }
-
-  body{background:white!important;color:#0a0806!important;font-size:9.5pt;}
-  body::before{display:none!important;}
-  .nav{background:white!important;border-bottom:1px solid #c8b89a;}
-  .hero-bg{display:none;}
-  .hero-tag,.hero-title,.hero-rule,.hero-desc{opacity:1!important;animation:none!important;}
-  .sec{page-break-inside:avoid;padding:1cm 0;}
-  .case-detail,.codeblock,.lesson,.summary{page-break-inside:avoid;}
-  .summary,.case-detail,.lesson{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .closing{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;animation:none!important;transition:none!important;}
+  body,body *{color:#000000!important;background:transparent!important;}
+  body{background:white!important;font-size:9pt;}
+  body::after,.hero-glow,.hero::before,.hero-kanji,.hero-accent,.scroll-hint,.cl-bg,.closing::before{display:none!important;}
+  .nav,.print-btn-wrap{display:none!important;}
+  .hero{min-height:unset;padding:2cm 0 1.5cm;border-bottom:2px solid #000;}
+  .hero-eyebrow,.hero-title,.hero-sub,.hero-rule,.hero-desc,.summary{opacity:1!important;}
+  .hero-title .line2{-webkit-text-stroke:1.5px #000;}
+  .hero-title .line3{-webkit-text-stroke:1.5px #c0392b;}
+  .sec{page-break-inside:avoid;padding:1cm 0;border-top:1px solid #c8b89a;}
+  .sec-flag,.sec-title{page-break-after:avoid;}
+  .case-detail{background:#f5f0e8!important;border-color:#c8b89a!important;page-break-inside:avoid;}
+  .case-detail.usa-c{border-left-color:#4a6fa5!important;}
+  .case-detail.can-c{border-left-color:#c0392b!important;}
+  .case-detail.aus-c{border-left-color:#27ae60!important;}
+  .case-detail.gbr-c,.case-detail.eu-c{border-left-color:#2855a0!important;}
+  .case-detail.oecd-c{border-left-color:#5a8fca!important;}
+  .codeblock{background:#eeeeee!important;border-left-color:#000!important;}
+  .lesson{background:#f5f0e8!important;border-left-color:#7a5410!important;}
+  .summary{background:white!important;}
+  .sum-head{background:#eeeeee!important;}
+  .sum-row.kr{background:#fff0ee!important;}
+  .closing{background:#0a0806!important;padding:1.5cm 0;}
+  .cl-main,.cl-meta{color:#f5f0e8!important;}
+  .cl-main strong{color:white!important;}
+  .reveal{opacity:1!important;transform:none!important;}
   .w{max-width:100%;padding:0;}
-  @page{margin:2cm 2.2cm;}
-
-  /* ── 16:1 흑백 대조비 강제 ──────────────────────────── */
-  body,p,.prose,.sec,.w,
-  .step-desc,.art-desc,.dm-desc,.rf-body,.crit-q,
-  .crit-l2t,.crit-ri,.alt-desc,.dmg-causes,
-  .fnd-sub,.info-body,.warn-body,.ins-body,
-  .rm-items,.acc-body,.voice-text,.cd-body,
-  .tl-desc,.comp-body,.cmp-body,.res-docs,
-  .bar-key,.stat-key,.cs-key,.grade-desc,
-  .sum-item,.ax-flow,.dmg-flow{
-    color:#000000!important;
-  }
-  /* 강조 제목류 */
-  strong,.step-title,.art-title,.dm-title,.rf-title,
-  .sec-title,.phase-title,.cover-main,.hero-title,
-  .cover-h1,.cd-title,.tl-title,.lsn-body,
-  .alt-title,.res-title,.dmg-title,.ax-title,
-  .grade-label,.crit-title,.ch-title{
-    color:#000000!important;
-  }
-  /* 태그·레이블류 (중간 어두운 색 → 검정) */
-  .sec-tag,.phase-tag,.sec-n,.ch-n,.rm-phase,
-  .cover-tag,.hero-tag,.nav-id,.hb-brand,
-  .doc-badge,.dmg-tag,.res-tag,.crit-hanja,
-  .ax-tag,.tb-title,.tb-date,.cover-eyebrow,
-  .cd-year,.lsn-tag,.info-tag,.warn-tag,
-  .tmpl-tag,.acc-tag,.voice-who,.seal-label,
-  .cover-h2,.hero-desc,.cover-thesis,
-  .prose,.sub,.muted,.ghost{
-    color:#000000!important;
-  }
-  /* 색상 강조 (gold/red/green) → 모두 검정 */
-  .prose .red,.prose .gold,.prose .green,
-  .step-desc .red,.step-desc .gold,.step-desc .green,
-  .art-desc .red,.art-desc .gold,
-  .dm-desc,.rf-body .green,.rf-body .gold,
-  .cd-body .green,.cd-body .red,.cd-body .gold,
-  .tl-desc .green,.tl-desc .red,
-  .lsn-body .gold,.lsn-body .red,.lsn-body .green,
-  .codeblock .ok,.codeblock .no,.codeblock .yr,
-  .template .lbl,.template .fill,
-  .dmg.l2t .dmg-flow .hi,.dmg.ri .dmg-flow .hi,
-  .axis.l2t .ax-flow .hi,.axis.ri .ax-flow .hi,
-  .rf-now,.rf-after,.dm-n,.art-n,
-  .cover-thesis .red,.cover-thesis em,
-  .cover-h1 .gold,.cover-h1 .red,
-  .sec-title .gold,.sec-title .red,.sec-title .green,
-  .ch-title .gold,.ch-title .red,
-  .cl-main .gold,.cl-main .red,
-  .closing-stmts .gold,.closing-stmts .red,
-  .tri-ko,.tri-ko strong,.tri-en{
-    color:#000000!important;
-  }
-  /* 검정 배경 챕터/closing → 강제 유지 */
-  .chapter,.chapter *{
-    background:#0a0806!important;
-    color:#ffffff!important;
-  }
-  /* 단, 챕터 내 gold/red 강조는 밝게 */
-  .chapter .ch-title .gold{color:#f2e6c7!important;}
-  .chapter .ch-title .red {color:#f9e1dd!important;}
-  /* closing — 흰 배경으로 전환 후 검정 텍스트 */
-  .closing,.final{
-    background:white!important;
-    color:#000000!important;
-  }
-  .closing *,.final *{color:#000000!important;}
-  /* 인장 원형 테두리 — 명확히 */
-  .seal.el .seal-circle,.seal-circle.gold-s{border:2px solid #000000!important;}
-  .seal.en .seal-circle,.seal-circle.both-s{border:2px solid #000000!important;}
-  .seal.er .seal-circle,.seal-circle.red-s {border:2px solid #000000!important;}
-  .seal-char,.seal .seal-char,
-  .seal.el .seal-char,.seal.en .seal-char,.seal.er .seal-char,
-  .cl-seal span{color:#000000!important;}
-  /* 패널 배경 유지 */
-  .voice,.accuse,.accusation,.finding,.infobox,.warnbox,
-  .axis,.dmg,.rm,.grade,.alt,.step,.rf,.cmp,.comp-panel,
-  .case-detail,.lesson,.cover-identity,.axes .axis,
-  .res,.res-card,.dmg-grid .dmg,.grade-grid .grade{
-    background:#f5f0e8!important;
-    border-color:#999999!important;
-  }
-  /* 등급 테두리 색상 — 검정 구분 */
-  .grade.g-green,.grade.green-g{border-top:4px solid #000000!important;}
-  .grade.g-gold,.grade.yellow-g {border-top:4px solid #555555!important;}
-  .grade.g-red,.grade.red-g     {border-top:4px solid #000000!important;}
-  /* 등급 기호 */
-  .grade-sym{color:#000000!important;}
-  /* 코드블록 */
-  .codeblock,.template{
-    background:#f0f0f0!important;
-    border-left-color:#000000!important;
-    color:#000000!important;
-  }
-  /* 바 차트 */
-  .bar-fill,.stat-val,.cs-val,.met-val{color:#000000!important;}
-  .bar-fill.peak,.bar-fill.high,.bar-fill.normal,.bar-fill.low{
-    background:#cccccc!important;
-  }
-  /* 표 */
-  .dtbl td.hi,.dtbl td.ok,.dtbl td.gold,
-  .sum-item.ok strong,.sum-item.bad strong,
-  .dmg.l2t .dmg-right,.dmg.ri .dmg-right,
-  .axis.l2t .ax-tag,.axis.ri .ax-tag,
-  .dmg.l2t .dmg-tag,.dmg.ri .dmg-tag{
-    color:#000000!important;
-  }
-  /* 링크 색상 */
-  a{color:#000000!important;text-decoration:underline;}
-  /* 배경 패턴 제거 */
-  body::before,body::after{display:none!important;}
-
-}
-
-/* ── 인쇄 버튼 ─────────────────────────────────────── */
-.print-btn-wrap{
-  position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;
-}
-.print-btn{
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.6rem 1.2rem;
-  font-family:'Noto Sans KR',sans-serif;
-  font-size:.72rem;font-weight:500;letter-spacing:.05em;
-  border:none;cursor:pointer;text-decoration:none;
-  transition:opacity .15s,transform .15s;
-  box-shadow:0 2px 8px rgba(0,0,0,.25);
-}
-.print-btn:hover{opacity:.82;transform:translateY(-2px);}
-.btn-dark{background:#0a0806;color:#f5f0e8;}
-.btn-dark svg{stroke:#f5f0e8;}
-.btn-light{background:#f5f0e8;color:#0a0806;border:1px solid #c8b89a;}
-.btn-light svg{stroke:#0a0806;}
-@media print{.print-btn-wrap{display:none!important;}}
-
-@media print{
-  /* opacity·animation 리셋 (개별 선택자) */
-  .hero-tag,.hero-title,.hero-rule,.hero-desc,
-  .cover-eyebrow,.cover-h1,.cover-h2,.cover-rule,
-  .cover-thesis,.axes,.cover-super,.cover-h1,
-  .cover-sub,.cover-divider,.cover-identity,
-  .urgency,.docs-label,.rm-label,
-  .stat,.cs,.metric,.bar-row{
-    opacity:1!important;animation:none!important;
-  }
-  /* 전체 */
-  body{background:white!important;font-size:9.5pt;}
-  body,p,h1,h2,h3,div,span,li,td,th,
-  section,header,article,nav,footer{color:#000000!important;}
-  body::before,body::after{display:none!important;}
-  /* 패널 */
-  .axis,.dmg,.grade,.alt,.res,.crit,
-  .voice,.accuse,.accusation,.finding,
-  .infobox,.warnbox,.case-detail,.lesson,
-  .cover-identity,.step,.rf,.comp-panel,.cmp{
-    background:#f5f0e8!important;border-color:#888!important;
-  }
-  .axes,.dmg-grid,.grades,.res-grid{background:#b0a080!important;}
-  /* 챕터헤더 */
-  .chapter,.chapter *{background:#000!important;color:#fff!important;}
-  .chapter .ch-title .gold{color:#f0e0a0!important;}
-  .chapter .ch-title .red{color:#ffd0c0!important;}
-  /* 클로징·피날레 */
-  .closing,.final{background:white!important;}
-  .closing *,.final *{color:#000!important;}
-  .closing-bg-hanja,.cover-bg,.cover-bg-hanja,
-  .hero-bg,.hero-bg-hanja{display:none!important;}
-  /* 인장 */
-  .seal-circle,.seal .seal-circle{border:2px solid #000!important;}
-  .seal-char,.seal .seal-char{color:#000!important;}
-  /* 코드블록·표 */
-  .codeblock,.template{background:#eee!important;color:#000!important;}
-  .bar-fill{background:#bbb!important;}
-  /* 링크 */
-  a{color:#000!important;text-decoration:underline;}
-  /* 페이지 */
   @page{margin:2cm 2.5cm;size:A4;}
-  .chapter{page-break-before:always;}
-  .chapter:first-of-type{page-break-before:avoid;}
-  .sec,.phase{page-break-inside:avoid;}
-  .closing{page-break-inside:avoid;}
-  .print-btn-wrap{display:none!important;}
-  .w{max-width:100%;padding:0;}
-  *{animation:none!important;transition:none!important;}
+  .closing{page-break-before:always;page-break-inside:avoid;}
 }
 </style>
 </head>
 <body>
 
-<nav class="nav">
+<nav class="nav z">
   <a href="index.html">← 원장(元帳) feat. 원금(元金)</a>
   <span class="nav-id">L2T-05 · 해외 선진 과세 인프라 사례 · 2026</span>
 </nav>
 
-<div class="hero w">
-  <div class="hero-bg">先</div>
-  <div class="hero-tag">L2T-05 · 해외 선진 과세 인프라 사례 · Global Best Practices · 2026</div>
-  <div class="hero-title">그들은 이미 <span class="gold">했습니다</span><br>한국은 <span class="red">언제 합니까</span></div>
-  <div class="hero-rule"></div>
-  <div class="hero-desc">
-    미국은 1954년에 IRC §301(c)(2)를 만들었습니다.<br>
-    1993년부터 ICI Primary Layout을 공시했습니다.<br>
-    2012년에 Form 1099-B로 취득원가 추적을 의무화했습니다.<br>
-    <strong>한국은 72년이 지났는데도 아직입니다.</strong>
+<section class="hero z">
+  <div class="hero-glow"></div>
+  <div class="hero-kanji">先</div>
+  <div class="hero-accent"></div>
+  <div class="w">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">L2T-05 · 해외 선진 과세 인프라 사례 · Global Best Practices · 2026</div>
+      <h1 class="hero-title">
+        <span class="line1">그들은 이미</span>
+        <span class="line2">했습니다</span>
+        <span class="line3">한국은 언제 합니까</span>
+      </h1>
+      <div class="hero-sub">72년의 격차 — 미국·캐나다·호주·독일·영국·OECD</div>
+      <div class="hero-rule"><div class="hr-line"></div><span class="hr-text">No Tax Without Ledger</span><div class="hr-line"></div></div>
+      <p class="hero-desc">
+        미국은 1954년에 IRC §301(c)(2)를 만들었습니다.<br>
+        1993년부터 ICI Primary Layout을 공시했습니다.<br>
+        2012년에 Form 1099-B로 취득원가 추적을 의무화했습니다.<br>
+        <strong><span class="red">한국은 72년이 지났는데도 아직입니다.</span></strong>
+      </p>
+    </div>
   </div>
-</div>
+  <div class="scroll-hint"><span class="sh-text">scroll</span><div class="sh-line"></div></div>
+</section>
 
-<hr class="heavy">
-
-<!-- 국가별 비교표 -->
-<section class="sec w">
-  <div class="sec-tag">개요 · 7개국 비교 매트릭스</div>
+<!-- 비교 매트릭스 -->
+<section class="sec w z reveal">
+  <div class="sec-flag"><div class="flag-em">🌐</div><div class="sec-tag">개요 · 7개국 비교 매트릭스</div></div>
   <h2 class="sec-title">한눈에 보는 <span class="gold">72년의 격차</span></h2>
-
   <div class="summary">
-    <div class="sum-head">
-      <div>국가</div>
-      <div>ROC 과세 제도</div>
-      <div>취득원가 추적(BT)</div>
-      <div>한국 도입 격차</div>
-    </div>
-    <div class="sum-row">
-      <div class="sum-flag">🇺🇸</div>
-      <div class="sum-item ok"><strong>IRC §301(c)(2) — 1954년</strong>ROC = 취득원가 감액, 비과세</div>
-      <div class="sum-item ok"><strong>Form 1099-B — 2012년</strong>증권사 취득원가 의무 보고</div>
-      <div class="sum-item gap"><strong>72년 격차</strong>한국 미도입</div>
-    </div>
-    <div class="sum-row">
-      <div class="sum-flag">🇨🇦</div>
-      <div class="sum-item ok"><strong>T3/T5 분류 — 1970년대~</strong>ROC 자동 분류 공시</div>
-      <div class="sum-item ok"><strong>CRA ACB 추적</strong>조정취득원가 자동 계산</div>
-      <div class="sum-item gap"><strong>50년+ 격차</strong></div>
-    </div>
-    <div class="sum-row">
-      <div class="sum-flag">🇦🇺</div>
-      <div class="sum-item ok"><strong>Cost Base Adjustment</strong>ITAA 1997 §104-155</div>
-      <div class="sum-item ok"><strong>ATO — 취득원가 자동 조정</strong>매도 시 CGT 자동 계산</div>
-      <div class="sum-item gap"><strong>30년+ 격차</strong></div>
-    </div>
-    <div class="sum-row">
-      <div class="sum-flag">🇩🇪</div>
-      <div class="sum-item ok"><strong>Kapitalertragsteuer 구분</strong>소득성격 분류 의무</div>
-      <div class="sum-item ok"><strong>Freistellungsauftrag</strong>납세자 원장 직접 관리</div>
-      <div class="sum-item gap"><strong>30년+ 격차</strong></div>
-    </div>
-    <div class="sum-row">
-      <div class="sum-flag">🇬🇧</div>
-      <div class="sum-item ok"><strong>HMRC — 투자소득 분류</strong>소득성격 공시 의무</div>
-      <div class="sum-item ok"><strong>CIGA 2007 — 취득원가</strong>자동 추적 의무화</div>
-      <div class="sum-item gap"><strong>20년+ 격차</strong></div>
-    </div>
-    <div class="sum-row">
-      <div class="sum-flag">🇪🇺</div>
-      <div class="sum-item ok"><strong>PRIIP KID 공시 의무</strong>투자상품 소득성격 공시</div>
-      <div class="sum-item ok"><strong>MiFID II — 투자자 보호</strong>데이터 투명성 의무</div>
-      <div class="sum-item gap"><strong>10년+ 격차</strong></div>
-    </div>
-    <div class="sum-row" style="background:rgba(122,16,10,.04);">
-      <div class="sum-flag">🇰🇷</div>
-      <div class="sum-item gap"><strong style="color:var(--red)">없음</strong>유권해석 한 줄</div>
-      <div class="sum-item gap"><strong style="color:var(--red)">없음</strong>취득원가 추적 부재</div>
-      <div class="sum-item gap"><strong style="color:var(--red)">기술 장벽 없음</strong>의지의 문제</div>
-    </div>
+    <div class="sum-head"><div>국가</div><div>ROC 과세 제도</div><div>취득원가 추적(BT)</div><div>한국 도입 격차</div></div>
+    <div class="sum-row"><div class="sum-flag">🇺🇸</div><div class="sum-item ok"><strong>IRC §301(c)(2) — 1954년</strong>ROC = 취득원가 감액, 비과세</div><div class="sum-item ok"><strong>Form 1099-B — 2012년</strong>증권사 취득원가 의무 보고</div><div class="sum-item gap"><strong>72년 격차</strong>한국 미도입</div></div>
+    <div class="sum-row"><div class="sum-flag">🇨🇦</div><div class="sum-item ok"><strong>T3/T5 분류 — 1970년대~</strong>ROC 자동 분류 공시</div><div class="sum-item ok"><strong>CRA ACB 추적</strong>조정취득원가 자동 계산</div><div class="sum-item gap"><strong>50년+ 격차</strong></div></div>
+    <div class="sum-row"><div class="sum-flag">🇦🇺</div><div class="sum-item ok"><strong>Cost Base Adjustment</strong>ITAA 1997 §104-155</div><div class="sum-item ok"><strong>ATO — 취득원가 자동 조정</strong>매도 시 CGT 자동 계산</div><div class="sum-item gap"><strong>30년+ 격차</strong></div></div>
+    <div class="sum-row"><div class="sum-flag">🇩🇪</div><div class="sum-item ok"><strong>Kapitalertragsteuer 구분</strong>소득성격 분류 의무</div><div class="sum-item ok"><strong>Freistellungsauftrag</strong>납세자 원장 직접 관리</div><div class="sum-item gap"><strong>30년+ 격차</strong></div></div>
+    <div class="sum-row"><div class="sum-flag">🇬🇧</div><div class="sum-item ok"><strong>HMRC — 투자소득 분류</strong>소득성격 공시 의무</div><div class="sum-item ok"><strong>CIGA 2007 — 취득원가</strong>자동 추적 의무화</div><div class="sum-item gap"><strong>20년+ 격차</strong></div></div>
+    <div class="sum-row"><div class="sum-flag">🇪🇺</div><div class="sum-item ok"><strong>PRIIP KID 공시 의무</strong>투자상품 소득성격 공시</div><div class="sum-item ok"><strong>MiFID II — 투자자 보호</strong>데이터 투명성 의무</div><div class="sum-item gap"><strong>10년+ 격차</strong></div></div>
+    <div class="sum-row kr"><div class="sum-flag">🇰🇷</div><div class="sum-item gap"><strong>없음</strong>유권해석 한 줄</div><div class="sum-item gap"><strong>없음</strong>취득원가 추적 부재</div><div class="sum-item gap"><strong>기술 장벽 없음</strong>의지의 문제</div></div>
   </div>
 </section>
 
-<hr>
-
 <!-- 미국 -->
-<section class="sec w">
-  <div class="sec-flag"><div class="flag-em">🇺🇸</div><div class="sec-tag">미국 · United States</div></div>
+<section class="sec w z reveal">
+  <div class="sec-flag"><div class="flag-em">🇺🇸</div><div class="sec-tag">미국 · United States · 1954~</div></div>
   <h2 class="sec-title">IRC §301(c)(2) — <span class="green">1954년 확립</span></h2>
 
   <div class="case-detail usa-c">
     <div class="cd-year">1954년 · IRC §301(c)(2) 제정</div>
     <div class="cd-title">자본반환(ROC)은 과세소득이 아닙니다 — 72년간 불변의 원칙</div>
-    <div class="cd-body">
-      분배금 중 회사의 유보이익(Earnings & Profits)을 초과하는 부분은
-      투자자의 취득원가(Basis)를 감액합니다. 과세소득이 아닙니다.<br><br>
-      <strong>핵심 조항:</strong><br>
-      "The portion of the distribution which is not a dividend shall be applied against
-      and reduce the adjusted basis of the stock." — IRC §301(c)(2)<br><br>
-      이것이 MSTY BOX3=100%, CONY 97%, NVDY 52.6%의 법적 근거입니다.
-    </div>
+    <div class="cd-body">분배금 중 회사의 유보이익(E&P)을 초과하는 부분은 투자자의 취득원가(Basis)를 감액합니다. 과세소득이 아닙니다.<br><br>
+    <strong>"The portion not a dividend shall be applied against and reduce the adjusted basis of the stock."</strong><br><br>
+    이것이 MSTY BOX3=100%, CONY 97%, NVDY 52.6%의 법적 근거입니다.</div>
     <div class="cd-effect">효과: 원금 반환에 세금 없음 · 72년간 납세자 보호</div>
   </div>
 
   <div class="case-detail usa-c">
     <div class="cd-year">1993년~ · ICI Primary Layout 공시 시작</div>
     <div class="cd-title">Investment Company Institute — 소득성격 유일 결정권자</div>
-    <div class="cd-body">
-      ETF·뮤추얼펀드 발행사들이 매년 1월 연간 분배금의 소득성격을 공시합니다.<br><br>
-      <strong>BOX 구조:</strong><br>
-      BOX1 — 배당소득 (Ordinary Dividends)<br>
-      BOX3 — 자본반환 (Nondividend Distributions · ROC) ← <strong>비과세</strong><br>
-      STCG — 단기양도소득 (Short-Term Capital Gains)<br><br>
-      KSD 공문 16516499에서 한국도 공식 인정:
-      <span class="green">"소득성격의 결정권은 현지 발행사(ICI)에 있다."</span>
-    </div>
+    <div class="cd-body">ETF·뮤추얼펀드 발행사가 매년 1월 소득성격을 공시합니다.<br><br>
+    BOX1 — 배당소득 · BOX3 — <strong>자본반환(ROC) ← 비과세</strong> · STCG — 단기양도소득<br><br>
+    KSD 공문 16516499에서 한국도 공식 인정: <span class="green">"소득성격의 결정권은 현지 발행사(ICI)에 있다."</span></div>
     <div class="cd-effect">효과: 무료 공시 · 납세자 직접 확인 가능 · 33년간 운영</div>
   </div>
 
   <div class="case-detail usa-c">
     <div class="cd-year">2012년 · Form 1099-B 의무화</div>
-    <div class="cd-title">Basis Tracking(취득원가 추적) — 증권사 의무 보고</div>
-    <div class="cd-body">
-      Energy Improvement and Extension Act 2008 →
-      2011년(주식) · 2012년(ETF·뮤추얼펀드) 단계적 의무화.<br><br>
-      <strong>Form 1099-B 핵심 항목:</strong><br>
-      Box 1a: 매도 종목·수량<br>
-      Box 1e: 조정취득원가 (Adjusted Basis) ← <strong>IRS에 자동 보고</strong><br>
-      Box 2: 단기/장기 구분<br>
-      Box 5: Covered/Noncovered 구분<br><br>
-      증권사가 ROC 수령 시 취득원가를 자동으로 감액합니다.
-      납세자는 별도로 계산할 필요가 없습니다.
-    </div>
+    <div class="cd-title">Basis Tracking — 증권사 취득원가 의무 보고</div>
+    <div class="cd-body">2011년(주식) · 2012년(ETF·뮤추얼펀드) 단계적 의무화.<br><br>
+    Box 1e: 조정취득원가 (Adjusted Basis) ← <strong>IRS에 자동 보고</strong><br>
+    증권사가 ROC 수령 시 취득원가를 자동으로 감액합니다. 납세자는 별도로 계산할 필요가 없습니다.</div>
     <div class="cd-effect">효과: 취득원가 오류 99% 감소 · IRS 자동 대조 · 납세자 부담 제거</div>
   </div>
 
-  <div class="codeblock">
-<span class="yr">미국 시스템 작동 흐름:</span>
+  <div class="codeblock"><span class="yr">미국 시스템 흐름:</span>
 ICI Primary Layout (1월 공시)
   → BOX3(ROC) 확정
-  → 증권사 Form 1099-B 자동 생성
-  → Box 1e 취득원가 자동 감액
+  → 증권사 Form 1099-B 자동 생성 (Box 1e 취득원가 자동 감액)
   → IRS 자동 대조
-  → 납세자: 별도 계산 불필요
 
 <span class="ok">결과: 원금 반환에 세금 없음. 자동화. 72년간 불변.</span>
-
-<span class="no">한국: ICI 연결 없음. BT 없음. 유권해석 한 줄.</span>
-  </div>
+<span class="no">한국: ICI 연결 없음. BT 없음. 유권해석 한 줄.</span></div>
 </section>
 
-<hr>
-
 <!-- 캐나다 -->
-<section class="sec w">
+<section class="sec w z reveal">
   <div class="sec-flag"><div class="flag-em">🇨🇦</div><div class="sec-tag">캐나다 · Canada</div></div>
   <h2 class="sec-title">T3/T5 분류 체계 — <span class="green">ROC 자동 분류</span></h2>
-
   <div class="case-detail can-c">
     <div class="cd-year">캐나다 세무청(CRA) · 연간 세금영수증</div>
     <div class="cd-title">T3·T5 — 소득성격 자동 분류 공시</div>
-    <div class="cd-body">
-      캐나다 펀드·ETF 발행사는 매년 CRA에 T3(신탁소득) 또는 T5(투자소득)를 제출합니다.<br><br>
-      <strong>T3 주요 박스:</strong><br>
-      Box 21 — 자본이득 (Capital Gains)<br>
-      Box 42 — <strong>자본반환 (Return of Capital) ← 비과세</strong><br>
-      Box 49 — 적격배당<br><br>
-      납세자는 Box 42 금액만큼 취득원가(ACB)를 즉시 감액해야 합니다.
-      CRA 공식 가이드라인이 단계별로 안내합니다.
-      <strong>납세자가 직접 계산하지 않아도 됩니다.</strong>
-    </div>
+    <div class="cd-body">Box 42 — <strong>자본반환(Return of Capital) ← 비과세</strong><br><br>
+    납세자는 Box 42 금액만큼 취득원가(ACB)를 즉시 감액해야 합니다. CRA 공식 가이드라인이 단계별로 안내합니다. <span class="green">납세자가 직접 계산하지 않아도 됩니다.</span></div>
     <div class="cd-effect">효과: 소득성격 자동 분류 · 납세자 혼란 없음 · 수십 년간 운영</div>
   </div>
 </section>
 
-<hr>
-
 <!-- 호주 -->
-<section class="sec w">
+<section class="sec w z reveal">
   <div class="sec-flag"><div class="flag-em">🇦🇺</div><div class="sec-tag">호주 · Australia</div></div>
   <h2 class="sec-title">Cost Base Adjustment — <span class="green">ATO 자동 조정</span></h2>
-
   <div class="case-detail aus-c">
-    <div class="cd-year">ITAA 1997 §104-155</div>
-    <div class="cd-title">자본반환 = 자본손실 이벤트 — CGT 자동 조정</div>
-    <div class="cd-body">
-      호주 세법(ITAA 1997)은 ROC를 CGT 이벤트 G1으로 정의합니다.<br><br>
-      <strong>작동 방식:</strong><br>
-      ROC 수령 → Cost Base 자동 감액 →
-      Cost Base가 0 미만이면 → 그 초과분만 자본이득으로 과세<br><br>
-      ATO(호주 세무청) 공식 계산기 제공.
-      증권사가 ATO에 자동 보고.
-      <span class="green">납세자가 스스로 계산할 필요 없습니다.</span>
-    </div>
+    <div class="cd-year">ITAA 1997 §104-155 · CGT 이벤트 G1</div>
+    <div class="cd-title">자본반환 = 취득원가 자동 감액 — CGT 정산</div>
+    <div class="cd-body">ROC 수령 → Cost Base 자동 감액 → Cost Base가 0 미만이면 → 그 초과분만 자본이득으로 과세.<br><br>
+    ATO 공식 계산기 제공. 증권사가 ATO에 자동 보고. <span class="green">납세자가 스스로 계산할 필요 없습니다.</span></div>
     <div class="cd-effect">효과: CGT 자동 정산 · 납세자 오류 방지 · 법적 명확성</div>
   </div>
 </section>
 
-<hr>
-
 <!-- 독일 -->
-<section class="sec w">
+<section class="sec w z reveal">
   <div class="sec-flag"><div class="flag-em">🇩🇪</div><div class="sec-tag">독일 · Germany</div></div>
-  <h2 class="sec-title">납세자 원장 직접 관리 — <span class="green">Freistellungsauftrag</span></h2>
-
+  <h2 class="sec-title">Freistellungsauftrag — <span class="green">납세자 원장 직접 관리</span></h2>
   <div class="case-detail deu-c">
     <div class="cd-year">독일 · Kapitalertragsteuer 체계</div>
     <div class="cd-title">소득성격 분류 + 납세자 면세 한도 직접 설정</div>
-    <div class="cd-body">
-      독일 은행은 투자소득을 3가지로 자동 분류합니다:<br><br>
-      <strong>① Zinsen</strong> — 이자소득<br>
-      <strong>② Dividenden</strong> — 배당소득<br>
-      <strong>③ Veräußerungsgewinne</strong> — 자본이득<br><br>
-      납세자는 Freistellungsauftrag(면세 한도 신청서)를 통해
-      연간 €1,000(2024년 기준) 한도까지 은행별로 직접 배분합니다.
-      은행이 이 한도 내에서 원천징수를 자동 면제합니다.<br><br>
-      <span class="green">납세자가 자신의 원장을 직접 설계하고 관리합니다.</span>
-    </div>
+    <div class="cd-body">독일 은행은 투자소득을 3가지로 자동 분류합니다: Zinsen(이자) · Dividenden(배당) · Veräußerungsgewinne(자본이득)<br><br>
+    납세자는 Freistellungsauftrag(면세 한도 신청서)를 통해 연간 €1,000 한도까지 은행별로 직접 배분합니다. <span class="green">납세자가 자신의 원장을 직접 설계하고 관리합니다.</span></div>
     <div class="cd-effect">효과: 납세자 주권 · 이중과세 방지 · 투명한 원장 관리</div>
   </div>
 </section>
 
-<hr>
-
 <!-- 영국 -->
-<section class="sec w">
+<section class="sec w z reveal">
   <div class="sec-flag"><div class="flag-em">🇬🇧</div><div class="sec-tag">영국 · United Kingdom</div></div>
   <h2 class="sec-title">HMRC — <span class="green">투자소득 소득성격 공시 의무</span></h2>
-
   <div class="case-detail gbr-c">
-    <div class="cd-year">HMRC · 자본이득세(CGT) 체계</div>
+    <div class="cd-year">HMRC · CIGA 2007 · 자본이득세(CGT) 체계</div>
     <div class="cd-title">펀드 분배금 소득성격 공시 + 취득원가 자동 추적</div>
-    <div class="cd-body">
-      영국 펀드·ETF는 HMRC에 연간 분배금의 소득성격을 의무 공시합니다.<br><br>
-      <strong>분류 체계:</strong><br>
-      Equalisation Payment — 자본반환 성격 (비과세)<br>
-      Dividend Distribution — 배당소득<br>
-      Interest Distribution — 이자소득<br><br>
-      CIGA 2007로 취득원가 자동 추적 의무화.
-      HMRC 공식 포털에서 납세자가 직접 조회 가능.
-      <span class="green">납세자가 소득성격을 실시간으로 확인할 수 있습니다.</span>
-    </div>
+    <div class="cd-body">Equalisation Payment — 자본반환 성격(비과세) · Dividend Distribution — 배당소득 · Interest Distribution — 이자소득<br><br>
+    CIGA 2007로 취득원가 자동 추적 의무화. HMRC 공식 포털에서 납세자가 직접 조회 가능. <span class="green">납세자가 소득성격을 실시간으로 확인할 수 있습니다.</span></div>
     <div class="cd-effect">효과: 납세자 과표 검증 가능 · 이중과세 방지</div>
   </div>
 </section>
 
-<hr>
-
 <!-- OECD -->
-<section class="sec w">
+<section class="sec w z reveal">
   <div class="sec-flag"><div class="flag-em">🌐</div><div class="sec-tag">OECD · 국제 표준</div></div>
-  <h2 class="sec-title">OECD BEPS Pillar 2 — <span class="green">국제 과세 원장 표준</span></h2>
-
+  <h2 class="sec-title">BEPS Pillar 2 — <span class="green">국제 과세 원장 표준</span></h2>
   <div class="case-detail oecd-c">
     <div class="cd-year">OECD · BEPS Pillar 2 · GloBE Rules 2021</div>
     <div class="cd-title">글로벌 최저세 — 과세 원장의 국제 표준화</div>
-    <div class="cd-body">
-      OECD는 글로벌 최저법인세(15%) 도입과 함께
-      국가별 세무 데이터 원장의 표준화를 추진하고 있습니다.<br><br>
-      <strong>핵심 원칙:</strong><br>
-      Qualified Domestic Minimum Top-up Tax — 원장 투명성 의무<br>
-      Country-by-Country Reporting — 국가별 과세 원장 공시<br>
-      Pillar 2 GloBE Information Return — 통합 원장 보고<br><br>
-      한국도 2024년부터 BEPS Pillar 2 적용.
-      그러나 <span class="red">개인 투자자 ROC 원장은 여전히 없습니다.</span>
-    </div>
+    <div class="cd-body">Qualified Domestic Minimum Top-up Tax — 원장 투명성 의무<br>Country-by-Country Reporting — 국가별 과세 원장 공시<br>Pillar 2 GloBE Information Return — 통합 원장 보고<br><br>
+    한국도 2024년부터 BEPS Pillar 2 적용. 그러나 <span class="red">개인 투자자 ROC 원장은 여전히 없습니다.</span></div>
     <div class="cd-effect">효과: 국제 과세 투명성 · 조세회피 방지 · 원장 표준화</div>
   </div>
 </section>
 
-<hr>
-
-<!-- 핵심 레슨 -->
-<section class="sec w">
-  <div class="sec-tag">결론 · 한국이 배워야 할 것</div>
+<!-- 결론 -->
+<section class="sec w z reveal">
+  <div class="sec-flag"><div class="sec-tag">결론 · L2T 핵심 레슨</div></div>
   <h2 class="sec-title">기술 장벽이 없습니다 — <span class="red">의지의 문제입니다</span></h2>
-
-  <div class="codeblock">
-<span class="yr">국가별 도입 연도 비교:</span>
-<span class="ok">🇺🇸 미국    1954년 IRC §301(c)(2)  — ROC 비과세 확립</span>
-<span class="ok">🇨🇦 캐나다   1970년대~  T3/T5    — ROC 자동 분류</span>
-<span class="ok">🇦🇺 호주    1997년    ITAA     — Cost Base 자동 조정</span>
-<span class="ok">🇩🇪 독일    2000년대~  KESt체계  — 납세자 원장 직접 관리</span>
-<span class="ok">🇬🇧 영국    2007년    CIGA     — 취득원가 의무 추적</span>
-<span class="ok">🇺🇸 미국    2012년    1099-B   — 증권사 BT 의무화</span>
-<span class="ok">🌐 OECD    2021년    Pillar 2 — 국제 원장 표준</span>
-<span class="no">🇰🇷 한국    2026년    ???      — 유권해석 한 줄</span>
-  </div>
-
+  <div class="codeblock"><span class="yr">국가별 도입 연도:</span>
+<span class="ok">🇺🇸  1954년  IRC §301(c)(2)  — ROC 비과세 확립</span>
+<span class="ok">🇨🇦  1970년대  T3/T5         — ROC 자동 분류</span>
+<span class="ok">🇦🇺  1997년  ITAA           — Cost Base 자동 조정</span>
+<span class="ok">🇩🇪  2000년대  KESt 체계      — 납세자 원장 직접 관리</span>
+<span class="ok">🇬🇧  2007년  CIGA           — 취득원가 의무 추적</span>
+<span class="ok">🇺🇸  2012년  1099-B         — 증권사 BT 의무화</span>
+<span class="ok">🌐  2021년  BEPS Pillar 2  — 국제 원장 표준</span>
+<span class="no">🇰🇷  2026년  ???            — 유권해석 한 줄</span></div>
   <div class="lesson">
-    <div class="lsn-tag">L2T 핵심 레슨</div>
+    <div class="lsn-tag">L2T 핵심 레슨 — No Tax Without Ledger</div>
     <div class="lsn-body">
-      7개국이 이미 만들었습니다.<br>
-      모두 같은 원칙으로 만들었습니다:<br><br>
+      7개국이 이미 만들었습니다. 모두 같은 원칙으로:<br><br>
       <span class="gold">원금 반환은 소득이 아닙니다.</span><br>
       취득원가는 자동으로 추적되어야 합니다.<br>
       납세자는 과표의 족보를 확인할 수 있어야 합니다.<br><br>
@@ -662,8 +426,9 @@ ICI Primary Layout (1월 공시)
 </section>
 
 <!-- CLOSING -->
-<div class="closing">
-  <div class="w">
+<div class="closing z">
+  <div class="cl-bg">先進</div>
+  <div class="cl-inner w">
     <div class="cl-main">
       미국은 1954년에 했습니다<br>
       캐나다·호주·독일·영국도 했습니다<br>
@@ -679,7 +444,17 @@ ICI Primary Layout (1월 공시)
   </div>
 </div>
 
+<!-- 인쇄 버튼 -->
+<div class="print-btn-wrap">
+  <a class="print-btn" href="WJ-09-print.html">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    인쇄
+  </a>
+</div>
 
-<div class="print-btn-wrap"><a class="print-btn btn-light" href="WJ-09-print.html"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>&nbsp;인쇄</a></div>
+<script>
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 </body>
 </html>
